@@ -1,0 +1,9 @@
+{% extends "usep_templates/base.html" %}
+
+{% block head_title %}{{ page_data.title_page }}{% endblock head_title %}
+
+{% block page_title %}{{ page_data.title_content }}{% endblock page_title %}
+
+{% block content %}
+  {{ page_data.content|safe }}
+{% endblock content %}

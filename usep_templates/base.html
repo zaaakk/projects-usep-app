@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US" xml:lang="en-US">
+
+  <head profile="http://gmpg.org/xfn/11">
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>{% block head_title %}HOLDER{% endblock head_title %}</title>
+    <link type="text/css" {% block head_media_href %}href="{{ STATIC_URL }}usep/css/style.css"{% endblock head_media_href %} media="all" rel="stylesheet" />
+
+    {% block in_page_css %}{% endblock in_page_css %}
+
+  </head>
+
+  <body>
+
+    <div id="header">
+      {% block header %}
+      <a href="{% url collections_url %}"><img src="{{ STATIC_URL }}usep/css/gfx/header_brickstamp.png" alt="U.S. Epigraphy Project" title="U.S. Epigraphy Project home page"/></a>
+    	<div id="headerlinks">
+        <!-- <a href="{{ usep_search_url }}"><img src="{{ STATIC_URL }}usep/css/gfx/button_search.png" /></a> -->
+    		<!-- <a href="../../../search/usep/results"><img src="{{ STATIC_URL }}usep/css/gfx/button_search.png" /></a> -->
+        <a href="/search/usep/results"><img src="{{ STATIC_URL }}usep/css/gfx/button_search.png" /></a>
+        <a href="{% url collections_url %}"><img src="{{ STATIC_URL }}usep/css/gfx/button_collections.png" /></a>
+        <a href="{% url publications_url %}"><img src="{{ STATIC_URL }}usep/css/gfx/button_publications.png" /></a> <br />
+  			<a href="{% url texts_url %}">Texts</a> |
+  			<a href="{% url links_url %}">Epigraphy links</a> |
+  			<a href="{% url about_url %}">About</a> |
+  			<a href="{% url contact_url %}">Contact</a>
+    	</div>
+    	{% endblock header %}
+    </div>
+
+    <div id="undefined_wrapper">
+
+      <h1 id="pagetitle">{% block page_title %}HOLDER{% endblock page_title %}</h1>
+
+      {% block list_of_states %}
+      <div id="listofstates"></div>  {% comment %} css applies green bar to this, so needed for now {% endcomment %}
+      {% endblock list_of_states %}
+
+      <div id="content">
+        {% block content %}
+        {% endblock content %}
+      <div> <!-- end div id="content" -->
+
+    </div> <!-- end div id="undefined_wrapper" -->
+
+  </body>
+
+  {% block page_js %}
+  {% endblock page_js %}
+
+</html>

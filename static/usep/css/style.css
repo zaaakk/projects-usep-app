@@ -1,0 +1,285 @@
+/* colors
+
+f7f2e5	cream background
+dedcd1	darker cream
+
+424242	grey
+b1b1b1	light grey
+
+4b7975	dark teal
+549390	teal
+7badac	light teal
+*/
+
+/*general layout*/
+
+html{font-size:100.01%;}
+body {
+	background:#F5F5F5;
+	color : #000;
+	font-family: Helvetica,Arial,Sans-serif;
+	padding:0px;
+	margin:0px;
+	font-size: 90%;
+	width:100%;
+	}
+
+blockquote {
+	color:#333;
+	}
+
+/*font styles*/
+p {
+	font-size: 1em;
+	padding: 0px;
+	line-height: 1.5;
+	}
+
+h1 {
+	font-size:2.1em;
+	color:#4b7975;
+	text-transform:uppercase;
+	font-family:georgia,palatino,serif;
+	font-weight:normal;
+	letter-spacing:0.15em;
+	}
+
+h2 {
+	font-size : 1.4em;
+	text-transform:uppercase;
+	font-family:georgia,palatino,serif;
+	font-weight:normal;
+	}
+
+h3 {
+	font-size:1.2em;
+	color:#4b7975;
+	text-transform:uppercase;
+	font-family:georgia,palatino,serif;
+	font-weight:normal;
+	letter-spacing:0.15em;
+	}
+
+a:link, a:visited {
+	font-weight:normal;
+	color : #4b7975;
+	text-decoration : none;
+	}
+
+a:hover, a:active {
+	font-weight:normal;
+	color : #4b7975;
+	text-decoration : none;
+	}
+
+img {
+	border:0;
+	}
+
+#pagetitle {
+	margin-top:60px;
+		}
+
+/*structure*/
+
+
+#header {
+	background-image:url('gfx/header_bg.png');
+	background-repeat:repeat-x;
+	background-color:#dedcd1;
+	height:160px;
+	padding-top:5px;
+	padding-left:20px;
+	}
+
+#headerlinks {
+	position:absolute;
+	top:35px;
+	left:200px;
+	font-family:georgia,palatino,serif;
+	text-transform:uppercase;
+	letter-spacing:0.15em;
+	color:#777;
+	}
+
+#headerlinks a:link, a:visited {
+	color:#777;
+	}
+
+#headerlinks a:hover,a:active {
+	color:#666;
+	}
+
+#content, body > h1 {
+	margin: 0 auto;
+	width:650px;
+	padding: 0em;
+	}
+
+
+#content {
+	padding-top:20px;
+	padding-bottom:20px;
+	}
+
+	#content > iframe {
+/*	margin: 0 auto;*/
+	}
+
+/*
+#content a:link,a:visited {
+		border-bottom:1px #b1b1b1 solid;
+		}
+*/
+
+#content a:hover, a:active {
+		border-bottom:1px #549390 solid;
+		}
+
+#listofstates {
+	background-color:#549390;
+	position:absolute;
+	top:160px;
+	left:0px;
+	min-height:4px;
+	width:100%;
+	font-family:georgia,palatino,serif;
+	letter-spacing:0.1em;
+	font-weight:normal;
+	font-size:1.2em;
+	color:#7badac;
+	}
+
+	#listofstates a:link, #listofstates a:visited {
+	color:#f7f2e5;
+	font-weight:normal;
+	}
+
+	#listofstates a:hover {
+		font-weight:normal;
+		color:#7badac;
+	}
+
+	#listofstates li {
+		display:inline;
+	}
+	#list {
+		text-align: center;
+		padding-left: 0em;
+		color: #555;
+	}
+	ul#list li:after {
+		content: " | ";
+	}
+
+.description {
+	padding-left: 20px;
+	font-weight: bold;
+}
+	.description > a {
+		font-weight: inherit;
+	}
+	.description > a:last-child{
+		background:url(gfx/external-link-icon.png) center right no-repeat;
+		padding: 0 13px 0 0;
+	}
+
+
+a.js-link, .jslink { font-weight: normal; }
+.js-info {
+	border-left: 1px solid #7badac;
+	margin-left: 40px;
+	padding-left: 20px;
+}
+
+/* for external xsl/xml-powered collections pages */
+#result {
+	width: 650px; /*may need to change this if images get bigger*/
+	margin: 0 auto;
+}
+
+.metadata {
+	float:left;
+}
+
+/*this formats the metadata output as table */
+
+.metadata table {
+//	padding-top: 15px;	
+}
+
+td.label {
+	text-align: right;
+	font-weight: bold;
+	color: #666;
+	padding: 0 0 0.5em 0;
+}
+
+td.value {
+	vertical-align: top;
+	padding-left: 10px;
+}
+
+td.inactive {
+	color: #999;
+}
+
+.metadata {
+	width: 300px;	
+}
+
+.facsimile {
+	float: right;
+}
+
+#image_wrap {
+	/*	 dimensions -- if you change the default size 
+			of the image displayed you will 
+			have to change the width as well*/
+		width:320px; 
+		margin-bottom:15px;
+//		padding:15px 0;
+
+		/* centered */
+		text-align: center;
+
+		/* some "skinning" 
+		background-color:#efefef;
+		border:2px solid #fff;
+		outline:1px solid #ddd;
+		-moz-ouline-radius:4px;*/
+}
+#edition {
+	clear:both;
+}
+/* ------------ Added for old files -------------------*/
+
+ul.collection {
+list-style-type: none;
+
+}
+
+ul.collection li {
+border-bottom: 1px solid #CCC;
+padding-bottom: 13px;
+padding-top: 13px;}
+
+ul.collection img {
+float: left;
+margin-right: 10px;
+}
+
+ul.collection p {
+margin-left: 50px;
+}
+
+#container {
+	padding-top:20px;
+	padding-bottom:20px;
+	}
+
+	#container, body > h1 {
+	margin: 0 auto;
+	width:650px;
+	padding: 0em;
+	}

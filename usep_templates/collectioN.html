@@ -1,0 +1,42 @@
+{% extends "usep_templates/base.html" %}
+
+{% block head_title %}US Epigraphy — {{ collection_title }} Collection{% endblock head_title %}
+
+{% block head_media_href %}href="{{ STATIC_URL }}usep/css/style.css"{% endblock head_media_href %}
+
+{% block header %}
+  <a href="../../collections/"><img src="{{ STATIC_URL }}usep/css/gfx/header_brickstamp.png" height="156" width="159" alt="U.S. Epigraphy Project" title="U.S. Epigraphy Project home page"/></a>
+  <div id="headerlinks">
+    <a href="/search/usep/results"><img src="{{ STATIC_URL }}usep/css/gfx/button_search.png" /></a>
+    <!-- <a href="../../../../search/usep/results"><img src="{{ STATIC_URL }}usep/css/gfx/button_search.png" height="25" width="160" /></a> -->
+    <a href="../../collections/"><img src="{{ STATIC_URL }}usep/css/gfx/button_collections.png" height="25" width="160" /></a>
+    <a href="../../publications/"><img src="{{ STATIC_URL }}usep/css/gfx/button_publications.png" height="25" width="160" /></a> <br />
+    <a href="../../texts/">Texts</a> |
+    <a href="../../links/">Epigraphy links</a> |
+    <a href="../../about/">About</a> |
+    <a href="../../contact/">Contact</a>
+  </div>
+{% endblock header %}
+
+{% block page_title %}Inscriptions from {{ collection_title }}{% endblock page_title %}
+
+{% block content %}
+  <div id="main">
+    <div id="container">
+      <p>( Total: {{ inscription_count }} )</p>
+      <ul class="collection">
+        {% for member in inscriptions %}
+        <li>
+          {% if member.image_url %}
+          <img class="thumb" src="{{ member.image_url }}" alt="inscription_thumbnail" width="40" height="40"></img>
+          {% else %}
+          <img class="thumb" src="{{ STATIC_URL }}usep/images/inscriptions/NoImageAvailable.jpg" alt="inscription_thumbnail" width="40" height="40"></img>
+          {% endif %}
+          <a href="{{ member.url }}">{{ member.id }} </a>
+          <span id="status">({{ member.status }})</span>
+        </li>
+        <!-- <li><img class="thumb" src="http://dev.stg.brown.edu/projects/usepigraphy/new/Pictures/Images/{% if member.image_url %}{{ member.id }}{% else %}NoImageAvailable{% endif %}.jpg" alt="Thumbnail indicating there is an image." width="40" height="40"></img><a href="http://dev.stg.brown.edu/projects/usepigraphy/new/view/#{{ member.id }}">{{ member.id }} <span id="status">({{ member.status }})</span></a></li> -->       {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endblock content %}

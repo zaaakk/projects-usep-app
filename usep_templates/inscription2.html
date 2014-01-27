@@ -1,0 +1,105 @@
+{% extends "usep_templates/base.html" %}
+
+{% block head_title %}US Epigraphy — Inscription — {{ inscription_id }}{% endblock head_title %}
+
+{% block in_page_css %}
+<style>
+    .metadata {
+        float: left;
+        width: 300px;
+    }
+    .bibl {
+        float: left;
+        width: 900px;
+    }
+    .bibl p {
+        float: left;
+        width: 275px;
+    }
+    .facsimile {
+        position:absolute;
+        left: 662px;
+        top: 448px;
+        /*top: 1048px;*/
+    }
+    div p a {
+        float: left;
+    }
+</style>
+<!-- these are all from the scrollables website -->
+<!-- <link rel="stylesheet" type="text/css" href="http://static.flowplayer.org/tools/css/scrollable-horizontal.css" /> -->
+<!-- <link rel="stylesheet" type="text/css" href="http://static.flowplayer.org/tools/css/scrollable-buttons.css" /> -->
+{% endblock in_page_css %}
+
+{% block page_title %}Inscription: {{ inscription_id }}{% endblock page_title %}
+
+{% block content %}
+  <div id="main">
+
+    <div id="container">
+
+        <p>( page under construction )</p>
+
+        {{ xslt_html|safe }}
+
+    </div>
+
+<!--
+    <div>
+        <a href="{{ transform_url }}">(transform link)</a>
+    </div>
+ -->
+
+  </div>
+{% endblock content %}
+
+{% block page_js %}
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script> possible that we don't need this line -->
+<!--
+<script src="http://cdn.jquerytools.org/1.2.6/jquery.tools.min.js"></script>
+<script src="jquery.ba-hashchange.min.js"></script>
+<script src="view.js"></script>
+<script>
+$(function() {
+
+$(".thumbsRow").scrollable();
+
+$(".items img").click(function() {
+
+    // see if same thumb is being clicked
+    if ($(this).hasClass("active")) { return; }
+
+    // calclulate large image's URL based on the thumbnail URL (flickr specific)
+    var url = $(this).attr("src").replace("_t", "");
+
+    // get handle to element that wraps the image and make it semi-transparent
+    var wrap = $("#image_wrap").fadeTo("medium", 0.5);
+
+    // the large image from www.flickr.com
+    var img = new Image();
+
+
+    // call this function after it's loaded
+    img.onload = function() {
+
+        // make wrapper fully visible
+        wrap.fadeTo("fast", 1);
+
+        // change the image
+        wrap.find("img").attr("src", url);
+
+    };
+
+    // begin loading the image from www.flickr.com
+    img.src = url;
+
+    // activate item
+    $(".items img").removeClass("active");
+    $(this).addClass("active");
+
+// when page loads simulate a "click" on the first image
+}).filter(":first").click();
+});
+</script>
+-->
+{% endblock page_js %}
