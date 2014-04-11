@@ -2,6 +2,7 @@
 
 import json, logging, pprint
 import requests
+import urllib
 from django.conf import settings as settings_project
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound, HttpResponseRedirect
@@ -18,16 +19,13 @@ log = logging.getLogger(__name__)
 
 ## dynamic pages
 
-def get_xml( request, inscription_id ): 
+def get_xml( request, url_stub, inscription_id ): 
     """ Route cross-server requests for xml files through the backend """
-    url = u'%s/%s.xml' % (settings_app.TRANSFORMER_XML_URL_SEGMENT, inscription_id)
-    
-    print "\n\tInscription url: " + str(url)
+    url = u'%s/%s.xml' % (urllib.unquote(url_stub), inscription_id)
     
     r = requests.get( url ) 
     xml = r.text
 
-    print "\n\trequests text: " + str(xml)
     return HttpResponse( xml ) 
 
 @cache_page( settings_app.COLLECTIONS_CACHE_SECONDS )
@@ -93,7 +91,8 @@ def display_inscription2( request, inscription_id ):
   """new version; uses xslt to grab data and create display / TODO: pull out data for optional json response."""
   # build info
   data_dict = {
-    u'inscription_id': inscription_id,
+    u'url_stub': urllib.quote(settings_app.TRANSFORMER_XML_URL_SEGMENT, safe=''), 
+    u'inscription_id': inscription_id, 
     }
   
   return render( request, u'usep_templates/inscription2.html', data_dict )

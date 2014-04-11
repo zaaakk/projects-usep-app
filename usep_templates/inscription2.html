@@ -74,7 +74,7 @@
             stylesheet:   "{{ STATIC_URL }}usep/xsl/USEp_display.xsl",
             // source:       "{{ STATIC_URL }}usep/TESTING/MD.Balt.JHU.L.1.xml"
             // source: "http://library.brown.edu/usep/xml/CA.Malibu.JPGM.G.71.AA.121.xml"
-            source: "{% url usep_app.views.get_xml inscription_id %}"
+            source: "{% url usep_app.views.get_xml url_stub inscription_id %}"
         });
     }; 
 

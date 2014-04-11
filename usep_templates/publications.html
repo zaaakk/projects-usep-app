@@ -38,3 +38,21 @@
 
   </div>
 {% endblock content %}
+
+{% block page_js %}
+<!-- Loading client-side XSL processor -->
+<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}usep/js/saxonce/Saxonce.nocache.js"></script>
+
+<script type="text/javascript">
+  // Initializing SaxonCE client-side XSL transformation
+    // Documentation at http://www.saxonica.com/ce/index.xml
+    var onSaxonLoad = function() {
+        Saxon.run({
+            stylesheet:   "{{ STATIC_URL }}usep/xsl/pubs.xsl",
+            // source:       "{{ STATIC_URL }}usep/TESTING/MD.Balt.JHU.L.1.xml"
+            // source: "http://library.brown.edu/usep/xml/CA.Malibu.JPGM.G.71.AA.121.xml"
+            source: "{% url usep_app.views.get_xml url_stub inscription_id %}"
+        });
+    }; 
+</script>
+{% endblock page_js %}
