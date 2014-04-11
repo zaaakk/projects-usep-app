@@ -77,8 +77,9 @@ img {
 	}
 
 #pagetitle {
-	margin-top:60px;
-		}
+	width: 100%;
+  	text-align: center;
+}
 
 /*structure*/
 
@@ -120,11 +121,12 @@ img {
 #content {
 	padding-top:20px;
 	padding-bottom:20px;
-	}
+	left:30%;
+}
 
-	#content > iframe {
+#content > iframe {
 /*	margin: 0 auto;*/
-	}
+}
 
 /*
 #content a:link,a:visited {
@@ -273,13 +275,25 @@ ul.collection p {
 margin-left: 50px;
 }
 
+
+/*Positioning the content and image panes when displaying inscriptions*/
+
 #container {
+	position:absolute;
+	left:30px;
 	padding-top:20px;
 	padding-bottom:20px;
-	}
+}
 
-	#container, body > h1 {
+#container, body > h1 {
 	margin: 0 auto;
 	width:650px;
 	padding: 0em;
-	}
+}
+
+#images {
+	top:280px;
+	position:absolute;
+	left:0px;
+	background:LightGray; 
+}

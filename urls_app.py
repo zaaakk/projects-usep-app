@@ -25,6 +25,8 @@ urlpatterns = patterns('',
   url( r'^inscription/(?P<inscription_id>[^/]+)/$', 'usep_app.views.display_inscription2', name='inscription_url' ),
   # url( r'^inscription_alt/(?P<inscription_id>[^/]+)/$', 'usep_app.views.display_inscription', name='inscription_url_alt' ),
 
+  url( r'^getxml/(?P<inscription_id>[^/]+)/$',  'usep_app.views.get_xml', name='get_xml_url' ),
+
   url( r'^login/$',  'usep_app.views.login', name='login_url' ),
   url( r'^publications/$',  'usep_app.views.publications', name='publications_url' ),
   url( r'^publication/(?P<publication>[^/]+)/$', 'usep_app.views.pubChildren', name='publication_url' ),
