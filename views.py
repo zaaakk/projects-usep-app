@@ -2,6 +2,7 @@
 
 import json, logging, pprint
 import requests
+import urllib
 from django.conf import settings as settings_project
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound, HttpResponseRedirect
@@ -10,12 +11,22 @@ from django.views.decorators.cache import cache_page
 from usep_app import settings_app, models
 from .models import AboutPage, ContactsPage, LinksPage, PublicationsPage, TextsPage  # static pages
 from .models import FlatCollection
+from usep_app import settings_app
+
 
 log = logging.getLogger(__name__)
 
 
 ## dynamic pages
 
+def get_xml( request, url_stub, inscription_id ): 
+    """ Route cross-server requests for xml files through the backend """
+    url = u'%s/%s.xml' % (urllib.unquote(url_stub), inscription_id)
+    
+    r = requests.get( url ) 
+    xml = r.text
+
+    return HttpResponse( xml ) 
 
 @cache_page( settings_app.COLLECTIONS_CACHE_SECONDS )
 def collections( request ):
@@ -78,33 +89,13 @@ def collection( request, collection ):
 
 def display_inscription2( request, inscription_id ):
   """new version; uses xslt to grab data and create display / TODO: pull out data for optional json response."""
-  ## build info
-  insc = models.Inscription2()
-  insc.run_xslt( inscription_id )   # applies xslt to collection-xml
-  insc.update_xslt_html()           # applies some string replacement on the transformed xml
-  insc.extract_inscription_data()   # extracts inscription and bibl info from transformed xml to a dict
-  ## display
+  # build info
   data_dict = {
-    u'inscription_url': u'%s://%s%s' % ( request.META[u'wsgi.url_scheme'], request.get_host(), reverse(u'inscription_url', args=(inscription_id,)) ),
-    u'inscription_id': inscription_id,
-    u'xslt_html': insc.updated_xslt_html,       # for template
-    u'transform_url': insc.full_transform_url,  # shown during dev
-    u'attribute_info': insc.extracted_data[u'attributes'],
-    u'bib_info': insc.extracted_data[u'bibl'],
-    u'summary':insc.extracted_data[u'summary'],
-    u'xml_source_url': insc.xml_url,
-    u'image_url': u'%s/usep/images/inscriptions/%s.jpg' % ( settings_app.INSCRIPTIONS_URL_SEGMENT, inscription_id )
+    u'url_stub': urllib.quote(settings_app.TRANSFORMER_XML_URL_SEGMENT, safe=''), 
+    u'inscription_id': inscription_id, 
     }
-  ## display
-  format = request.GET.get( u'format', None )
-  callback = request.GET.get( u'callback', None )
-  if format == u'json':
-    output = json.dumps( data_dict, sort_keys=True, indent=2 )
-    if callback:
-      output = u'%s(%s)' % ( callback, output )
-    return HttpResponse( output, content_type = u'application/javascript; charset=utf-8' )
-  else:
-    return render( request, u'usep_templates/inscription2.html', data_dict )
+  
+  return render( request, u'usep_templates/inscription2.html', data_dict )
 
 
 # def display_inscription2( request, inscription_id ):

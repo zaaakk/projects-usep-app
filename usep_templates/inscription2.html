@@ -1,9 +1,9 @@
 {% extends "usep_templates/base.html" %}
 
-{% block head_title %}US Epigraphy — Inscription — {{ inscription_id }}{% endblock head_title %}
+<!-- {% block head_title %}US Epigraphy — Inscription — {{ inscription_id }}{% endblock head_title %} -->
 
 {% block in_page_css %}
-<style>
+<style type="text/css">
     .metadata {
         float: left;
         width: 300px;
@@ -34,26 +34,72 @@
 {% block page_title %}Inscription: {{ inscription_id }}{% endblock page_title %}
 
 {% block content %}
-  <div id="main">
-
-    <div id="container">
-
-        <p>( page under construction )</p>
-
-        {{ xslt_html|safe }}
-
-    </div>
-
-<!--
-    <div>
-        <a href="{{ transform_url }}">(transform link)</a>
-    </div>
- -->
-
-  </div>
+    <div id="container"></div>
+    <div id="images"></div>
 {% endblock content %}
 
 {% block page_js %}
+<!-- Loading client-side XSL processor -->
+<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}usep/js/saxonce/Saxonce.nocache.js"></script>
+
+<!-- Loading image viewer -->
+<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}usep/js/highslide/highslide-with-gallery.packed.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}usep/js/highslide/highslide.css" />
+
+<!-- JQuery -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var windowWidth = $(window).width(); 
+        var content = $("#container"); 
+        var images = $("#images"); 
+        var leftSideOffset = 80; 
+        var imageDivWidth = 205; 
+        var contentImageSpacer = 30; 
+
+        console.log("window width: " + windowWidth); 
+
+        content.css("left", imageDivWidth + leftSideOffset + contentImageSpacer + "px"); 
+        content.css("width", windowWidth - (imageDivWidth + leftSideOffset * 2 + contentImageSpacer) + "px"); 
+
+        images.css("left", leftSideOffset + "px"); 
+        images.css("width", imageDivWidth + "px"); 
+    }); 
+
+    // Initializing SaxonCE client-side XSL transformation
+    // Documentation at http://www.saxonica.com/ce/index.xml
+    var onSaxonLoad = function() {
+        Saxon.run({
+            stylesheet:   "{{ STATIC_URL }}usep/xsl/USEp_display.xsl",
+            // source:       "{{ STATIC_URL }}usep/TESTING/MD.Balt.JHU.L.1.xml"
+            // source: "http://library.brown.edu/usep/xml/CA.Malibu.JPGM.G.71.AA.121.xml"
+            source: "{% url usep_app.views.get_xml url_stub inscription_id %}"
+        });
+    }; 
+
+
+    // override Highslide settings here
+    // instead of editing the highslide.js file
+    hs.graphicsDir = '{{ STATIC_URL }}usep/js/highslide/graphics/';
+    hs.addSlideshow({
+        // slideshowGroup: 'group1',
+        interval: 5000,
+        repeat: false,
+        useControls: true,
+        fixedControls: true,
+        overlayOptions: {
+            opacity: .6,
+            position: 'top center',
+            hideOnMouseOut: true
+        }
+    });
+    // Optional: a crossfade transition looks good with the slideshow
+    hs.transitions = ['expand', 'crossfade'];
+</script>
+
+<!-- Code from before, possibly to make thumbnails of images scrollable -->
+
 <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script> possible that we don't need this line -->
 <!--
 <script src="http://cdn.jquerytools.org/1.2.6/jquery.tools.min.js"></script>
