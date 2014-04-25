@@ -2,7 +2,6 @@
 
 import json, logging, pprint
 import requests
-import urllib
 from django.conf import settings as settings_project
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound, HttpResponseRedirect
@@ -15,18 +14,18 @@ from usep_app import settings_app
 
 
 log = logging.getLogger(__name__)
-
+url_map = {"INSCRIPTION":settings_app.TRANSFORMER_XML_URL_SEGMENT, 
+  "BIB":u"http://library.brown.edu/usep"}
 
 ## dynamic pages
 
-def get_xml( request, url_stub, inscription_id ): 
+def get_xml( request ): 
     """ Route cross-server requests for xml files through the backend """
-    url = u'%s/%s.xml' % (urllib.unquote(url_stub), inscription_id)
-    
+    url = u'%s/%s.xml' % (url_map[request.GET["url_key"]], request.GET["inscription_id"])
     r = requests.get( url ) 
+    r.encoding = u'utf-8'
     xml = r.text
-
-    return HttpResponse( xml ) 
+    return HttpResponse( xml.encode(u'utf-8'), content_type=u"text/html; charset=utf-8" ) 
 
 @cache_page( settings_app.COLLECTIONS_CACHE_SECONDS )
 def collections( request ):
@@ -91,7 +90,7 @@ def display_inscription2( request, inscription_id ):
   """new version; uses xslt to grab data and create display / TODO: pull out data for optional json response."""
   # build info
   data_dict = {
-    u'url_stub': urllib.quote(settings_app.TRANSFORMER_XML_URL_SEGMENT, safe=''), 
+    u'url_key': "INSCRIPTION", 
     u'inscription_id': inscription_id, 
     }
   
@@ -156,40 +155,58 @@ def login( request ):
 
 
 def publications( request ):
-  ## build info
-  pubs = models.Publications()
-  pubs.getPubData()  # makes solr call
-  pubs.buildPubLists()
+  # ## build info
+  # pubs = models.Publications()
+  # pubs.getPubData()  # makes solr call
+  # pubs.buildPubLists()
+  # data_dict = {
+  #   u'master_dict': pubs.master_pub_dict,
+  #   u'corpora_list': pubs.corpora,
+  #   u'journals_list': pubs.journals,
+  #   u'monographs_list': pubs.monographs, 
+  #   u'url_key': "BIB", 
+  #   u'inscription_id': 'usepi_bib' 
+  # }
+  # ## store inscription_ids for each publication to session for pubChildren()
+  # request.session['publications_to_inscription_ids_dict'] = data_dict['master_dict']
+  # ## display
+  # format = request.GET.get( u'format', None )
+  # callback = request.GET.get( u'callback', None )
+  # if format == u'json':
+  #   output = json.dumps( data_dict, sort_keys=True, indent=2 )
+  #   if callback:
+  #     output = u'%s(%s)' % ( callback, output )
+  #   return HttpResponse( output, content_type = u'application/javascript; charset=utf-8' )
+  # else:
+  #   return render( request, u'usep_templates/publications.html', data_dict )
   data_dict = {
-    u'master_dict': pubs.master_pub_dict,
-    u'corpora_list': pubs.corpora,
-    u'journals_list': pubs.journals,
-    u'monographs_list': pubs.monographs }
-  ## store inscription_ids for each publication to session for pubChildren()
-  request.session['publications_to_inscription_ids_dict'] = data_dict['master_dict']
-  ## display
-  format = request.GET.get( u'format', None )
-  callback = request.GET.get( u'callback', None )
-  if format == u'json':
-    output = json.dumps( data_dict, sort_keys=True, indent=2 )
-    if callback:
-      output = u'%s(%s)' % ( callback, output )
-    return HttpResponse( output, content_type = u'application/javascript; charset=utf-8' )
-  else:
-    return render( request, u'usep_templates/publications.html', data_dict )
-
+    u'url_key': "BIB", 
+    u'inscription_id': 'usepi_bib', 
+  }
+  return render( request, u'usep_templates/publications.html', data_dict )
 
 def pubChildren( request, publication ):
   """displays listing of inscriptions for publication"""
   log.debug( u'publication: %s' % publication )
   assert type( publication ) == unicode
+
+  print "pubChildren with publication: " + publication
+
   if not u'publications_to_inscription_ids_dict' in request.session:
+    print "before initializing Publications"
     pubs = models.Publications()
+    print "about make pubs get pub data"
     pubs.getPubData()  # makes solr call
+    print "building the publication result"
     pubs.buildPubLists()
     request.session['publications_to_inscription_ids_dict'] = pubs.master_pub_dict  # key: publication; value: list of inscription_ids
+  
+  print "about to get publication specific data for publication: " + publication
   data = request.session[u'publications_to_inscription_ids_dict'][publication]
+  print "data retrieved: " + str(data)
   log.debug( u'publication data: %s' % data )
+  
+  print "calling the Publication model"
   pub = models.Publication()
   pub.getPubData( data )
   pub.buildInscriptionList( request.META[u'wsgi.url_scheme'], request.get_host() )

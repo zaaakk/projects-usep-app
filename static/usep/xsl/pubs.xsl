@@ -5,7 +5,8 @@
     xmlns:t="http://www.tei-c.org/ns/1.0"
     exclude-result-prefixes="xs xd"
     version="2.0">
-    <xsl:output method="xhtml"/>
+
+    <xsl:output method="xhtml" encoding="UTF-8" />
     <xd:doc scope="stylesheet">
         <xd:desc>
             <xd:p><xd:b>Created on:</xd:b> Apr 11, 2014</xd:p>
@@ -15,26 +16,29 @@
     </xd:doc>
     <xsl:strip-space elements="*"/>
     <xsl:template match="/t:listBibl">
-       <html>
-           <h2>Corpora</h2>
-           <xsl:apply-templates mode="corpus"/>
-           <h2>Journals</h2>
-           <xsl:apply-templates mode="journal"/>
-           <h2>Monographs</h2>
-        <xsl:apply-templates mode="monograph"/>
-       </html>
+        <xsl:result-document href="#container">
+            <hr />
+            <h2 style="text-align:center;">Corpora</h2>
+                <xsl:apply-templates mode="corpus"/>
+            <hr />
+            <h2 style="text-align:center;">Journals</h2>
+                <xsl:apply-templates mode="journal"/>
+            <hr />
+            <h2 style="text-align:center;">Monographs</h2>
+                <xsl:apply-templates mode="monograph"/>
+        </xsl:result-document>
     </xsl:template>
     
-     <xsl:template match="t:bibl[@type='c']" mode="corpus">
-         <p><a href="{concat('my-url',@xml:id)}"><xsl:apply-templates mode="#current"/></a> <span style="color:grey"><xsl:value-of select="@xml:id"/></span></p>
+    <xsl:template match="t:bibl[@type='c']" mode="corpus">
+        <p><a href="/../{concat('usep/publication/', normalize-space(t:title))}"><xsl:apply-templates/></a> <span style="color:grey"><xsl:value-of select="@xml:id"/></span></p>
     </xsl:template>
     
     <xsl:template match="t:bibl[@type='j']" mode="journal">
-        <p><a href="concat('my-url',{@xml:id})"><xsl:apply-templates/></a> <span style="color:grey"><xsl:value-of select="@xml:id"/></span></p>
+        <p><a href="/../{concat('usep/publication/', normalize-space(t:title))}"><xsl:apply-templates/></a> <span style="color:grey"><xsl:value-of select="@xml:id"/></span></p>
     </xsl:template>
     
     <xsl:template match="t:bibl[@type='m']" mode="monograph">
-        <p><a href="concat('my-url',{@xml:id})"><xsl:apply-templates/></a> <span style="color:grey"><xsl:value-of select="@xml:id"/></span></p>
+        <p><a href="/../{concat('usep/publication/', normalize-space(t:title))}"><xsl:apply-templates/></a> <span style="color:grey"><xsl:value-of select="@xml:id"/></span></p>
     </xsl:template>
     
     <xsl:template match="t:bibl[@type='v']"/>

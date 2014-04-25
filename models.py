@@ -372,13 +372,19 @@ class Publications(object):
 
     def getPubData(self):
         """Gets solr publication data for self.buildPubLists()"""
+        print "models.py: Publications: getPubData"
+
         sh = SolrHelper()
         payload = dict( sh.default_params.items() + {
             u'q': u'bib_ids_types:*',
             u'rows': u'99999',
             u'fl': u'id, bib_ids, bib_ids_types, bib_titles, bib_titles_all, bib_authors, status' }.items()
             )
+
+        print "\tAbout to make request!"
         r = requests.get( settings_app.SOLR_URL_BASE, params=payload )
+
+        print "\tReturned from the get request"
         log.debug( u'publications solr call: %s' % r.url )
         self.pubs_solr_url = r.url
         self.pubs_solr_response = r.content.decode( u'utf-8', u'replace' )

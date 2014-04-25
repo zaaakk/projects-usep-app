@@ -9,8 +9,7 @@
 {% block content %}
   <div id="main">
 
-    <div id="container">
-
+   <!--  <div id="testing">
       <ul id="corpora">
         <h1>Corpora</h1>
         {% for item in corpora_list %}
@@ -31,8 +30,9 @@
         <p><a href="{% url publication_url item %}">{{ item }}</a></p>
         {% endfor %}
       </ul>
-
     </div>
+ -->
+    <div id="container" style="position:relative; left:-20px;"></div>
 
     <hr/>
 
@@ -45,14 +45,13 @@
 
 <script type="text/javascript">
   // Initializing SaxonCE client-side XSL transformation
-    // Documentation at http://www.saxonica.com/ce/index.xml
-    var onSaxonLoad = function() {
-        Saxon.run({
-            stylesheet:   "{{ STATIC_URL }}usep/xsl/pubs.xsl",
-            // source:       "{{ STATIC_URL }}usep/TESTING/MD.Balt.JHU.L.1.xml"
-            // source: "http://library.brown.edu/usep/xml/CA.Malibu.JPGM.G.71.AA.121.xml"
-            source: "{% url usep_app.views.get_xml url_stub inscription_id %}"
-        });
-    }; 
+  // Documentation at http://www.saxonica.com/ce/index.xml
+  var onSaxonLoad = function() {
+      Saxon.run({
+          stylesheet: "{{ STATIC_URL }}usep/xsl/pubs.xsl",
+          source:     "{% url usep_app.views.get_xml %}?url_key={{ url_key }}&inscription_id={{ inscription_id }}"
+      });
+  }; 
+
 </script>
 {% endblock page_js %}
