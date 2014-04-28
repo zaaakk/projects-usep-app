@@ -7,7 +7,7 @@
 {% block page_title %}Publications{% endblock page_title %}
 
 {% block content %}
-  <div id="loading" style="background-image: url('{{ STATIC_URL }}usep/loading.png');"></div>
+  <div id="loading" style="background-image: url('{{ custom_static_url }}usep/loading.png');"></div>
   <div id="main" style="display:visible;">
 
    <!--  <div id="testing">
@@ -43,9 +43,9 @@
 
 {% block page_js %}
 <!-- Loading client-side XSL processor -->
-<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}usep/js/saxonce/Saxonce.nocache.js"></script>
+<script type="text/javascript" language="javascript" src="{{ custom_static_url }}usep/js/saxonce/Saxonce.nocache.js"></script>
 
-<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}usep/js/fade.js"></script>
+<script type="text/javascript" language="javascript" src="{{ custom_static_url }}usep/js/fade.js"></script>
 
 <script type="text/javascript">
   // fade("in", document.getElementById("loading"));
@@ -53,7 +53,7 @@
   // Documentation at http://www.saxonica.com/ce/index.xml
   var onSaxonLoad = function() {
       var processor = Saxon.run({
-          stylesheet: "{{ STATIC_URL }}usep/xsl/pubs.xsl",
+          stylesheet: "{{ custom_static_url }}usep/xsl/pubs.xsl",
           source:     "{% url usep_app.views.get_xml %}?url_key={{ url_key }}&inscription_id={{ inscription_id }}"
       });
 

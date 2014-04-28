@@ -106,7 +106,7 @@ def display_inscription2( request, inscription_id ):
     u'url_key': "INSCRIPTION", 
     u'inscription_id': inscription_id, 
     u'custom_static_url': custom_static_url,
-    }
+  }
   
   return render( request, u'usep_templates/inscription2.html', data_dict )
 
@@ -193,9 +193,16 @@ def publications( request ):
   #   return HttpResponse( output, content_type = u'application/javascript; charset=utf-8' )
   # else:
   #   return render( request, u'usep_templates/publications.html', data_dict )
+
+  hostname = request.get_host()
+  custom_static_url = settings_project.STATIC_URL
+  if hostname.lower() == "usepigraphy.brown.edu":
+    custom_static_url = static_url.replace("library.brown.edu", "usepigraphy.brown.edu")
+
   data_dict = {
     u'url_key': "BIB", 
     u'inscription_id': 'usepi_bib', 
+    u'custom_static_url': custom_static_url
   }
   return render( request, u'usep_templates/publications.html', data_dict )
 
