@@ -96,20 +96,16 @@ def display_inscription2( request, inscription_id ):
   # print "request.META[u'wsgi.url_scheme']: " + str(request.META[u'wsgi.url_scheme'])
   # print "request.get_host(): " + str(request.get_host())
 
-  # hostname = request.get_host()
-  # static_url = ""
-  # if (hostname === "usepigraphy") {
-  #   static_url = ""
-  # }
-  # else {
-  #   static_url = settings_app.STATIC_URL
-  # }
+  hostname = request.get_host()
+  custom_static_url = settings_project.STATIC_URL
+  if hostname.lower() == "usepigraphy.brown.edu":
+    custom_static_url = static_url.replace("library.brown.edu", "usepigraphy.brown.edu")
 
   # build info
   data_dict = {
     u'url_key': "INSCRIPTION", 
     u'inscription_id': inscription_id, 
-    u'static_url': static_url,
+    u'custom_static_url': custom_static_url,
     }
   
   return render( request, u'usep_templates/inscription2.html', data_dict )

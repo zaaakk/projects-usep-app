@@ -34,20 +34,20 @@
 {% block page_title %}Inscription: {{ inscription_id }}{% endblock page_title %}
 
 {% block content %}
-    <div id="loading" style="background-image: url('{{ STATIC_URL }}usep/loading.png');"></div>
+    <div id="loading" style="background-image: url('{{ custom_static_url }}usep/loading.png');"></div>
     <div id="container"></div>
     <div id="images"></div>
 {% endblock content %}
 
 {% block page_js %}
 <!-- Loading client-side XSL processor -->
-<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}usep/js/saxonce/Saxonce.nocache.js"></script>
+<script type="text/javascript" language="javascript" src="{{ custom_static_url }}usep/js/saxonce/Saxonce.nocache.js"></script>
 
 <!-- Loading image viewer -->
-<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}usep/js/highslide/highslide-with-gallery.packed.js"></script>
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}usep/js/highslide/highslide.css" />
+<script type="text/javascript" language="javascript" src="{{ custom_static_url }}usep/js/highslide/highslide-with-gallery.packed.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ custom_static_url }}usep/js/highslide/highslide.css" />
 
-<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}usep/js/fade.js"></script>
+<script type="text/javascript" language="javascript" src="{{ custom_static_url }}usep/js/fade.js"></script>
 
 <!-- JQuery -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -78,8 +78,8 @@
     // Documentation at http://www.saxonica.com/ce/index.xml
     var onSaxonLoad = function() {
         var processor = Saxon.run({
-            stylesheet:   "{{ STATIC_URL }}usep/xsl/USEp_display.xsl",
-            // source:       "{{ STATIC_URL }}usep/TESTING/MD.Balt.JHU.L.1.xml"
+            stylesheet:   "{{ custom_static_url }}usep/xsl/USEp_display.xsl",
+            // source:       "{{ custom_static_url }}usep/TESTING/MD.Balt.JHU.L.1.xml"
             // source: "http://library.brown.edu/usep/xml/CA.Malibu.JPGM.G.71.AA.121.xml"
             source: "{% url usep_app.views.get_xml %}?url_key={{ url_key }}&inscription_id={{ inscription_id }}"
         });
@@ -88,7 +88,7 @@
 
     // override Highslide settings here
     // instead of editing the highslide.js file
-    hs.graphicsDir = '{{ STATIC_URL }}usep/js/highslide/graphics/';
+    hs.graphicsDir = '{{ custom_static_url }}usep/js/highslide/graphics/';
     hs.addSlideshow({
         // slideshowGroup: 'group1',
         interval: 5000,
