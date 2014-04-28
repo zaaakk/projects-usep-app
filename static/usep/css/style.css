@@ -138,6 +138,25 @@ img {
 		border-bottom:1px #549390 solid;
 		}
 
+#loading {
+	/*background-color: LightGray; */
+	opacity: 0.3;
+	position: absolute;
+	background-repeat: no-repeat; 
+	background-position: center center; 
+	z-index: 5000; 
+	width:100%;
+	height:100%;
+	left:0px;
+	top:0px;
+}
+
+/*#loading img {
+	position:absolute;
+	left:50%;
+	top:50%;
+}*/
+
 #listofstates {
 	background-color:#549390;
 	position:absolute;

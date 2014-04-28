@@ -25,6 +25,10 @@ def get_xml( request ):
     r = requests.get( url ) 
     r.encoding = u'utf-8'
     xml = r.text
+
+    print "request.META[u'wsgi.url_scheme']: " + str(request.META[u'wsgi.url_scheme'])
+    print "request.get_host(): " + str(request.get_host())
+
     return HttpResponse( xml.encode(u'utf-8'), content_type=u"text/html; charset=utf-8" ) 
 
 @cache_page( settings_app.COLLECTIONS_CACHE_SECONDS )
@@ -88,10 +92,24 @@ def collection( request, collection ):
 
 def display_inscription2( request, inscription_id ):
   """new version; uses xslt to grab data and create display / TODO: pull out data for optional json response."""
+  
+  # print "request.META[u'wsgi.url_scheme']: " + str(request.META[u'wsgi.url_scheme'])
+  # print "request.get_host(): " + str(request.get_host())
+
+  # hostname = request.get_host()
+  # static_url = ""
+  # if (hostname === "usepigraphy") {
+  #   static_url = ""
+  # }
+  # else {
+  #   static_url = settings_app.STATIC_URL
+  # }
+
   # build info
   data_dict = {
     u'url_key': "INSCRIPTION", 
     u'inscription_id': inscription_id, 
+    u'static_url': static_url,
     }
   
   return render( request, u'usep_templates/inscription2.html', data_dict )

@@ -34,6 +34,7 @@
 {% block page_title %}Inscription: {{ inscription_id }}{% endblock page_title %}
 
 {% block content %}
+    <div id="loading" style="background-image: url('{{ STATIC_URL }}usep/loading.png');"></div>
     <div id="container"></div>
     <div id="images"></div>
 {% endblock content %}
@@ -45,6 +46,8 @@
 <!-- Loading image viewer -->
 <script type="text/javascript" language="javascript" src="{{ STATIC_URL }}usep/js/highslide/highslide-with-gallery.packed.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}usep/js/highslide/highslide.css" />
+
+<script type="text/javascript" language="javascript" src="{{ STATIC_URL }}usep/js/fade.js"></script>
 
 <!-- JQuery -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -65,17 +68,22 @@
 
         images.css("left", leftSideOffset + "px"); 
         images.css("width", imageDivWidth + "px"); 
+
+        // $("#loading").fadeIn(); 
     }); 
+
+    // fade("in", document.getElementById("loading"));
  
     // Initializing SaxonCE client-side XSL transformation
     // Documentation at http://www.saxonica.com/ce/index.xml
     var onSaxonLoad = function() {
-        Saxon.run({
+        var processor = Saxon.run({
             stylesheet:   "{{ STATIC_URL }}usep/xsl/USEp_display.xsl",
             // source:       "{{ STATIC_URL }}usep/TESTING/MD.Balt.JHU.L.1.xml"
             // source: "http://library.brown.edu/usep/xml/CA.Malibu.JPGM.G.71.AA.121.xml"
             source: "{% url usep_app.views.get_xml %}?url_key={{ url_key }}&inscription_id={{ inscription_id }}"
         });
+        processor.setSuccess(fade("out", document.getElementById("loading")));
     }; 
 
     // override Highslide settings here
