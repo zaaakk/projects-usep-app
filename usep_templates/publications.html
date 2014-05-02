@@ -51,10 +51,12 @@
   // fade("in", document.getElementById("loading"));
   // Initializing SaxonCE client-side XSL transformation
   // Documentation at http://www.saxonica.com/ce/index.xml
+
   var onSaxonLoad = function() {
       var processor = Saxon.run({
           stylesheet: "{{ custom_static_url }}usep/xsl/pubs.xsl",
-          source:     "{% url usep_app.views.get_xml %}?url_key={{ url_key }}&inscription_id={{ inscription_id }}"
+          source:     "{% url usep_app.views.get_xml %}?url_key={{ url_key }}&inscription_id={{ inscription_id }}",
+          parameters: { prefix: "{{ url_prefix }}", url: "{% url publication_url " " %}".slice(1,18) }
       });
 
       processor.setSuccess(fade("out", document.getElementById("loading")));
