@@ -6,6 +6,9 @@
     exclude-result-prefixes="xs xd"
     version="2.0">
 
+    <xsl:param name="prefix" />
+    <xsl:param name="url" />
+
     <xsl:output method="xhtml" encoding="UTF-8" />
     <xd:doc scope="stylesheet">
         <xd:desc>
@@ -30,15 +33,15 @@
     </xsl:template>
     
     <xsl:template match="t:bibl[@type='c']" mode="corpus">
-        <p><a href="/../{concat('usep/publication/', normalize-space(t:title))}"><xsl:apply-templates/></a> <span style="color:grey"><xsl:value-of select="@xml:id"/></span></p>
+        <p><a href="/../{concat(concat($prefix, $url), normalize-space(t:title))}"><xsl:apply-templates/></a> <span style="color:grey"><xsl:value-of select="@xml:id"/></span></p>
     </xsl:template>
     
     <xsl:template match="t:bibl[@type='j']" mode="journal">
-        <p><a href="/../{concat('usep/publication/', normalize-space(t:title))}"><xsl:apply-templates/></a> <span style="color:grey"><xsl:value-of select="@xml:id"/></span></p>
+        <p><a href="/../{concat(concat($prefix, $url), normalize-space(t:title))}"><xsl:apply-templates/></a> <span style="color:grey"><xsl:value-of select="@xml:id"/></span></p>
     </xsl:template>
     
     <xsl:template match="t:bibl[@type='m']" mode="monograph">
-        <p><a href="/../{concat('usep/publication/', normalize-space(t:title))}"><xsl:apply-templates/></a> <span style="color:grey"><xsl:value-of select="@xml:id"/></span></p>
+        <p><a href="/../{concat(concat($prefix, $url), normalize-space(t:title))}"><xsl:apply-templates/></a> <span style="color:grey"><xsl:value-of select="@xml:id"/></span></p>
     </xsl:template>
     
     <xsl:template match="t:bibl[@type='v']"/>

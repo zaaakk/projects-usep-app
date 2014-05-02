@@ -372,7 +372,7 @@ class Publications(object):
 
     def getPubData(self):
         """Gets solr publication data for self.buildPubLists()"""
-        print "models.py: Publications: getPubData"
+        #print "models.py: Publications: getPubData"
 
         sh = SolrHelper()
         payload = dict( sh.default_params.items() + {
@@ -381,10 +381,10 @@ class Publications(object):
             u'fl': u'id, bib_ids, bib_ids_types, bib_titles, bib_titles_all, bib_authors, status' }.items()
             )
 
-        print "\tAbout to make request!"
+        #print "\tAbout to make request!"
         r = requests.get( settings_app.SOLR_URL_BASE, params=payload )
 
-        print "\tReturned from the get request"
+        #print "\tReturned from the get request"
         log.debug( u'publications solr call: %s' % r.url )
         self.pubs_solr_url = r.url
         self.pubs_solr_response = r.content.decode( u'utf-8', u'replace' )
@@ -402,22 +402,22 @@ class Publications(object):
         log.debug( u'len( self.pubs_entries ): %s' % len( self.pubs_entries ) )
         corpora_dict = {}; journal_dict = {}; monograph_dict = {}  # temp holders
 
-        # print len(self.pubs_entries)
-        # print self.pubs_entries.__class__
-        # print str(self.pubs_entries[1:4])
+        # #print len(self.pubs_entries)
+        # #print self.pubs_entries.__class__
+        # #print str(self.pubs_entries[1:4])
 
         for entry in self.pubs_entries:  # an entry can contain multiple bibs
             # log.debug( u'entry being processed: %s' % entry )
             ## make separate bib entries
 
-            # print "\n" + str(entry)
+            # #print "\n" + str(entry)
 
             temp_bibs = []
             last_bib_type = None
             for i, bib_id in enumerate( entry[u'bib_ids'] ):
                 try:
                     last_bib_type = entry[u'bib_ids_types'][i]  # first should always succeed
-                    print last_bib_type + "; bib_id: " + bib_id + "; i: " + i
+                    #print last_bib_type + "; bib_id: " + bib_id + "; i: " + i
                 except:
                     pass
                 try:
@@ -460,9 +460,9 @@ class Publications(object):
                     } )
             # log.debug( u'temp_bibs: %s' % temp_bibs )
 
-            # print len(temp_bibs)
-            # print temp_bibs.__class__
-            # print str(temp_bibs[1:4])
+            # #print len(temp_bibs)
+            # #print temp_bibs.__class__
+            # #print str(temp_bibs[1:4])
 
 
             ## categorize by bib_type
@@ -500,7 +500,7 @@ class Publications(object):
         self.monographs_dict = monograph_dict
         self.monographs = sorted( self.monographs_dict.keys() )
 
-        # print ("\n'Classical Attic Tombstones' in self.corpora_dict.keys() " + str('Classical Attic Tombstones' in self.corpora_dict.keys()))
+        # #print ("\n'Classical Attic Tombstones' in self.corpora_dict.keys() " + str('Classical Attic Tombstones' in self.corpora_dict.keys()))
         # print str([j for j, element in enumerate(self.corpora_dict.keys()) if element == 'Classical Attic Tombstones'])
         # print str(self.corpora_dict[('Classical Attic Tombstones')])
 

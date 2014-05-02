@@ -26,8 +26,8 @@ def get_xml( request ):
     r.encoding = u'utf-8'
     xml = r.text
 
-    print "request.META[u'wsgi.url_scheme']: " + str(request.META[u'wsgi.url_scheme'])
-    print "request.get_host(): " + str(request.get_host())
+    #print "request.META[u'wsgi.url_scheme']: " + str(request.META[u'wsgi.url_scheme'])
+    #print "request.get_host(): " + str(request.get_host())
 
     return HttpResponse( xml.encode(u'utf-8'), content_type=u"text/html; charset=utf-8" ) 
 
@@ -93,12 +93,13 @@ def collection( request, collection ):
 def display_inscription2( request, inscription_id ):
   """new version; uses xslt to grab data and create display / TODO: pull out data for optional json response."""
   
-  # print "request.META[u'wsgi.url_scheme']: " + str(request.META[u'wsgi.url_scheme'])
-  # print "request.get_host(): " + str(request.get_host())
+  # #print "request.META[u'wsgi.url_scheme']: " + str(request.META[u'wsgi.url_scheme'])
+  # #print "request.get_host(): " + str(request.get_host())
 
   hostname = request.get_host()
   custom_static_url = settings_project.STATIC_URL
   if hostname.lower() == "usepigraphy.brown.edu":
+    #print "display_inscription2 swapping out static urls! static url is " + str(settings_project.STATIC_URL)
     custom_static_url = static_url.replace("library.brown.edu", "usepigraphy.brown.edu")
 
   # build info
@@ -196,13 +197,18 @@ def publications( request ):
 
   hostname = request.get_host()
   custom_static_url = settings_project.STATIC_URL
-  if hostname.lower() == "usepigraphy.brown.edu":
-    custom_static_url = static_url.replace("library.brown.edu", "usepigraphy.brown.edu")
+  url_prefix = ""
+  if hostname.lower() == u"usepigraphy.brown.edu":
+    custom_static_url = static_url.replace(u"library.brown.edu", u"usepigraphy.brown.edu")
+    url_prefix = "projects/"
+  elif hostname.lower() == u"library.brown.edu":
+    url_prefix = "projects/"
 
   data_dict = {
-    u'url_key': "BIB", 
-    u'inscription_id': 'usepi_bib', 
-    u'custom_static_url': custom_static_url
+    u'url_key': u"BIB", 
+    u'inscription_id': u'usepi_bib', 
+    u'custom_static_url': custom_static_url, 
+    u'url_prefix': url_prefix
   }
   return render( request, u'usep_templates/publications.html', data_dict )
 
@@ -211,23 +217,23 @@ def pubChildren( request, publication ):
   log.debug( u'publication: %s' % publication )
   assert type( publication ) == unicode
 
-  print "pubChildren with publication: " + publication
+  #print "pubChildren with publication: " + publication
 
   if not u'publications_to_inscription_ids_dict' in request.session:
-    print "before initializing Publications"
+    #print "before initializing Publications"
     pubs = models.Publications()
-    print "about make pubs get pub data"
+    #print "about make pubs get pub data"
     pubs.getPubData()  # makes solr call
-    print "building the publication result"
+    #print "building the publication result"
     pubs.buildPubLists()
     request.session['publications_to_inscription_ids_dict'] = pubs.master_pub_dict  # key: publication; value: list of inscription_ids
   
-  print "about to get publication specific data for publication: " + publication
+  #print "about to get publication specific data for publication: " + publication
   data = request.session[u'publications_to_inscription_ids_dict'][publication]
-  print "data retrieved: " + str(data)
+  #print "data retrieved: " + str(data)
   log.debug( u'publication data: %s' % data )
   
-  print "calling the Publication model"
+  #print "calling the Publication model"
   pub = models.Publication()
   pub.getPubData( data )
   pub.buildInscriptionList( request.META[u'wsgi.url_scheme'], request.get_host() )
