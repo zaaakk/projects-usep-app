@@ -201,18 +201,13 @@ def publications( request ):
 
   hostname = request.get_host()
   custom_static_url = settings_project.STATIC_URL
-  url_prefix = ""
   if hostname.lower() == u"usepigraphy.brown.edu":
     custom_static_url = static_url.replace(u"library.brown.edu", u"usepigraphy.brown.edu")
-    url_prefix = "projects/"
-  elif hostname.lower() == u"library.brown.edu":
-    url_prefix = "projects/"
 
   data_dict = {
     u'url_key': u"BIB", 
     u'inscription_id': u'usepi_bib', 
     u'custom_static_url': custom_static_url, 
-    u'url_prefix': url_prefix
   }
   return render( request, u'usep_templates/publications.html', data_dict )
 
