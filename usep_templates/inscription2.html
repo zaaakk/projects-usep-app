@@ -76,14 +76,32 @@
  
     // Initializing SaxonCE client-side XSL transformation
     // Documentation at http://www.saxonica.com/ce/index.xml
+    // var onSaxonLoad = function() {
+    //     var processor = Saxon.run({
+    //         stylesheet:   "{{ custom_static_url }}usep/xsl/USEp_display.xsl",
+    //         // source:       "{{ custom_static_url }}usep/TESTING/MD.Balt.JHU.L.1.xml"
+    //         // source: "http://library.brown.edu/usep/xml/CA.Malibu.JPGM.G.71.AA.121.xml"
+    //         source: "{% url usep_app.views.get_xml %}?url_key={{ url_key }}&inscription_id={{ inscription_id }}"
+    //     });
+    //     processor.setSuccess(fade("out", document.getElementById("loading")));
+
+
+    // }; 
+
     var onSaxonLoad = function() {
-        var processor = Saxon.run({
-            stylesheet:   "{{ custom_static_url }}usep/xsl/USEp_display.xsl",
-            // source:       "{{ custom_static_url }}usep/TESTING/MD.Balt.JHU.L.1.xml"
-            // source: "http://library.brown.edu/usep/xml/CA.Malibu.JPGM.G.71.AA.121.xml"
-            source: "{% url usep_app.views.get_xml %}?url_key={{ url_key }}&inscription_id={{ inscription_id }}"
-        });
-        processor.setSuccess(fade("out", document.getElementById("loading")));
+
+        var inscription_xml = "{% url usep_app.views.get_xml %}?url_key={{ url_key }}&inscription_id={{ inscription_id }}"
+
+        var xsl = Saxon.requestXML("{{ custom_static_url}}usep/xsl/xipr.xsl");
+        var xml = Saxon.requestXML(inscription_xml);
+        var proc = Saxon.newXSLT20Processor(xsl);
+
+        var xml2 = proc.transformToDocument(xml);
+        var xsl2 = Saxon.requestXML("{{ custom_static_url }}usep/xsl/USEp_display.xsl");
+        var proc2 = Saxon.newXSLT20Processor(xsl2);
+
+        proc2.updateHTMLDocument(xml2);
+        proc2.setSuccess(fade("out", document.getElementById("loading"))); 
     }; 
 
     // override Highslide settings here
