@@ -14,7 +14,7 @@ from usep_app import settings_app
 
 
 log = logging.getLogger(__name__)
-url_map = {"INSCRIPTION":settings_app.TRANSFORMER_XML_URL_SEGMENT, 
+url_map = {"INSCRIPTION":settings_app.TRANSFORMER_XML_URL_SEGMENT,
   "BIB":u"http://library.brown.edu/usep"}
 
 
@@ -23,17 +23,17 @@ url_map = {"INSCRIPTION":settings_app.TRANSFORMER_XML_URL_SEGMENT,
 
 ## dynamic pages
 
-def get_xml( request ): 
+def get_xml( request ):
     """ Route cross-server requests for xml files through the backend """
     url = u'%s/%s.xml' % (url_map[request.GET["url_key"]], request.GET["inscription_id"])
-    r = requests.get( url ) 
+    r = requests.get( url )
     r.encoding = u'utf-8'
     xml = r.text
 
     #print "request.META[u'wsgi.url_scheme']: " + str(request.META[u'wsgi.url_scheme'])
     #print "request.get_host(): " + str(request.get_host())
 
-    return HttpResponse( xml.encode(u'utf-8'), content_type=u"text/html; charset=utf-8" ) 
+    return HttpResponse( xml.encode(u'utf-8'), content_type=u"text/html; charset=utf-8" )
 
 @cache_page( settings_app.COLLECTIONS_CACHE_SECONDS )
 def collections( request ):
@@ -95,24 +95,17 @@ def collection( request, collection ):
 
 
 def display_inscription2( request, inscription_id ):
-  """new version; uses xslt to grab data and create display / TODO: pull out data for optional json response."""
-  
-  # #print "request.META[u'wsgi.url_scheme']: " + str(request.META[u'wsgi.url_scheme'])
-  # #print "request.get_host(): " + str(request.get_host())
-
+  """ Displays inscription html from saxon-ce rendering of source xml and an include file of bib data,
+      which is then run through an xsl transform. """
   hostname = request.get_host()
   custom_static_url = settings_project.STATIC_URL
-  if hostname.lower() == "usepigraphy.brown.edu":
-    #print "display_inscription2 swapping out static urls! static url is " + str(settings_project.STATIC_URL)
-    custom_static_url = static_url.replace("library.brown.edu", "usepigraphy.brown.edu")
-
-  # build info
+  if hostname.lower() == u'usepigraphy.brown.edu':
+    custom_static_url = static_url.replace( 'library.brown.edu', 'usepigraphy.brown.edu' )  # so js saxon-ce works as expected
   data_dict = {
-    u'url_key': "INSCRIPTION", 
-    u'inscription_id': inscription_id, 
+    u'url_key': "INSCRIPTION",
+    u'inscription_id': inscription_id,
     u'custom_static_url': custom_static_url,
   }
-  
   return render( request, u'usep_templates/inscription2.html', data_dict )
 
 
@@ -182,9 +175,9 @@ def publications( request ):
   #   u'master_dict': pubs.master_pub_dict,
   #   u'corpora_list': pubs.corpora,
   #   u'journals_list': pubs.journals,
-  #   u'monographs_list': pubs.monographs, 
-  #   u'url_key': "BIB", 
-  #   u'inscription_id': 'usepi_bib' 
+  #   u'monographs_list': pubs.monographs,
+  #   u'url_key': "BIB",
+  #   u'inscription_id': 'usepi_bib'
   # }
   # ## store inscription_ids for each publication to session for pubChildren()
   # request.session['publications_to_inscription_ids_dict'] = data_dict['master_dict']
@@ -205,9 +198,9 @@ def publications( request ):
     custom_static_url = static_url.replace(u"library.brown.edu", u"usepigraphy.brown.edu")
 
   data_dict = {
-    u'url_key': u"BIB", 
-    u'inscription_id': u'usepi_bib', 
-    u'custom_static_url': custom_static_url, 
+    u'url_key': u"BIB",
+    u'inscription_id': u'usepi_bib',
+    u'custom_static_url': custom_static_url,
   }
   return render( request, u'usep_templates/publications.html', data_dict )
 
@@ -226,12 +219,12 @@ def pubChildren( request, publication ):
     #print "building the publication result"
     pubs.buildPubLists()
     request.session['publications_to_inscription_ids_dict'] = pubs.master_pub_dict  # key: publication; value: list of inscription_ids
-  
+
   #print "about to get publication specific data for publication: " + publication
   data = request.session[u'publications_to_inscription_ids_dict'][publication]
   #print "data retrieved: " + str(data)
   log.debug( u'publication data: %s' % data )
-  
+
   #print "calling the Publication model"
   pub = models.Publication()
   pub.getPubData( data )
