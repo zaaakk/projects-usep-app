@@ -113,13 +113,14 @@ def display_inscription_temp_1( request ):
   """ Displays inscription html from saxon-ce rendering of dummy-source-xml and dummy-include-file,
       which is then run through a dummy-xsl-transform. """
   log.debug( u'display_inscription_temp_1() starting' )
-  data_dict = {
+  context = {
     'source_xml_path': settings_app.TEMP_SOURCE_XML_PATH,
-    'include_path': settings_app.TEMP_INCLUDE_PATH,
     'xsl_path': settings_app.TEMP_XSL_PATH,
+    'saxonce_dir_path': settings_app.TEMP_SAXONCE_DIR_PATH,
+    'xipr_path': settings_app.TEMP_XIPR_PATH,
     }
-  log.debug( u'display_inscription_temp_1() data_dict, %s' % pprint.pformat(data_dict) )
-  return render( request, u'usep_templates/display_inscription_temp_1.html', data_dict )
+  log.debug( u'display_inscription_temp_1() context, %s' % pprint.pformat(context) )
+  return render( request, u'usep_templates/display_inscription_temp_1.html', context )
 
 
 def login( request ):

@@ -17,8 +17,9 @@ try:
         u'SOLR_URL_BASE',               # ustring; url; include trailing slash
         u'SPOOFED_ADMIN',               # ustring; u'' in production; allows easy local non-shib login-testing
 
-        u'TEMP_INCLUDE_PATH',     # testing
+        u'TEMP_SAXONCE_DIR_PATH', # testing
         u'TEMP_SOURCE_XML_PATH',  # testing
+        u'TEMP_XIPR_PATH',        # testing
         u'TEMP_XSL_PATH',         # testing
 
         u'TRANSFORMER_URL',             # ustring; url; no trailing slash
