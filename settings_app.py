@@ -16,6 +16,11 @@ try:
         u'SERVER_NAME',                 # ustring; e.g. u'library.brown.edu'; could be obtained from request, would have to be passed from views to Region to Settlement to Institution
         u'SOLR_URL_BASE',               # ustring; url; include trailing slash
         u'SPOOFED_ADMIN',               # ustring; u'' in production; allows easy local non-shib login-testing
+
+        u'TEMP_INCLUDE_PATH',     # testing
+        u'TEMP_SOURCE_XML_PATH',  # testing
+        u'TEMP_XSL_PATH',         # testing
+
         u'TRANSFORMER_URL',             # ustring; url; no trailing slash
         u'TRANSFORMER_XML_URL_SEGMENT', # ustring; can't reliably use XML_URL_SEGMENT because transformer may not be able to access dev boxes.
         u'TRANSFORMER_XSL_URL',         # ustring; can't reliably use settings_project.STATIC_URL because transformer may not be able to access dev boxes.
