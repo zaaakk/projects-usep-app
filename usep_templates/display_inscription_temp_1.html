@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+    </head>
+
+    <body>
+
+        <h1>TESTING...</h1>
+
+        <p>source_xml_url, `{{ source_xml_url }}`</p>
+        <p>xsl_url, `{{ xsl_url }}`</p>
+        <p>saxonce_file_url, `{{ saxonce_file_url }}`</p>
+        <p>xipr_url, `{{ xipr_url }}`</p>
+
+        <script type="text/javascript" language="javascript" src="{{ saxonce_file_url }}"></script>
+        <script type="text/javascript">
+            /* trying out the "low-level JavaScript calls" from `http://www.saxonica.com/ce/user-doc/1.1/html/starting/running/` */
+            var onSaxonLoad = function() {
+              // original xml
+              var xml = Saxon.requestXML( "{{ source_xml_url }}" );
+              // initial transform to incorporate include
+              var xsl = Saxon.requestXML( "{{ xipr_url }}" );
+              var proc = Saxon.newXSLT20Processor(xsl);
+              var xml2 = proc.transformToDocument(xml);
+              console.log( "FOO" );
+              // subsequent transform
+              var xsl2 = Saxon.requestXML( "{{ xsl_url }}" );
+              var proc2 = Saxon.newXSLT20Processor(xsl2);
+              proc2.updateHTMLDocument(xml2);
+            };
+        </script>
+    </body>
+</html>

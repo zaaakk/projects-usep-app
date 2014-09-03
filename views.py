@@ -109,35 +109,18 @@ def display_inscription2( request, inscription_id ):
   return render( request, u'usep_templates/inscription2.html', data_dict )
 
 
-# def display_inscription2( request, inscription_id ):
-#   """new version; uses xslt to grab data and create display / TODO: pull out data for optional json response."""
-#   ## build info
-#   insc = models.Inscription2()
-#   insc.run_xslt( inscription_id )   # applies xslt to collection-xml
-#   insc.update_xslt_html()           # applies some string replacement on the transformed xml
-#   insc.extract_inscription_data()   # extracts inscription and bibl info from transformed xml to a dict
-#   ## display
-#   data_dict = {
-#     u'inscription_url': u'%s://%s%s' % ( request.META[u'wsgi.url_scheme'], request.get_host(), reverse(u'inscription_url', args=(inscription_id,)) ),
-#     u'inscription_id': inscription_id,
-#     u'xslt_html': insc.updated_xslt_html,       # for template
-#     u'transform_url': insc.full_transform_url,  # shown during dev
-#     u'attribute_info': insc.extracted_data[u'attributes'],
-#     u'bib_info': insc.extracted_data[u'bibl'],
-#     u'summary':insc.extracted_data[u'summary'],
-#     u'xml_source_url': insc.xml_url,
-#     u'image_url': u'%s/usep/images/inscriptions/%s.jpg' % ( settings_app.INSCRIPTIONS_URL_SEGMENT, inscription_id )
-#     }
-#   ## display
-#   format = request.GET.get( u'format', None )
-#   callback = request.GET.get( u'callback', None )
-#   if format == u'json':
-#     output = json.dumps( data_dict, sort_keys=True, indent=2 )
-#     if callback:
-#       output = u'%s(%s)' % ( callback, output )
-#     return HttpResponse( output, content_type = u'application/javascript; charset=utf-8' )
-#   else:
-#     return render( request, u'usep_templates/inscription2.html', data_dict )
+def display_inscription_temp_1( request ):
+  """ Displays inscription html from saxon-ce rendering of dummy-source-xml and dummy-include-file,
+      which is then run through a dummy-xsl-transform. """
+  log.debug( u'display_inscription_temp_1() starting' )
+  context = {
+    'source_xml_url': settings_app.TEMP_SOURCE_XML_URL,
+    'xsl_url': settings_app.TEMP_XSL_URL,
+    'saxonce_file_url': settings_app.TEMP_SAXONCE_FILE_URL,
+    'xipr_url': settings_app.TEMP_XIPR_URL,
+    }
+  log.debug( u'display_inscription_temp_1() context, %s' % pprint.pformat(context) )
+  return render( request, u'usep_templates/display_inscription_temp_1.html', context )
 
 
 def login( request ):
