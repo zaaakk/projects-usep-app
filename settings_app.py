@@ -17,10 +17,10 @@ try:
         u'SOLR_URL_BASE',               # ustring; url; include trailing slash
         u'SPOOFED_ADMIN',               # ustring; u'' in production; allows easy local non-shib login-testing
 
-        u'TEMP_SAXONCE_DIR_PATH', # testing
-        u'TEMP_SOURCE_XML_PATH',  # testing
-        u'TEMP_XIPR_PATH',        # testing
-        u'TEMP_XSL_PATH',         # testing
+        u'TEMP_SAXONCE_FILE_URL',  # testing
+        u'TEMP_SOURCE_XML_URL',    # testing
+        u'TEMP_XIPR_URL',          # testing
+        u'TEMP_XSL_URL',           # testing
 
         u'TRANSFORMER_URL',             # ustring; url; no trailing slash
         u'TRANSFORMER_XML_URL_SEGMENT', # ustring; can't reliably use XML_URL_SEGMENT because transformer may not be able to access dev boxes.

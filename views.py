@@ -114,10 +114,10 @@ def display_inscription_temp_1( request ):
       which is then run through a dummy-xsl-transform. """
   log.debug( u'display_inscription_temp_1() starting' )
   context = {
-    'source_xml_path': settings_app.TEMP_SOURCE_XML_PATH,
-    'xsl_path': settings_app.TEMP_XSL_PATH,
-    'saxonce_dir_path': settings_app.TEMP_SAXONCE_DIR_PATH,
-    'xipr_path': settings_app.TEMP_XIPR_PATH,
+    'source_xml_url': settings_app.TEMP_SOURCE_XML_URL,
+    'xsl_url': settings_app.TEMP_XSL_URL,
+    'saxonce_file_url': settings_app.TEMP_SAXONCE_FILE_URL,
+    'xipr_url': settings_app.TEMP_XIPR_URL,
     }
   log.debug( u'display_inscription_temp_1() context, %s' % pprint.pformat(context) )
   return render( request, u'usep_templates/display_inscription_temp_1.html', context )
