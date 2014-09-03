@@ -23,7 +23,7 @@ urlpatterns = patterns('',
   # url( r'^collections_dev/$',  'usep_app.views.collections_dev', name='collections_url_dev' ),
 
   url( r'^inscription/(?P<inscription_id>[^/]+)/$', 'usep_app.views.display_inscription2', name='inscription_url' ),
-  # url( r'^inscription_alt/(?P<inscription_id>[^/]+)/$', 'usep_app.views.display_inscription', name='inscription_url_alt' ),
+  url( r'^inscription_temp_1/$', 'usep_app.views.display_inscription_temp_1', name='display_inscription_temp_1' ),
 
   url( r'^getxml/$',  'usep_app.views.get_xml', name='get_xml_url' ),
   # url( r'^getxml/(?P<url_key>.+)/(?P<inscription_id>[^/]+)/$',  'usep_app.views.get_xml', name='get_xml_url' ),
