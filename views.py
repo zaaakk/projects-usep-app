@@ -112,7 +112,12 @@ def display_inscription2( request, inscription_id ):
 def display_inscription_temp_1( request ):
   """ Displays inscription html from saxon-ce rendering of dummy-source-xml and dummy-include-file,
       which is then run through a dummy-xsl-transform. """
-  return HttpResponse( u'<p>Hello World!</p>' )
+  data_dict = {
+    'source_xml_path': 'foo',
+    'include_path': 'foo2',
+    'xsl_path': 'foo3'
+    }
+  return render( request, u'usep_templates/display_inscription_temp_1.html', data_dict )
 
 
 def login( request ):
