@@ -152,14 +152,8 @@ def display_inscription( request, inscription_id ):
     settings_project.STATIC_URL, request.get_host() )
   source_xml_url = display_inscription_helper.build_source_xml_url(
     settings_app.DISPLAY_INSCRIPTION_XML_URL_PATTERN, request.is_secure(), request.get_host(), inscription_id )
-  context = {
-    u'custom_static_url': custom_static_url,
-    u'inscription_id': inscription_id,
-    u'source_xml_url': source_xml_url,
-    u'xsl_url': settings_app.DISPLAY_INSCRIPTION_XSL_URL,
-    u'saxonce_file_url': settings_app.DISPLAY_INSCRIPTION_SAXONCE_FILE_URL,
-    u'xipr_url': settings_app.DISPLAY_INSCRIPTION_XIPR_URL
-    }
+  context = display_inscription_helper.build_context(
+    custom_static_url, inscription_id, source_xml_url, settings_app.DISPLAY_INSCRIPTION_XSL_URL, settings_app.DISPLAY_INSCRIPTION_SAXONCE_FILE_URL, settings_app.DISPLAY_INSCRIPTION_XIPR_URL )
   log.debug( u'display_inscription() context, %s' % pprint.pformat(context) )
   return render( request, u'usep_templates/display_inscription.html', context )
 
@@ -184,6 +178,18 @@ class DisplayInscriptionHelper(object):
     url = url.replace( u'HOSTNAME', hostname )
     url = url.replace( u'INSCRIPTION_ID', inscription_id )
     return url
+
+  def build_context( self, custom_static_url, inscription_id, source_xml_url, xsl_url, saxonce_url, xipr_url ):
+    """ Returns context dict. """
+    context = {
+      u'custom_static_url': custom_static_url,
+      u'inscription_id': inscription_id,
+      u'source_xml_url': source_xml_url,
+      u'xsl_url': xsl_url,
+      u'saxonce_file_url': saxonce_url,
+      u'xipr_url': xipr_url
+      }
+    return context
 
 
 
