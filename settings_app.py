@@ -17,6 +17,11 @@ try:
         u'SOLR_URL_BASE',               # ustring; url; include trailing slash
         u'SPOOFED_ADMIN',               # ustring; u'' in production; allows easy local non-shib login-testing
 
+        u'TEMP2_SAXONCE_FILE_URL', # testing
+        u'TEMP2_SOURCE_XML_URL',   # testing
+        u'TEMP2_XIPR_URL',         # testing
+        u'TEMP2_XSL_URL',          # testing
+
         u'TEMP_SAXONCE_FILE_URL',  # testing
         u'TEMP_SOURCE_XML_URL',    # testing
         u'TEMP_XIPR_URL',          # testing
