@@ -8,6 +8,12 @@ module_attributes = globals()  # http://docs.python.org/2/library/functions.html
 try:
     assert sorted( module_attributes.keys() ) == [
         u'COLLECTIONS_CACHE_SECONDS',   # integer; number of seconds
+
+        u'DISPLAY_INSCRIPTION_SAXONCE_FILE_URL',  # ustring; url to saxon-ce file `js/saxonce/Saxonce.nocache.js`
+        u'DISPLAY_INSCRIPTION_XIPR_URL',          # ustring; url to the xipr.xsl file that saxon-ce uses to perform an include (just before the transform)
+        u'DISPLAY_INSCRIPTION_XML_URL_PATTERN',   # ustring; like u'SCHEME://HOSTNAME/path/to/usep_data/inscriptions/INSCRIPTION_ID.xml'
+        u'DISPLAY_INSCRIPTION_XSL_URL',           # ustring; url to usep_data xsl stylesheet
+
         u'INSCRIPTIONS_URL_SEGMENT',    # ustring; url to inscription-images directory; no trailing slash
         u'LOGIN_URL',                   # ustring; full url for login; allows simple enforced https for shib
         u'PERMITTED_ADMINS',            # list of ustrings; shib eppns

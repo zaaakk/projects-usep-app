@@ -143,6 +143,50 @@ def display_inscription_temp_2( request ):
   return render( request, u'usep_templates/display_inscription_temp_2.html', context )
 
 
+def display_inscription( request, inscription_id ):
+  """ Displays inscription html from saxon-ce rendering of source xml and an include file of bib data,
+      which is then run through an xsl transform. """
+  log.debug( u'display_inscription() starting' )
+  display_inscription_helper = DisplayInscriptionHelper()
+  custom_static_url = display_inscription_helper.build_custom_static_url(
+    settings_project.STATIC_URL, request.get_host() )
+  source_xml_url = display_inscription_helper.build_source_xml_url(
+    settings_app.DISPLAY_INSCRIPTION_XML_URL_PATTERN, request.is_secure(), request.get_host(), inscription_id )
+  context = {
+    u'custom_static_url': custom_static_url,
+    u'inscription_id': inscription_id,
+    u'source_xml_url': source_xml_url,
+    u'xsl_url': settings_app.DISPLAY_INSCRIPTION_XSL_URL,
+    u'saxonce_file_url': settings_app.DISPLAY_INSCRIPTION_SAXONCE_FILE_URL,
+    u'xipr_url': settings_app.DISPLAY_INSCRIPTION_XIPR_URL
+    }
+  log.debug( u'display_inscription() context, %s' % pprint.pformat(context) )
+  return render( request, u'usep_templates/display_inscription.html', context )
+
+
+
+class DisplayInscriptionHelper(object):
+  """ Helper for views.display_inscription() """
+
+  def build_custom_static_url( self, project_static_url, hostname ):
+    """ Updates settings_PROJECT STATIC_URL if needed.
+        Returns url.
+        """
+    custom_static_url = project_static_url
+    if hostname.lower() == u'usepigraphy.brown.edu':
+      custom_static_url = custom_static_url.replace( 'library.brown.edu', 'usepigraphy.brown.edu' )  # so js saxon-ce works as expected
+    return custom_static_url
+
+  def build_source_xml_url( self, url_pattern, is_secure, hostname, inscription_id ):
+    """ Returns url to inscription xml. """
+    scheme = u'https' if ( is_secure == True ) else u'http'
+    url = url_pattern.replace( u'SCHEME', scheme )
+    url = url.replace( u'HOSTNAME', hostname )
+    url = url.replace( u'INSCRIPTION_ID', inscription_id )
+    return url
+
+
+
 def login( request ):
   from django.contrib import auth
   log.debug( u'login() starting' )
