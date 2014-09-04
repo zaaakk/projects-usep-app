@@ -160,133 +160,6 @@ class Collection(object):
     # end class Collection()
 
 
-# Server-side xsl transform for displaying inscriptions. 
-# Transitioned to client-side xsl handling so this code is 
-# not in use anymore
-
-# class Inscription2(object):
-#     """ Handles code to display the inscription page. """
-
-#     def __init__(self):
-#         self.inscription_id = None      # set by self.run_xslt(); used by self.updateXsltHtml()
-#         self.full_transform_url = None  # set by self.run_xslt(); used by views.display_inscription2()
-#         self.xslt_html = None           # set by self.run_xslt(); used by self.updateXsltHtml()
-#         self.updated_xslt_html = None   # set by self.run_xslt(); used by views.display_inscription2() & self.updateDataDict()
-#         self.xml_url = None             # set by self.run_xslt(); used by views.display_inscription2()
-#         self.extracted_data = None      # dict set by self.extract_inscription_data(); used by views.display_inscription2()
-
-#     def run_xslt( self, inscription_id ):
-#         """Applies stylesheet to xml record."""
-#         self.inscription_id = inscription_id
-#         self.xml_url = u'%s/%s.xml' % ( settings_app.TRANSFORMER_XML_URL_SEGMENT, self.inscription_id )
-#         self.full_transform_url = u'%s?source=%s&style=%s' % ( settings_app.TRANSFORMER_URL, self.xml_url, settings_app.TRANSFORMER_XSL_URL )
-#         log.debug( u'- in Inscription2.run_xslt(); self.full_transform_url: %s' % self.full_transform_url )
-#         r = requests.get( self.full_transform_url )
-#         self.xslt_html = r.content.decode( u'utf-8', u'replace' )
-#         log.debug( u'- in Inscription2.run_xslt(); self.xslt_html: %s' % self.xslt_html )
-#         return
-
-#     def update_xslt_html(self):
-#         """Updates transformation output."""
-#         def _update_image_url():
-#             search_string = u'<img src="../Pictures/Thumbnails/%s.jpg"/>' % self.inscription_id
-#             replace_string = u'<img src="%s/%s.jpg"/>' % ( settings_app.INSCRIPTIONS_URL_SEGMENT, self.inscription_id )
-#             self.updated_xslt_html = self.xslt_html.replace( search_string, replace_string )
-#         def _update_blank_gif():
-#             search_string = u'<img src="http://static.flowplayer.org/tools/img/blank.gif"/>'
-#             replace_string = u''
-#             self.updated_xslt_html = self.updated_xslt_html.replace( search_string, replace_string )
-#         def _update_xml_link():
-#             search_string = u'http://dev.stg.brown.edu/projects/usepigraphy/new/xml/%s.xml' % self.inscription_id
-#             replace_string = u'%s/%s.xml' % ( settings_app.XML_URL_SEGMENT, self.inscription_id )
-#             self.updated_xslt_html = self.updated_xslt_html.replace( search_string, replace_string )
-#         ## work
-#         _update_image_url()
-#         _update_blank_gif()
-#         _update_xml_link()
-#         log.debug( u'- in Inscription2.update_xslt_html(); self.updated_xslt_html: %s' % self.updated_xslt_html )
-#         return
-
-#     def extract_inscription_data(self):
-#         """ Extracts a few pieces of data for format=json; not used by web-display.
-#                 Called by views.display_inscription2() """
-#         try:
-#             import bs4
-#             from bs4 import BeautifulSoup
-#             ## soupify transformed xml
-#             log.debug( u'- in Inscription2.extract_inscription_data(); about to soupify' )
-#             soup = BeautifulSoup(       # syntax: <http://www.crummy.com/software/BeautifulSoup/bs4/doc/>
-#                     self.updated_xslt_html,
-#                     u'html.parser',         # python's html parser
-#                     # [u'lxml', u'xml'],    # says lxml will be the parser, and that the file is xml
-#                     from_encoding=u'utf-8'  # bs4 would figure it out, but this is faster
-#                     )
-#             log.debug( u'- in Inscription2.extract_inscription_data(); soup made' )
-#             assert type(soup) == BeautifulSoup, type(soup)
-#             ## extract summary info
-#             summary_string = u''
-#             summary = soup.find( class_=u'titleBlurb' ).find( u'p' )
-#             if summary:
-#                 for child in summary.children:
-#                         if type(child) == bs4.element.NavigableString:
-#                                 summary_string += child.strip()
-#                         elif type(child) == bs4.element.Tag and unicode(child) == u'<br/>':
-#                                 summary_string += u'\n'
-#             ## extract attribute info
-#             metadata_dict = {}
-#             attr_metadata = soup.find( class_=u'metadata' )
-#             if attr_metadata:
-#                 rows = attr_metadata.find_all( u'tr' )
-#                 for row in rows:
-#                         if row.td.attrs[u'class'] == u'label':
-#                                 key = row.td.text; assert type(key) == unicode
-#                                 value = row.find_all( u'td' )[1].text; assert type(value) == unicode
-#                                 metadata_dict[key] = value
-#             ## extract bib info
-#             bib_list = []
-#             bib_metadata = soup.find( class_=u'bibl' )
-#             bibs = bib_metadata.find_all( u'p' )
-#             for bib in bibs:
-#                 bib_string = u''
-#                 for i, child in enumerate(bib.children):
-#                     # print u'- child %s is %s, of type %s' % ( i, child, type(child) )
-#                     if type(child) == bs4.element.NavigableString:
-#                         if len( child.strip() )> 0:
-#                             if i == 0:
-#                                 bib_string += child.strip()
-#                             else:
-#                                 bib_string += u' %s' % child.strip()
-#                     elif type(child) == bs4.element.Tag:
-#                         if child.name == 'i':  # non-unicode; is title
-#                             # print u'- child.name: %s, and type(child.name): %s' % ( child.name, type(child.name) )
-#                             title = child.text.strip()
-#                             # print u'- title is: %s' % title
-#                             if i == 0:
-#                                 bib_string += title
-#                             else:
-#                                 bib_string += u' %s' % title
-#                 # print u'- bib_string is: %s' % bib_string
-#                 bib_list.append( bib_string.strip() )
-#             ## assemble data
-#             self.extracted_data = {
-#                     u'attributes': metadata_dict,
-#                     u'bibl': bib_list,
-#                     u'summary': summary_string
-#                 }
-#             log.debug( u'- in Inscription2.extract_inscription_data(); self.extracted_data: %s' % self.extracted_data )
-#             return
-#         except Exception as e:
-#             log.debug( u'- in Inscription2.extract_inscription_data(); exception: %s' % unicode(repr(e)) )
-#             self.extracted_data = {
-#                     u'attributes': {},
-#                     u'bibl': [],
-#                     u'summary': u'An error occurred extracting data from the transformed url.'
-#                 }
-#             return
-
-#     # end class Inscription2()
-
-
 class Publication(object):
 
     def __init__(self):
@@ -439,15 +312,15 @@ class Publications(object):
                 #         bib_author = entry[u'bib_authors'][index]
                 #     #journals and corpora have multiple authors
                 #     else:
-                #         bib_author = u'multiple_authors'  
+                #         bib_author = u'multiple_authors'
                 # except:
                 #     bib_author = u'no_author'
                 # try:
                 #     bib_id = entry[u'bib_ids'][i]
                 # except:
-                #     try: 
+                #     try:
                 #         bib_id = entry[u'bib_ids'][0] # try again and just use the first bib_id
-                #     except: 
+                #     except:
                 #         bib_id = u'no_bib_id'
                 temp_bibs.append( {
                     u'bib_id': bib_id,
@@ -455,7 +328,7 @@ class Publications(object):
                     u'bib_type': last_bib_type,
                     u'id': entry[u'id'],  # the inscription_id
                     u'status': bib_status
-                    # u'bib_author': bib_author, 
+                    # u'bib_author': bib_author,
                     # u'bib_id': bib_id
                     } )
             # log.debug( u'temp_bibs: %s' % temp_bibs )
