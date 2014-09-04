@@ -20,8 +20,7 @@ urlpatterns = patterns('',
   url( r'^collections/$',  'usep_app.views.collections', name='collections_url' ),
   url( r'^collections/(?P<collection>[^/]+)/$',  'usep_app.views.collection', name='collection_url' ),
 
-  # url( r'^collections_dev/$',  'usep_app.views.collections_dev', name='collections_url_dev' ),
-
+  url( r'^inscription/test_1234/$', 'usep_app.views.display_inscription_temp_2', name='display_inscription_temp_2' ),
   url( r'^inscription/(?P<inscription_id>[^/]+)/$', 'usep_app.views.display_inscription2', name='inscription_url' ),
   url( r'^inscription_temp_1/$', 'usep_app.views.display_inscription_temp_1', name='display_inscription_temp_1' ),
 
