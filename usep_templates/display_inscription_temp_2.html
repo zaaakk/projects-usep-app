@@ -76,12 +76,14 @@
 
         var inscription_xml = "{{ source_xml_url }}"
         console.log( "inscription_xml: " + inscription_xml );
-        var xsl = Saxon.requestXML("{{ custom_static_url }}usep/xsl/xipr.xsl");
+        // var xsl = Saxon.requestXML("{{ custom_static_url }}usep/xsl/xipr.xsl");
+        var xsl = Saxon.requestXML("{{ xipr_url }}");
         var xml = Saxon.requestXML(inscription_xml);
         var proc = Saxon.newXSLT20Processor(xsl);
 
         var xml2 = proc.transformToDocument(xml);
-        var xsl2 = Saxon.requestXML("{{ custom_static_url }}usep/xsl/USEp_display.xsl");
+        // var xsl2 = Saxon.requestXML("{{ custom_static_url }}usep/xsl/USEp_display.xsl");
+        var xsl2 = Saxon.requestXML("{{ xsl_url }}");
         var proc2 = Saxon.newXSLT20Processor(xsl2);
 
         proc2.updateHTMLDocument(xml2);
