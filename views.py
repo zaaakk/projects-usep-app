@@ -110,7 +110,7 @@ def display_inscription2( request, inscription_id ):
   return render( request, u'usep_templates/inscription2.html', data_dict )
 
 
-def display_inscription_temp_1( request ):
+def display_inscription_temp_1( request ):  # remove after 4-Oct-2014
   """ Displays inscription html from saxon-ce rendering of dummy-source-xml and dummy-include-file,
       which is then run through a dummy-xsl-transform. """
   log.debug( u'display_inscription_temp_1() starting' )
@@ -124,7 +124,7 @@ def display_inscription_temp_1( request ):
   return render( request, u'usep_templates/display_inscription_temp_1.html', context )
 
 
-def display_inscription_temp_2( request ):
+def display_inscription_temp_2( request ):  # remove after 4-Oct-2014
   """ Displays inscription html from saxon-ce rendering of hardcoded-real-source-xml and hardcoded-real-include-file,
       which is then run through the hardcoded-real-xsl-transform. """
   log.debug( u'display_inscription_temp_2() starting' )
@@ -148,7 +148,7 @@ def display_inscription( request, inscription_id ):
   """ Displays inscription html from saxon-ce rendering of source xml and an include file of bib data,
       which is then run through an xsl transform. """
   log.debug( u'display_inscription() starting' )
-  display_inscription_helper = DisplayInscriptionHelper()
+  display_inscription_helper = DisplayInscriptionHelper()  # models.py
   custom_static_url = display_inscription_helper.build_custom_static_url(
     settings_project.STATIC_URL, request.get_host() )
   source_xml_url = display_inscription_helper.build_source_xml_url(
@@ -157,41 +157,6 @@ def display_inscription( request, inscription_id ):
     custom_static_url, inscription_id, source_xml_url, settings_app.DISPLAY_INSCRIPTION_XSL_URL, settings_app.DISPLAY_INSCRIPTION_SAXONCE_FILE_URL, settings_app.DISPLAY_INSCRIPTION_XIPR_URL )
   log.debug( u'display_inscription() context, %s' % pprint.pformat(context) )
   return render( request, u'usep_templates/display_inscription.html', context )
-
-
-
-# class DisplayInscriptionHelper(object):
-#   """ Helper for views.display_inscription() """
-
-#   def build_custom_static_url( self, project_static_url, hostname ):
-#     """ Updates settings_PROJECT STATIC_URL if needed.
-#         Returns url.
-#         """
-#     custom_static_url = project_static_url
-#     if hostname.lower() == u'usepigraphy.brown.edu':
-#       custom_static_url = custom_static_url.replace( 'library.brown.edu', 'usepigraphy.brown.edu' )  # so js saxon-ce works as expected
-#     return custom_static_url
-
-#   def build_source_xml_url( self, url_pattern, is_secure, hostname, inscription_id ):
-#     """ Returns url to inscription xml. """
-#     scheme = u'https' if ( is_secure == True ) else u'http'
-#     url = url_pattern.replace( u'SCHEME', scheme )
-#     url = url.replace( u'HOSTNAME', hostname )
-#     url = url.replace( u'INSCRIPTION_ID', inscription_id )
-#     return url
-
-#   def build_context( self, custom_static_url, inscription_id, source_xml_url, xsl_url, saxonce_url, xipr_url ):
-#     """ Returns context dict. """
-#     context = {
-#       u'custom_static_url': custom_static_url,
-#       u'inscription_id': inscription_id,
-#       u'source_xml_url': source_xml_url,
-#       u'xsl_url': xsl_url,
-#       u'saxonce_file_url': saxonce_url,
-#       u'xipr_url': xipr_url
-#       }
-#     return context
-
 
 
 def login( request ):
