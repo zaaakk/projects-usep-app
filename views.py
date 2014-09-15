@@ -149,14 +149,29 @@ def display_inscription( request, inscription_id ):
       which is then run through an xsl transform. """
   log.debug( u'display_inscription() starting' )
   display_inscription_helper = DisplayInscriptionHelper()  # models.py
-  custom_static_url = display_inscription_helper.build_custom_static_url(
-    settings_project.STATIC_URL, request.get_host() )
+  # custom_static_url = display_inscription_helper.build_custom_static_url(
+  #   settings_project.STATIC_URL, request.get_host() )
   source_xml_url = display_inscription_helper.build_source_xml_url(
     settings_app.DISPLAY_INSCRIPTION_XML_URL_PATTERN, request.is_secure(), request.get_host(), inscription_id )
   context = display_inscription_helper.build_context(
-    custom_static_url, inscription_id, source_xml_url, settings_app.DISPLAY_INSCRIPTION_XSL_URL, settings_app.DISPLAY_INSCRIPTION_SAXONCE_FILE_URL, settings_app.DISPLAY_INSCRIPTION_XIPR_URL )
+    request.get_host(), settings_project.STATIC_URL, inscription_id, source_xml_url, settings_app.DISPLAY_INSCRIPTION_XSL_URL, settings_app.DISPLAY_INSCRIPTION_SAXONCE_FILE_URL, settings_app.DISPLAY_INSCRIPTION_XIPR_URL )
   log.debug( u'display_inscription() context, %s' % pprint.pformat(context) )
   return render( request, u'usep_templates/display_inscription.html', context )
+
+
+# def display_inscription( request, inscription_id ):
+#   """ Displays inscription html from saxon-ce rendering of source xml and an include file of bib data,
+#       which is then run through an xsl transform. """
+#   log.debug( u'display_inscription() starting' )
+#   display_inscription_helper = DisplayInscriptionHelper()  # models.py
+#   custom_static_url = display_inscription_helper.build_custom_static_url(
+#     settings_project.STATIC_URL, request.get_host() )
+#   source_xml_url = display_inscription_helper.build_source_xml_url(
+#     settings_app.DISPLAY_INSCRIPTION_XML_URL_PATTERN, request.is_secure(), request.get_host(), inscription_id )
+#   context = display_inscription_helper.build_context(
+#     custom_static_url, inscription_id, source_xml_url, settings_app.DISPLAY_INSCRIPTION_XSL_URL, settings_app.DISPLAY_INSCRIPTION_SAXONCE_FILE_URL, settings_app.DISPLAY_INSCRIPTION_XIPR_URL )
+#   log.debug( u'display_inscription() context, %s' % pprint.pformat(context) )
+#   return render( request, u'usep_templates/display_inscription.html', context )
 
 
 def login( request ):
