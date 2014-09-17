@@ -30,7 +30,7 @@
           {% if member.image_url %}
           <img class="thumb" src="{{ member.image_url }}" alt="inscription_thumbnail" width="40" height="40"></img>
           {% else %}
-          <img class="thumb" src="{{ STATIC_URL }}usep/images/inscriptions/NoImageAvailable.jpg" alt="inscription_thumbnail" width="40" height="40"></img>
+          <img class="thumb" src="{{ STATIC_URL }}usep/images/NoImageAvailable.jpg" alt="inscription_thumbnail" width="40" height="40"></img>
           {% endif %}
           <a href="{{ member.url }}">{{ member.id }} </a>
           <span id="status">({{ member.status }})</span>

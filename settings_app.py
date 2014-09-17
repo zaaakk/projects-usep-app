@@ -37,6 +37,7 @@ try:
         u'TRANSFORMER_XML_URL_SEGMENT', # ustring; can't reliably use XML_URL_SEGMENT because transformer may not be able to access dev boxes.
         u'TRANSFORMER_XSL_URL',         # ustring; can't reliably use settings_project.STATIC_URL because transformer may not be able to access dev boxes.
         u'XML_URL_SEGMENT',             # ustring; url to xml directory; no trailing slash
+
         u'__builtins__',                # irrelevant; standard module attribute
         u'__doc__',                     # ''
         u'__file__',                    # ''
