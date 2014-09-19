@@ -19,9 +19,6 @@ url_map = {"INSCRIPTION":settings_app.TRANSFORMER_XML_URL_SEGMENT,
   "BIB":u"http://library.brown.edu/usep"}
 
 
-# COMMENT HERE!
-
-
 ## dynamic pages
 
 def get_xml( request ):
@@ -159,21 +156,6 @@ def display_inscription( request, inscription_id ):
   return render( request, u'usep_templates/display_inscription.html', context )
 
 
-# def display_inscription( request, inscription_id ):
-#   """ Displays inscription html from saxon-ce rendering of source xml and an include file of bib data,
-#       which is then run through an xsl transform. """
-#   log.debug( u'display_inscription() starting' )
-#   display_inscription_helper = DisplayInscriptionHelper()  # models.py
-#   custom_static_url = display_inscription_helper.build_custom_static_url(
-#     settings_project.STATIC_URL, request.get_host() )
-#   source_xml_url = display_inscription_helper.build_source_xml_url(
-#     settings_app.DISPLAY_INSCRIPTION_XML_URL_PATTERN, request.is_secure(), request.get_host(), inscription_id )
-#   context = display_inscription_helper.build_context(
-#     custom_static_url, inscription_id, source_xml_url, settings_app.DISPLAY_INSCRIPTION_XSL_URL, settings_app.DISPLAY_INSCRIPTION_SAXONCE_FILE_URL, settings_app.DISPLAY_INSCRIPTION_XIPR_URL )
-#   log.debug( u'display_inscription() context, %s' % pprint.pformat(context) )
-#   return render( request, u'usep_templates/display_inscription.html', context )
-
-
 def login( request ):
   from django.contrib import auth
   log.debug( u'login() starting' )
@@ -201,42 +183,17 @@ def login( request ):
 
 
 def publications( request ):
-  # ## build info
-  # pubs = models.Publications()
-  # pubs.getPubData()  # makes solr call
-  # pubs.buildPubLists()
-  # data_dict = {
-  #   u'master_dict': pubs.master_pub_dict,
-  #   u'corpora_list': pubs.corpora,
-  #   u'journals_list': pubs.journals,
-  #   u'monographs_list': pubs.monographs,
-  #   u'url_key': "BIB",
-  #   u'inscription_id': 'usepi_bib'
-  # }
-  # ## store inscription_ids for each publication to session for pubChildren()
-  # request.session['publications_to_inscription_ids_dict'] = data_dict['master_dict']
-  # ## display
-  # format = request.GET.get( u'format', None )
-  # callback = request.GET.get( u'callback', None )
-  # if format == u'json':
-  #   output = json.dumps( data_dict, sort_keys=True, indent=2 )
-  #   if callback:
-  #     output = u'%s(%s)' % ( callback, output )
-  #   return HttpResponse( output, content_type = u'application/javascript; charset=utf-8' )
-  # else:
-  #   return render( request, u'usep_templates/publications.html', data_dict )
-
   hostname = request.get_host()
   custom_static_url = settings_project.STATIC_URL
   if hostname.lower() == u"usepigraphy.brown.edu":
     custom_static_url = static_url.replace(u"library.brown.edu", u"usepigraphy.brown.edu")
-
   data_dict = {
-    u'url_key': u"BIB",
-    u'inscription_id': u'usepi_bib',
+    u'publications_stylesheet_url': settings_app.DISPLAY_PUBLICATIONS_XSL_URL,
+    u'publications_xml_url': settings_app.DISPLAY_PUBLICATIONS_BIB_URL,
     u'custom_static_url': custom_static_url,
   }
   return render( request, u'usep_templates/publications.html', data_dict )
+
 
 def pubChildren( request, publication ):
   """displays listing of inscriptions for publication"""
@@ -278,37 +235,6 @@ def pubChildren( request, publication ):
     return HttpResponse( output, content_type = u'application/javascript; charset=utf-8' )
   else:
     return render( request, u'usep_templates/publicatioN.html', data_dict )
-
-
-# def pubChildren( request, publication ):
-#   """displays listing of inscriptions for publication"""
-#   log.debug( u'publication: %s' % publication )
-#   assert type( publication ) == unicode
-#   if not u'publications_to_inscription_ids_dict' in request.session:
-#     pubs = models.Publications()
-#     pubs.getPubData()  # makes solr call
-#     pubs.buildPubLists()
-#     request.session['publications_to_inscription_ids_dict'] = pubs.master_pub_dict  # key: publication; value: list of inscription_ids
-#   data = request.session[u'publications_to_inscription_ids_dict'][publication]
-#   log.debug( u'publication data: %s' % data )
-#   pub = models.Publication()
-#   pub.getPubData( data )
-#   pub.buildInscriptionList( request.META[u'wsgi.url_scheme'], request.META[u'SERVER_NAME'] )
-#   pub.makeImageUrls()
-#   data_dict = {
-#     u'publication_title': publication,
-#     u'inscriptions': pub.inscription_entries,
-#     u'inscription_count': pub.inscription_count }
-#   ## respond
-#   format = request.GET.get( u'format', None )
-#   callback = request.GET.get( u'callback', None )
-#   if format == u'json':
-#     output = json.dumps( data_dict, sort_keys=True, indent=2 )
-#     if callback:
-#       output = u'%s(%s)' % ( callback, output )
-#     return HttpResponse( output, content_type = u'application/javascript; charset=utf-8' )
-#   else:
-#     return render( request, u'usep_templates/publicatioN.html', data_dict )
 
 
 ## static pages
