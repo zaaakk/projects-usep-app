@@ -13,6 +13,7 @@ from usep_app import settings_app
 log = logging.getLogger(__name__)
 
 
+
 ### django-db collection class ###
 
 
@@ -127,6 +128,18 @@ class PublicationsPage(models.Model):
 
 ### other non-db classes ###
 
+def id_sort(doc):
+    idno = doc[u'msid_idno']
+    idno = idno.replace("-",".").replace(",",".").replace("/",".").replace("#","")
+    keylist = [doc[u'language']]
+    for x in idno.split("."):
+        try:
+            keylist += [int(x)]
+        except ValueError:
+            
+            keylist += [x]
+
+    return tuple(keylist)
 
 class Collection(object):
     """ Handles code to display the inscriptions list for a given collection. """
@@ -135,14 +148,14 @@ class Collection(object):
         """ Queries solr for collection info. """
         payload = {
             u'q': collection,
-            u'fl': u'id,status,graphic_name',
+            u'fl': u'id,status,graphic_name,language,msid_idno',
             u'start': u'0',
             u'rows': u'99000',
             u'wt': u'json',
             u'indent': u'on', }
         r = requests.get( settings_app.SOLR_URL_BASE, params=payload )
         d = json.loads( r.content.decode(u'utf-8', u'replace') )
-        sorted_doc_list = sorted( d[u'response'][u'docs'], key=itemgetter(u'id') )  # sorts the doc-list on dict key 'id'
+        sorted_doc_list = sorted( d[u'response'][u'docs'], key=id_sort )  # sorts the doc-list on dict key 'msid_idno'
         return sorted_doc_list
 
     def enhance_solr_data( self, solr_data, url_scheme, server_name ):
