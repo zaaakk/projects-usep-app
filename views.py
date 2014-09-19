@@ -188,7 +188,7 @@ def publications( request ):
   publications_stylesheet_url = settings_app.DISPLAY_PUBLICATIONS_XSL_URL
   publications_xml_url = settings_app.DISPLAY_PUBLICATIONS_BIB_URL
   if hostname.lower() == u"usepigraphy.brown.edu":
-    custom_static_url = static_url.replace(u"library.brown.edu", u"usepigraphy.brown.edu")
+    custom_static_url = custom_static_url.replace(u"library.brown.edu", u"usepigraphy.brown.edu")
     publications_stylesheet_url = publications_stylesheet_url.replace(u"library.brown.edu", u"usepigraphy.brown.edu")
     publications_xml_url = publications_xml_url.replace(u"library.brown.edu", u"usepigraphy.brown.edu")
   data_dict = {
