@@ -33,7 +33,7 @@
       </ul>
     </div>
  -->
-    
+
     <div id="container" style="position:relative; left:-20px;"></div>
 
     <hr/>
@@ -42,14 +42,18 @@
 {% endblock content %}
 
 {% block page_js %}
+
 <!-- Loading client-side XSL processor -->
 <script type="text/javascript" language="javascript" src="{{ custom_static_url }}usep/js/saxonce/Saxonce.nocache.js"></script>
 
 <script type="text/javascript" language="javascript" src="{{ custom_static_url }}usep/js/fade.js"></script>
 
 <script type="text/javascript">
-  // Initializing SaxonCE client-side XSL transformation
-  // Documentation at http://www.saxonica.com/ce/index.xml
+  // Initializing SaxonCE client-side XSL transformation; docs at http://www.saxonica.com/ce/index.xml
+  var stylesheet = "{{ custom_static_url }}usep/xsl/pubs.xsl";
+  var source = "{% url usep_app.views.get_xml %}?url_key={{ url_key }}&inscription_id={{ inscription_id }}";
+  console.log( "stylesheet, " + stylesheet );
+  console.log( "source, " + source );
   var onSaxonLoad = function() {
       var processor = Saxon.run({
           stylesheet: "{{ custom_static_url }}usep/xsl/pubs.xsl",
@@ -58,7 +62,7 @@
       });
 
       processor.setSuccess(fade("out", document.getElementById("loading")));
-  }; 
-
+  };
 </script>
+
 {% endblock page_js %}
