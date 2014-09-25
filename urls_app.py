@@ -20,13 +20,11 @@ urlpatterns = patterns('',
   url( r'^collections/$',  'usep_app.views.collections', name='collections_url' ),
   url( r'^collections/(?P<collection>[^/]+)/$',  'usep_app.views.collection', name='collection_url' ),
 
-  url( r'^inscription/test_1234/$', 'usep_app.views.display_inscription_temp_2', name='display_inscription_temp_2' ),
-  url( r'^inscription_temp_1/$', 'usep_app.views.display_inscription_temp_1', name='display_inscription_temp_1' ),
-  # url( r'^inscription/(?P<inscription_id>[^/]+)/$', 'usep_app.views.display_inscription2', name='inscription_url' ),
+  # url( r'^inscription/test_1234/$', 'usep_app.views.display_inscription_temp_2', name='display_inscription_temp_2' ),
+  # url( r'^inscription_temp_1/$', 'usep_app.views.display_inscription_temp_1', name='display_inscription_temp_1' ),
   url( r'^inscription/(?P<inscription_id>[^/]+)/$', 'usep_app.views.display_inscription', name='inscription_url' ),
 
   url( r'^getxml/$',  'usep_app.views.get_xml', name='get_xml_url' ),
-  # url( r'^getxml/(?P<url_key>.+)/(?P<inscription_id>[^/]+)/$',  'usep_app.views.get_xml', name='get_xml_url' ),
 
   url( r'^login/$',  'usep_app.views.login', name='login_url' ),
   url( r'^publications/$',  'usep_app.views.publications', name='publications_url' ),
