@@ -15,8 +15,10 @@ from usep_app import settings_app
 
 
 log = logging.getLogger(__name__)
-url_map = {"INSCRIPTION":settings_app.TRANSFORMER_XML_URL_SEGMENT,
-  "BIB":u"http://library.brown.edu/usep"}
+url_map = {  # TODO: check if this is still being used
+  "INSCRIPTION":settings_app.TRANSFORMER_XML_URL_SEGMENT,
+  "BIB":u"http://library.brown.edu/usep"
+  }
 
 
 ## dynamic pages
@@ -92,55 +94,6 @@ def collection( request, collection ):
   return response
 
 
-# def display_inscription2( request, inscription_id ):
-#   """ Displays inscription html from saxon-ce rendering of source xml and an include file of bib data,
-#       which is then run through an xsl transform. """
-#   hostname = request.get_host()
-#   custom_static_url = settings_project.STATIC_URL
-#   if hostname.lower() == u'usepigraphy.brown.edu':
-#     custom_static_url = static_url.replace( 'library.brown.edu', 'usepigraphy.brown.edu' )  # so js saxon-ce works as expected
-#   data_dict = {
-#     u'url_key': "INSCRIPTION",
-#     u'inscription_id': inscription_id,
-#     u'custom_static_url': custom_static_url,
-#   }
-#   return render( request, u'usep_templates/inscription2.html', data_dict )
-
-
-# def display_inscription_temp_1( request ):  # remove after 4-Oct-2014
-#   """ Displays inscription html from saxon-ce rendering of dummy-source-xml and dummy-include-file,
-#       which is then run through a dummy-xsl-transform. """
-#   log.debug( u'display_inscription_temp_1() starting' )
-#   context = {
-#     'source_xml_url': settings_app.TEMP_SOURCE_XML_URL,
-#     'xsl_url': settings_app.TEMP_XSL_URL,
-#     'saxonce_file_url': settings_app.TEMP_SAXONCE_FILE_URL,
-#     'xipr_url': settings_app.TEMP_XIPR_URL,
-#     }
-#   log.debug( u'display_inscription_temp_1() context, %s' % pprint.pformat(context) )
-#   return render( request, u'usep_templates/display_inscription_temp_1.html', context )
-
-
-# def display_inscription_temp_2( request ):  # remove after 4-Oct-2014
-#   """ Displays inscription html from saxon-ce rendering of hardcoded-real-source-xml and hardcoded-real-include-file,
-#       which is then run through the hardcoded-real-xsl-transform. """
-#   log.debug( u'display_inscription_temp_2() starting' )
-#   hostname = request.get_host()
-#   custom_static_url = settings_project.STATIC_URL
-#   if hostname.lower() == u'usepigraphy.brown.edu':
-#     custom_static_url = static_url.replace( 'library.brown.edu', 'usepigraphy.brown.edu' )  # so js saxon-ce works as expected
-#   context = {
-#     u'custom_static_url': custom_static_url,
-#     u'inscription_id': u'CA.Berk.UC.HMA.G.8-4213',
-#     u'source_xml_url': settings_app.TEMP2_SOURCE_XML_URL,
-#     u'xsl_url': settings_app.TEMP2_XSL_URL,
-#     u'saxonce_file_url': settings_app.TEMP2_SAXONCE_FILE_URL,
-#     u'xipr_url': settings_app.TEMP2_XIPR_URL
-#     }
-#   log.debug( u'display_inscription_temp_2() context, %s' % pprint.pformat(context) )
-#   return render( request, u'usep_templates/display_inscription_temp_2.html', context )
-
-
 def display_inscription( request, inscription_id ):
   """ Displays inscription html from saxon-ce rendering of source xml and an include file of bib data,
       which is then run through an xsl transform. """
@@ -195,19 +148,6 @@ def publications( request ):
     u'custom_static_url': custom_static_url,
   }
   return render( request, u'usep_templates/publications.html', data_dict )
-
-
-# def publications( request ):
-#   hostname = request.get_host()
-#   custom_static_url = settings_project.STATIC_URL
-#   if hostname.lower() == u"usepigraphy.brown.edu":
-#     custom_static_url = static_url.replace(u"library.brown.edu", u"usepigraphy.brown.edu")
-#   data_dict = {
-#     u'publications_stylesheet_url': settings_app.DISPLAY_PUBLICATIONS_XSL_URL,
-#     u'publications_xml_url': settings_app.DISPLAY_PUBLICATIONS_BIB_URL,
-#     u'custom_static_url': custom_static_url,
-#   }
-#   return render( request, u'usep_templates/publications.html', data_dict )
 
 
 def pubChildren( request, publication ):
