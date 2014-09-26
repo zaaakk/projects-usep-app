@@ -56,7 +56,7 @@ def collections( request ):
       return HttpResponse( output, content_type = u'application/javascript; charset=utf-8' )
     else:
       data_dict[u'login_url'] = settings_app.LOGIN_URL
-      return render( request, u'usep_templates/collectionS_dev.html', data_dict )
+      return render( request, u'usep_templates/collectionS.html', data_dict )
   ## work ##
   data_dict = prepare_data()
   format = request.GET.get( u'format', None )
