@@ -15,11 +15,10 @@ from usep_app import settings_app
 
 
 log = logging.getLogger(__name__)
-url_map = {"INSCRIPTION":settings_app.TRANSFORMER_XML_URL_SEGMENT,
-  "BIB":u"http://library.brown.edu/usep"}
-
-
-# COMMENT HERE!
+url_map = {  # TODO: check if this is still being used
+  "INSCRIPTION":settings_app.TRANSFORMER_XML_URL_SEGMENT,
+  "BIB":u"http://library.brown.edu/usep"
+  }
 
 
 ## dynamic pages
@@ -57,7 +56,7 @@ def collections( request ):
       return HttpResponse( output, content_type = u'application/javascript; charset=utf-8' )
     else:
       data_dict[u'login_url'] = settings_app.LOGIN_URL
-      return render( request, u'usep_templates/collectionS_dev.html', data_dict )
+      return render( request, u'usep_templates/collectionS.html', data_dict )
   ## work ##
   data_dict = prepare_data()
   format = request.GET.get( u'format', None )
@@ -95,83 +94,17 @@ def collection( request, collection ):
   return response
 
 
-def display_inscription2( request, inscription_id ):
-  """ Displays inscription html from saxon-ce rendering of source xml and an include file of bib data,
-      which is then run through an xsl transform. """
-  hostname = request.get_host()
-  custom_static_url = settings_project.STATIC_URL
-  if hostname.lower() == u'usepigraphy.brown.edu':
-    custom_static_url = static_url.replace( 'library.brown.edu', 'usepigraphy.brown.edu' )  # so js saxon-ce works as expected
-  data_dict = {
-    u'url_key': "INSCRIPTION",
-    u'inscription_id': inscription_id,
-    u'custom_static_url': custom_static_url,
-  }
-  return render( request, u'usep_templates/inscription2.html', data_dict )
-
-
-def display_inscription_temp_1( request ):  # remove after 4-Oct-2014
-  """ Displays inscription html from saxon-ce rendering of dummy-source-xml and dummy-include-file,
-      which is then run through a dummy-xsl-transform. """
-  log.debug( u'display_inscription_temp_1() starting' )
-  context = {
-    'source_xml_url': settings_app.TEMP_SOURCE_XML_URL,
-    'xsl_url': settings_app.TEMP_XSL_URL,
-    'saxonce_file_url': settings_app.TEMP_SAXONCE_FILE_URL,
-    'xipr_url': settings_app.TEMP_XIPR_URL,
-    }
-  log.debug( u'display_inscription_temp_1() context, %s' % pprint.pformat(context) )
-  return render( request, u'usep_templates/display_inscription_temp_1.html', context )
-
-
-def display_inscription_temp_2( request ):  # remove after 4-Oct-2014
-  """ Displays inscription html from saxon-ce rendering of hardcoded-real-source-xml and hardcoded-real-include-file,
-      which is then run through the hardcoded-real-xsl-transform. """
-  log.debug( u'display_inscription_temp_2() starting' )
-  hostname = request.get_host()
-  custom_static_url = settings_project.STATIC_URL
-  if hostname.lower() == u'usepigraphy.brown.edu':
-    custom_static_url = static_url.replace( 'library.brown.edu', 'usepigraphy.brown.edu' )  # so js saxon-ce works as expected
-  context = {
-    u'custom_static_url': custom_static_url,
-    u'inscription_id': u'CA.Berk.UC.HMA.G.8-4213',
-    u'source_xml_url': settings_app.TEMP2_SOURCE_XML_URL,
-    u'xsl_url': settings_app.TEMP2_XSL_URL,
-    u'saxonce_file_url': settings_app.TEMP2_SAXONCE_FILE_URL,
-    u'xipr_url': settings_app.TEMP2_XIPR_URL
-    }
-  log.debug( u'display_inscription_temp_2() context, %s' % pprint.pformat(context) )
-  return render( request, u'usep_templates/display_inscription_temp_2.html', context )
-
-
 def display_inscription( request, inscription_id ):
   """ Displays inscription html from saxon-ce rendering of source xml and an include file of bib data,
       which is then run through an xsl transform. """
   log.debug( u'display_inscription() starting' )
   display_inscription_helper = DisplayInscriptionHelper()  # models.py
-  # custom_static_url = display_inscription_helper.build_custom_static_url(
-  #   settings_project.STATIC_URL, request.get_host() )
   source_xml_url = display_inscription_helper.build_source_xml_url(
     settings_app.DISPLAY_INSCRIPTION_XML_URL_PATTERN, request.is_secure(), request.get_host(), inscription_id )
   context = display_inscription_helper.build_context(
     request.get_host(), settings_project.STATIC_URL, inscription_id, source_xml_url, settings_app.DISPLAY_INSCRIPTION_XSL_URL, settings_app.DISPLAY_INSCRIPTION_SAXONCE_FILE_URL, settings_app.DISPLAY_INSCRIPTION_XIPR_URL )
   log.debug( u'display_inscription() context, %s' % pprint.pformat(context) )
   return render( request, u'usep_templates/display_inscription.html', context )
-
-
-# def display_inscription( request, inscription_id ):
-#   """ Displays inscription html from saxon-ce rendering of source xml and an include file of bib data,
-#       which is then run through an xsl transform. """
-#   log.debug( u'display_inscription() starting' )
-#   display_inscription_helper = DisplayInscriptionHelper()  # models.py
-#   custom_static_url = display_inscription_helper.build_custom_static_url(
-#     settings_project.STATIC_URL, request.get_host() )
-#   source_xml_url = display_inscription_helper.build_source_xml_url(
-#     settings_app.DISPLAY_INSCRIPTION_XML_URL_PATTERN, request.is_secure(), request.get_host(), inscription_id )
-#   context = display_inscription_helper.build_context(
-#     custom_static_url, inscription_id, source_xml_url, settings_app.DISPLAY_INSCRIPTION_XSL_URL, settings_app.DISPLAY_INSCRIPTION_SAXONCE_FILE_URL, settings_app.DISPLAY_INSCRIPTION_XIPR_URL )
-#   log.debug( u'display_inscription() context, %s' % pprint.pformat(context) )
-#   return render( request, u'usep_templates/display_inscription.html', context )
 
 
 def login( request ):
@@ -201,42 +134,21 @@ def login( request ):
 
 
 def publications( request ):
-  # ## build info
-  # pubs = models.Publications()
-  # pubs.getPubData()  # makes solr call
-  # pubs.buildPubLists()
-  # data_dict = {
-  #   u'master_dict': pubs.master_pub_dict,
-  #   u'corpora_list': pubs.corpora,
-  #   u'journals_list': pubs.journals,
-  #   u'monographs_list': pubs.monographs,
-  #   u'url_key': "BIB",
-  #   u'inscription_id': 'usepi_bib'
-  # }
-  # ## store inscription_ids for each publication to session for pubChildren()
-  # request.session['publications_to_inscription_ids_dict'] = data_dict['master_dict']
-  # ## display
-  # format = request.GET.get( u'format', None )
-  # callback = request.GET.get( u'callback', None )
-  # if format == u'json':
-  #   output = json.dumps( data_dict, sort_keys=True, indent=2 )
-  #   if callback:
-  #     output = u'%s(%s)' % ( callback, output )
-  #   return HttpResponse( output, content_type = u'application/javascript; charset=utf-8' )
-  # else:
-  #   return render( request, u'usep_templates/publications.html', data_dict )
-
   hostname = request.get_host()
   custom_static_url = settings_project.STATIC_URL
+  publications_stylesheet_url = settings_app.DISPLAY_PUBLICATIONS_XSL_URL
+  publications_xml_url = settings_app.DISPLAY_PUBLICATIONS_BIB_URL
   if hostname.lower() == u"usepigraphy.brown.edu":
-    custom_static_url = static_url.replace(u"library.brown.edu", u"usepigraphy.brown.edu")
-
+    custom_static_url = custom_static_url.replace(u"library.brown.edu", u"usepigraphy.brown.edu")
+    publications_stylesheet_url = publications_stylesheet_url.replace(u"library.brown.edu", u"usepigraphy.brown.edu")
+    publications_xml_url = publications_xml_url.replace(u"library.brown.edu", u"usepigraphy.brown.edu")
   data_dict = {
-    u'url_key': u"BIB",
-    u'inscription_id': u'usepi_bib',
+    u'publications_stylesheet_url': publications_stylesheet_url,
+    u'publications_xml_url': publications_xml_url,
     u'custom_static_url': custom_static_url,
   }
   return render( request, u'usep_templates/publications.html', data_dict )
+
 
 def pubChildren( request, publication ):
   """displays listing of inscriptions for publication"""
@@ -278,37 +190,6 @@ def pubChildren( request, publication ):
     return HttpResponse( output, content_type = u'application/javascript; charset=utf-8' )
   else:
     return render( request, u'usep_templates/publicatioN.html', data_dict )
-
-
-# def pubChildren( request, publication ):
-#   """displays listing of inscriptions for publication"""
-#   log.debug( u'publication: %s' % publication )
-#   assert type( publication ) == unicode
-#   if not u'publications_to_inscription_ids_dict' in request.session:
-#     pubs = models.Publications()
-#     pubs.getPubData()  # makes solr call
-#     pubs.buildPubLists()
-#     request.session['publications_to_inscription_ids_dict'] = pubs.master_pub_dict  # key: publication; value: list of inscription_ids
-#   data = request.session[u'publications_to_inscription_ids_dict'][publication]
-#   log.debug( u'publication data: %s' % data )
-#   pub = models.Publication()
-#   pub.getPubData( data )
-#   pub.buildInscriptionList( request.META[u'wsgi.url_scheme'], request.META[u'SERVER_NAME'] )
-#   pub.makeImageUrls()
-#   data_dict = {
-#     u'publication_title': publication,
-#     u'inscriptions': pub.inscription_entries,
-#     u'inscription_count': pub.inscription_count }
-#   ## respond
-#   format = request.GET.get( u'format', None )
-#   callback = request.GET.get( u'callback', None )
-#   if format == u'json':
-#     output = json.dumps( data_dict, sort_keys=True, indent=2 )
-#     if callback:
-#       output = u'%s(%s)' % ( callback, output )
-#     return HttpResponse( output, content_type = u'application/javascript; charset=utf-8' )
-#   else:
-#     return render( request, u'usep_templates/publicatioN.html', data_dict )
 
 
 ## static pages

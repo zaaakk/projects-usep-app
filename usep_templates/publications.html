@@ -50,18 +50,18 @@
 
 <script type="text/javascript">
   // Initializing SaxonCE client-side XSL transformation; docs at http://www.saxonica.com/ce/index.xml
-  var stylesheet = "{{ custom_static_url }}usep/xsl/pubs.xsl";
-  var source = "{% url usep_app.views.get_xml %}?url_key={{ url_key }}&inscription_id={{ inscription_id }}";
-  console.log( "stylesheet, " + stylesheet );
-  console.log( "source, " + source );
+  var target_stylesheet = "{{ publications_stylesheet_url }}";
+  var target_source = "{{ publications_xml_url }}";
+  console.log( "target_stylesheet, " + target_stylesheet );
+  console.log( "target_source, " + target_source );
   var onSaxonLoad = function() {
       var processor = Saxon.run({
-          stylesheet: "{{ custom_static_url }}usep/xsl/pubs.xsl",
-          source:     "{% url usep_app.views.get_xml %}?url_key={{ url_key }}&inscription_id={{ inscription_id }}",
+          stylesheet: target_stylesheet,
+          source:     target_source,
           parameters: { url: ("{% url publication_url " " %}".slice(1, -4)) }
       });
 
-      processor.setSuccess(fade("out", document.getElementById("loading")));
+      processor.setSuccess( fade("out", document.getElementById("loading")) );
   };
 </script>
 

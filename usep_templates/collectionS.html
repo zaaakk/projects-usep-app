@@ -14,6 +14,7 @@
 {% endblock list_of_states %}
 
 {% block content %}
+
   <div id="map">
     <p>
       <iframe width="600" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://batchgeo.com/map/15a95237b77fadbd7161115646e676e0" frameborder="0" width="100%" height="550" style="border:3px solid #999;border-radius:5px;"></iframe>
@@ -22,99 +23,38 @@
       <small>View <a href="http://batchgeo.com/map/15a95237b77fadbd7161115646e676e0">US Epigraphy Collections</a> in a full screen map</small>
     </p>
   </div>
+
   <div class="region">
-    {% for region in region_list %}
-      <a name="{{ region.code|lower }}"><h2>{{ region.name }}</h2></a>
 
-      {% for inscription in region.inscriptions %}  {% comment %} edge-case region: 'No' (unknown) {% endcomment %}
-        <p class="description">
-          <a href="{{ inscription.collection_url }}">No location information</a>
-            <br/>
-        </p>
-      {% endfor %}
+    {% regroup all_collections_dictionaries by region_name as region_list %}  {% comment %} note: no 'end_regroup' {% endcomment %}
 
-      {% for institution in region.institutions %}  {% comment %} edge-case region: 'DC' {% endcomment %}
-        <p class="description">
-          <a href="{{ institution.collection_url }}">{{ institution.collection_id }}</a>
-          {% if institution.description %}
-            <a class="js-link" href="#">[More...]</a>
-          {% endif %}
-          {% if institution.url %}
-            <br/>
-            <a target="_blank" href="{{ institution.url }}">{{ institution.name }}{% if institution.address %}<br/>{% endif %}{{ institution.address }}</a>
-          {% else %}
-            <br/>
-            {{ institution.name }}{% if institution.address %}<br/>{% endif %}{{ institution.address }}
-          {% endif %}
-        </p>
-        {% if institution.description %}
-          <div class="js-info">
-            <p>{{ institution.description|safe }}</p>
-          </div>
+    {% for region_name in region_list %}
+
+      {% comment %} ## Region-name with anchor ## {% endcomment %}
+      {% for item in region_name.list %}
+        {% if forloop.first %}
+          <a name="{{ item.region_code|lower }}">
         {% endif %}
       {% endfor %}
+            <h2>{{ region_name.grouper }}</h2>
+          </a>
 
-      {% for settlement in region.settlements %}
-        {% comment %}<p>TEMP {{ settlement.source_name }}</p>{% endcomment %}
-        {% if settlement.institutions %}
+      {% comment %} ## Collections ## {% endcomment %}
+      {% for item in region_name.list %}
+        <p class="description">
+          <a href="../collections/{{ item.collection_code }}/">{{ item.collection_code }}</a>
+          <a class="js-link" href="#">[More...]</a>
+          <br/>
+          <a target="_blank" href="{{ item.collection_url }}">{{ item.collection_name }}<br/>{{ item.collection_address }}</a>
+          <div class="js-info">
+            <p>{{ item.collection_description|safe }}</p>
+          </div>
+        </p>
+      {% endfor %}
+    {% endfor %}
 
-          {% for institution in settlement.institutions %}
+    <!-- end region output -->
 
-            {% if institution.repositories %}
-              {% for repository in institution.repositories %}
-                <p class="description">
-                  <a href="{{ repository.collection_url }}">{{ repository.collection_id }}</a>
-                  {% if repository.description %}
-                  <a class="js-link" href="#">[More...]</a>
-                  <br/>
-                  {% endif %}
-                  {% if repository.url %}
-                  <a target="_blank" href="{{ repository.url }}">{{ repository.name }}{% if repository.address %}<br/>{% endif %}{{ repository.address }}</a>
-                  {% else %}
-                  {{ repository.name }}{% if repository.address %}<br/>{% endif %}{{ repository.address }}
-                  {% endif %}
-                </p>
-                {% if repository.description %}
-                  <div class="js-info">
-                    <p>{{ repository.description|safe }}</p>
-                  </div>
-                {% endif %}
-              {% endfor %}
-
-            {% else %}  {% comment %} part of: if institution.repositories... {% endcomment %}
-              <p class="description">
-                <a href="{{ institution.collection_url }}">{{ institution.collection_id }}</a>
-                {% if institution.description %}
-                  <a class="js-link" href="#">[More...]</a>
-                {% endif %}
-                {% if institution.url %}
-                  <br/>
-                  <a target="_blank" href="{{ institution.url }}">{{ institution.name }}{% if institution.address %}<br/>{% endif %}{{ institution.address }}</a>
-                {% else %}
-                  <br/>
-                  {{ institution.name }}{% if institution.address %}<br/>{% endif %}{{ institution.address }}
-                {% endif %}
-              </p>
-              {% if institution.description %}
-                <div class="js-info">
-                  <p>{{ institution.description|safe }}</p>
-                </div>
-              {% endif %}
-            {% endif %}  {% comment %} end if institution.repositories... {% endcomment %}
-          {% endfor %}  {% comment %} end for institution... {% endcomment %}
-
-        {% else %}  {% comment %} part of: if settlement.institutions... {% endcomment %}
-
-          {% for settlement_repository in settlement.settlement_repositories %}
-            <p class="description">
-              <a href="./{{ region.code }}.{{ settlement.source_name }}.{{ settlement_repository.code }}/">{{ region.code }}.{{ settlement.source_name }}.{{ settlement_repository.code }}</a>
-            </p>
-          {% endfor %}
-
-        {% endif %}  {% comment %} end if settlement.institutions... {% endcomment %}
-
-      {% endfor %}  {% comment %} end for settlement... {% endcomment %}
-    {% endfor %}  {% comment %} end for region... {% endcomment %}
   </div> <!-- end div class="region" -->
   <div id="admin" style="position: absolute; right: 10px;"><a href="{{ login_url }}">admin</div>
 {% endblock content %}
