@@ -10,6 +10,8 @@ from django.db import models
 from django.utils.encoding import smart_unicode
 from usep_app import settings_app
 
+import string
+
 log = logging.getLogger(__name__)
 
 
@@ -128,18 +130,58 @@ class PublicationsPage(models.Model):
 
 ### other non-db classes ###
 
+# Function to pass to sorted() to sort the list of documents by weird free-form ids
+# essentially splits them into numeric and non-numeric keys and returns whatever
+# set it was able to break up
 def id_sort(doc):
     idno = doc[u'msid_idno']
-    idno = idno.replace("-",".").replace(",",".").replace("/",".").replace("#","")
+
+    # IN THE FUTURE:
+    # add to this string to add new characters to split tokens over (splits over "." by default)
+    split_characters = "-,/"
+    # add to this string to add new characters that should be removed (e.g. "#")
+    remove_characters = "#"
+
+    for c in split_characters:
+        idno = idno.replace(c, ".")
+    for c in remove_characters:
+        idno = idno.replace(c, "")
+
     keylist = [doc[u'language']]
     for x in idno.split("."):
         try:
             keylist += [int(x)]
         except ValueError:
             
-            keylist += [x]
+            tokens = break_token(x)
+            keylist += tokens
 
     return tuple(keylist)
+
+# Break a mixed numeric/text token into numeric/non-numeric parts. Helper for id_sort
+def break_token(token):
+    idx1 = 0
+    idx2 = 0
+    parts = []
+    numeric = (token[0] in string.digits) # True if we start with a numeric token, false otherwise
+
+    # Loop through string and add subtokens to parts as necessary
+    for c in token:
+        condition = token[idx2] in string.digits
+        if not numeric:
+            condition = not condition
+
+
+        if condition:
+            idx2 += 1
+        else:
+            parts += [int(token[idx1:idx2])] if numeric else [token[idx1:idx2]]
+            idx1 = idx2
+            idx2 += 1
+            numeric = not numeric
+
+    parts += [token[idx1:idx2]]
+    return parts
 
 class Collection(object):
     """ Handles code to display the inscriptions list for a given collection. """
