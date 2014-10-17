@@ -24,8 +24,10 @@
   <div id="main">
     <div id="container">
       <p>( Total: {{ inscription_count }} )</p>
+      {% for keylang,language_group in inscriptions.iteritems %}
+      <h2>{{ keylang }}</h2>
       <ul class="collection">
-        {% for member in inscriptions %}
+        {% for member in language_group %}
         <li>
           {% if member.image_url %}
           <img class="thumb" src="{{ member.image_url }}" alt="inscription_thumbnail" width="40" height="40"></img>
@@ -37,6 +39,7 @@
         </li>
         <!-- <li><img class="thumb" src="http://dev.stg.brown.edu/projects/usepigraphy/new/Pictures/Images/{% if member.image_url %}{{ member.id }}{% else %}NoImageAvailable{% endif %}.jpg" alt="Thumbnail indicating there is an image." width="40" height="40"></img><a href="http://dev.stg.brown.edu/projects/usepigraphy/new/view/#{{ member.id }}">{{ member.id }} <span id="status">({{ member.status }})</span></a></li> -->       {% endfor %}
       </ul>
+      {% endfor %}
     </div>
   </div>
 {% endblock content %}
