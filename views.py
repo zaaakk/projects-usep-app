@@ -71,11 +71,12 @@ def collection( request, collection ):
   def prepare_data():
     c = models.Collection()
     solr_data = c.get_solr_data( collection )
-    inscription_dict, num = c.enhance_solr_data( solr_data, request.META[u'wsgi.url_scheme'], request.get_host() )
+    inscription_dict, num, display_dict = c.enhance_solr_data( solr_data, request.META[u'wsgi.url_scheme'], request.get_host() )
     data_dict = {
       u'collection_title': collection,
       u'inscriptions': inscription_dict,
-      u'inscription_count': num
+      u'inscription_count': num,
+      u'display': display_dict,
       }
     return data_dict
   def build_response( format, callback ):

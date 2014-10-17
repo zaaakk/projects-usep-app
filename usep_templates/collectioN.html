@@ -23,11 +23,11 @@
 {% block content %}
   <div id="main">
     <div id="container">
-      <p>( Total: {{ inscription_count }} )</p>
+      <p>( Total: {{ inscription_count }} ) Jump to: {% for k,v in display.iteritems %}<a href="#{{ k }}">{{ v }}</a>{% if not forloop.last %} | {% endif %}{% endfor %}</p>
       {% for keylang,language_group in inscriptions.iteritems %}
-      <h2>{{ keylang }}</h2>
+      <h2 id="{{ keylang }}">{{ language_group.display }}</h2>
       <ul class="collection">
-        {% for member in language_group %}
+        {% for member in language_group.docs %}
         <li>
           {% if member.image_url %}
           <img class="thumb" src="{{ member.image_url }}" alt="inscription_thumbnail" width="40" height="40"></img>
