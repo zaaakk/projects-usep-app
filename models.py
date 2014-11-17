@@ -147,7 +147,7 @@ def id_sort(doc):
     for c in remove_characters:
         idno = idno.replace(c, "")
 
-    keylist = [doc[u'language']]
+    keylist = []
     for x in idno.split("."):
         try:
             keylist += [int(x)]
@@ -183,6 +183,31 @@ def break_token(token):
     parts += [token[idx1:idx2]]
     return parts
 
+def separate_into_languages(docs):
+
+    # Language value/display pairs as of 10/2014
+    language_pairs = {
+        u"lat": u"Latin",
+        u"grc": u"Greek",
+        u"la": u"Latin",
+        u"la-Grek": u"Latin written in Greek",
+        u"und": u"Undecided",
+        u"unknown": u"Unknown"
+    }
+
+
+    result = {}
+    for doc in docs:
+        if doc[u'language'] in result:
+            result[doc[u'language']][u'docs'] += [doc]
+        else:
+            result[doc[u'language']] = {u'docs': [doc], u'display': language_pairs[doc[u'language']]}
+
+    # Actual display pairs used for convenience
+    d = dict([(lang, language_pairs[lang]) for lang in result])
+
+    return (result, len(docs), d)
+
 class Collection(object):
     """ Handles code to display the inscriptions list for a given collection. """
 
@@ -198,6 +223,7 @@ class Collection(object):
         r = requests.get( settings_app.SOLR_URL_BASE, params=payload )
         d = json.loads( r.content.decode(u'utf-8', u'replace') )
         sorted_doc_list = sorted( d[u'response'][u'docs'], key=id_sort )  # sorts the doc-list on dict key 'msid_idno'
+        
         return sorted_doc_list
 
     def enhance_solr_data( self, solr_data, url_scheme, server_name ):
@@ -210,7 +236,7 @@ class Collection(object):
             entry[u'image_url'] = image_url
             entry[u'url'] = u'%s://%s%s' % ( url_scheme, server_name, reverse(u'inscription_url', args=(entry[u'id'],)) )
             enhanced_list.append( entry )
-        return enhanced_list
+        return separate_into_languages(enhanced_list)
 
     # end class Collection()
 
