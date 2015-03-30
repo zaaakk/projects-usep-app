@@ -44,6 +44,10 @@ h1 {
 	letter-spacing:0.15em;
 	}
 
+.id_string {
+	text-transform: none;
+}
+
 h2 {
 	font-size : 1.4em;
 	text-transform:uppercase;
