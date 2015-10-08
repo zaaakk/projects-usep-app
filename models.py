@@ -191,6 +191,7 @@ def separate_into_languages(docs):
         u"grc": u"Greek",
         u"la": u"Latin",
         u"la-Grek": u"Latin written in Greek",
+        u"lat-Grek":u"Latin written in Greek",
         u"und": u"Undecided",
         u"unknown": u"Unknown"
     }
