@@ -191,6 +191,7 @@ def separate_into_languages(docs):
         u"grc": u"Greek",
         u"la": u"Latin",
         u"la-Grek": u"Latin written in Greek",
+        u"lat-Grek":u"Latin written in Greek",
         u"und": u"Undecided",
         u"unknown": u"Unknown"
     }
@@ -201,7 +202,7 @@ def separate_into_languages(docs):
         if doc[u'language'] in result:
             result[doc[u'language']][u'docs'] += [doc]
         else:
-            result[doc[u'language']] = {u'docs': [doc], u'display': language_pairs[doc[u'language']]}
+            result[doc[u'language']] = {u'docs': [doc], u'display': language_pairs.get(doc[u'language'], 'Unknown Value')}
 
     # Actual display pairs used for convenience
     d = dict([(lang, language_pairs[lang]) for lang in result])
