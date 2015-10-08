@@ -202,7 +202,7 @@ def separate_into_languages(docs):
         if doc[u'language'] in result:
             result[doc[u'language']][u'docs'] += [doc]
         else:
-            result[doc[u'language']] = {u'docs': [doc], u'display': language_pairs[doc[u'language']]}
+            result[doc[u'language']] = {u'docs': [doc], u'display': language_pairs.get(doc[u'language'], 'Unknown Value')}
 
     # Actual display pairs used for convenience
     d = dict([(lang, language_pairs[lang]) for lang in result])
