@@ -7,9 +7,8 @@
 {% block list_of_states %}
   <div id="listofstates">
     {% for code in region_codes %}
-      <li><a href="#{{ code|lower }}">{{ code }}</a></li>{% if not forloop.last %} | {% endif %}
+      <span><a href="#{{ code|lower }}">{{ code }}</a></span>{% if not forloop.last %} | {% endif %}
     {% endfor %}
-    <ul id="list"></ul>
   </div>
 {% endblock list_of_states %}
 

@@ -32,12 +32,12 @@
     </div>
 
     <div id="undefined_wrapper">
-
-      <h1 id="pagetitle">{% block page_title %}HOLDER{% endblock page_title %}</h1>
-
       {% block list_of_states %}
       <div id="listofstates"></div>  {% comment %} css applies green bar to this, so needed for now {% endcomment %}
       {% endblock list_of_states %}
+
+      <h1 id="pagetitle">{% block page_title %}HOLDER{% endblock page_title %}</h1>
+
 
       <div id="content">
         {% block content %}
