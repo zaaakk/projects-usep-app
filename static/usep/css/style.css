@@ -163,16 +163,15 @@ img {
 
 #listofstates {
 	background-color:#549390;
-	position:absolute;
-	top:160px;
-	left:0px;
-	min-height:4px;
+	min-height:1.2em;
 	width:100%;
 	font-family:georgia,palatino,serif;
 	letter-spacing:0.1em;
 	font-weight:normal;
 	font-size:1.2em;
 	color:#7badac;
+	padding: 0.3em 0 0.3em 0;
+	text-align: center;
 	}
 
 	#listofstates a:link, #listofstates a:visited {
