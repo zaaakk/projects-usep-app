@@ -77,6 +77,7 @@ def collection( request, collection ):
       u'inscriptions': inscription_dict,
       u'inscription_count': num,
       u'display': display_dict,
+      u'flat_collection': FlatCollection.objects.get(collection_code=collection),
       }
     return data_dict
   def build_response( format, callback ):
