@@ -152,7 +152,7 @@ def id_sort(doc):
         try:
             keylist += [int(x)]
         except ValueError:
-            
+
             tokens = break_token(x)
             keylist += tokens
 
@@ -198,9 +198,17 @@ def separate_into_languages(docs):
         u"unknown": u"Unknown"
     }
 
+    # result = {}
+    # for doc in docs:
+    #     if doc[u'language'] in result:  # 2016-02-09: when doc['language'] is a list, result is `TypeError -- unhashable type: 'list'`
+    #         result[doc[u'language']][u'docs'] += [doc]
+    #     else:
+    #         result[doc[u'language']] = {u'docs': [doc], u'display': language_pairs.get(doc[u'language'], doc[u"language"])}
 
     result = {}
     for doc in docs:
+        language = doc.get('language', u'')
+        language = language[0] if type(language) == list else language
         if doc[u'language'] in result:
             result[doc[u'language']][u'docs'] += [doc]
         else:
@@ -226,7 +234,7 @@ class Collection(object):
         r = requests.get( settings_app.SOLR_URL_BASE, params=payload )
         d = json.loads( r.content.decode(u'utf-8', u'replace') )
         sorted_doc_list = sorted( d[u'response'][u'docs'], key=id_sort )  # sorts the doc-list on dict key 'msid_idno'
-        
+
         return sorted_doc_list
 
     def enhance_solr_data( self, solr_data, url_scheme, server_name ):
