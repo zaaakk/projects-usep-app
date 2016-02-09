@@ -209,10 +209,10 @@ def separate_into_languages(docs):
     for doc in docs:
         language = doc.get('language', u'')
         language = language[0] if type(language) == list else language
-        if doc[u'language'] in result:
-            result[doc[u'language']][u'docs'] += [doc]
+        if language in result:
+            result[language][u'docs'] += [doc]
         else:
-            result[doc[u'language']] = {u'docs': [doc], u'display': language_pairs.get(doc[u'language'], doc[u"language"])}
+            result[language] = {u'docs': [doc], u'display': language_pairs.get(language, language)}
 
     # Actual display pairs used for convenience
     d = dict([(lang, language_pairs.get(lang, lang)) for lang in result])
