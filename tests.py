@@ -24,50 +24,21 @@ class CollectionTest( TestCase ):
     self.assertEqual( list, type(inscription_list) )
     self.assertEqual( dict, type(inscription_list[0]) )
     list_element_keys = sorted( inscription_list[0].keys() )
-    self.assertEqual( [u'graphic_name', u'id', u'status'], list_element_keys )
+    # self.assertEqual( [u'graphic_name', u'id', u'status'], list_element_keys )
+    self.assertEqual( [u'graphic_name', u'id', u'language', u'msid_idno', u'status'], list_element_keys )
 
   def test_enhance_solr_data(self):
     c = Collection()
     inscription_list = c.get_solr_data( u'VA.Rich.MFA' )
     enhanced_list = c.enhance_solr_data( solr_data=inscription_list, url_scheme=u'http', server_name=u'blah'  )
-    self.assertEqual( list, type(enhanced_list) )
+    # self.assertEqual( list, type(enhanced_list) )
+    self.assertEqual( tuple, type(enhanced_list) )
     self.assertEqual( dict, type(enhanced_list[0]) )
     list_element_keys = sorted( enhanced_list[0].keys() )
-    self.assertEqual( [u'graphic_name', u'id', u'image_url', u'status', u'url'], list_element_keys )
+    # self.assertEqual( [u'graphic_name', u'id', u'image_url', u'status', u'url'], list_element_keys )
+    self.assertEqual( [u'grc'], list_element_keys )
 
   # end class CollectionTest()
-
-
-# class Inscription2Test(TestCase):
-
-#   def test_extract_inscription_data_a(self):  # more info
-#     inscription_id = u'CA.Berk.UC.HMA.G.8-3898'
-#     insc = Inscription2()
-#     insc.run_xslt( inscription_id )
-#     insc.update_xslt_html()
-#     insc.extract_inscription_data()
-#     self.assertEqual( u'Fragment', insc.extracted_data[u'attributes'][u'Condition'] )
-#     self.assertEqual( [u'Smutny, R.J., Greek and Latin Inscriptions at Berkeley (1966): 6-7, no. 3, Pl. 5'], insc.extracted_data[u'bibl'] )
-
-#   def test_extract_inscription_data_b(self):  # less info
-#     inscription_id = u'CA.Berk.UC.HMA.G.8-4985'
-#     insc = Inscription2()
-#     insc.run_xslt( inscription_id )
-#     insc.update_xslt_html()
-#     insc.extract_inscription_data()
-#     self.assertEqual( u'', insc.extracted_data[u'attributes'][u'Condition'] )
-#     self.assertEqual( [u'Classical Attic Tombstones 3: 415', u'SEG 35 (1985): no. 202'], insc.extracted_data[u'bibl'] )
-
-#   def test_extract_inscription_data_bib_only(self):
-#     inscription_id = u'IL.Urb.UI.WHM.G.WHM1930.01.0001'
-#     insc = Inscription2()
-#     insc.run_xslt( inscription_id )
-#     insc.update_xslt_html()
-#     insc.extract_inscription_data()
-#     self.assertEqual( {}, insc.extracted_data[u'attributes'] )
-#     self.assertEqual( [u'BE (1973): no. 24', u'Kroll, J. H., Athenian Bronze Allotment Plates (1972): 124-126, no. 18'], insc.extracted_data[u'bibl'] )
-
-#   # end class Inscription2Test()
 
 
 class PublicationTest( TestCase ):
