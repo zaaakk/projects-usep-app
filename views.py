@@ -13,6 +13,8 @@ from .models import FlatCollection
 from .models import DisplayInscriptionHelper
 from usep_app import settings_app
 
+from lxml import etree
+
 
 log = logging.getLogger(__name__)
 url_map = {  # TODO: check if this is still being used
@@ -157,15 +159,23 @@ def pubChildren( request, publication ):
   log.debug( u'publication: %s' % publication )
   assert type( publication ) == unicode
 
+  publications_xml_url = settings_app.DISPLAY_PUBLICATIONS_BIB_URL
+  r = requests.get(publications_xml_url)
+  xml = etree.fromstring(r.content)
+  xp = etree.XPath("//t:bibl[@xml:id='{0}']/t:title".format(publication), namespaces={"t":"http://www.tei-c.org/ns/1.0"})
+  title = xp(xml)[0].text
+  if not title:
+    title = publication
+
   #print "calling the Publication model"
   pub = models.Publication()
   pub.getPubData( publication )
   pub.buildInscriptionList( request.META[u'wsgi.url_scheme'], request.get_host() )
   pub.makeImageUrls()
   data_dict = {
-    u'publication_title': publication,
+    u'publication_title': title,
     u'inscriptions': pub.inscription_entries,
-    u'inscription_count': pub.inscription_count }
+    u'inscription_count': pub.inscription_count, }
   ## respond
   format = request.GET.get( u'format', None )
   callback = request.GET.get( u'callback', None )
