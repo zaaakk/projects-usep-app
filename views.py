@@ -157,25 +157,9 @@ def pubChildren( request, publication ):
   log.debug( u'publication: %s' % publication )
   assert type( publication ) == unicode
 
-  #print "pubChildren with publication: " + publication
-
-  if not u'publications_to_inscription_ids_dict' in request.session:
-    #print "before initializing Publications"
-    pubs = models.Publications()
-    #print "about make pubs get pub data"
-    pubs.getPubData()  # makes solr call
-    #print "building the publication result"
-    pubs.buildPubLists()
-    request.session['publications_to_inscription_ids_dict'] = pubs.master_pub_dict  # key: publication; value: list of inscription_ids
-
-  #print "about to get publication specific data for publication: " + publication
-  data = request.session[u'publications_to_inscription_ids_dict'][publication]
-  #print "data retrieved: " + str(data)
-  log.debug( u'publication data: %s' % data )
-
   #print "calling the Publication model"
   pub = models.Publication()
-  pub.getPubData( data )
+  pub.getPubData( publication )
   pub.buildInscriptionList( request.META[u'wsgi.url_scheme'], request.get_host() )
   pub.makeImageUrls()
   data_dict = {
