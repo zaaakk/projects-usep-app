@@ -160,12 +160,15 @@ def pubChildren( request, publication ):
   assert type( publication ) == unicode
 
   publications_xml_url = settings_app.DISPLAY_PUBLICATIONS_BIB_URL
-  r = requests.get(publications_xml_url)
-  xml = etree.fromstring(r.content)
-  xp = etree.XPath("//t:bibl[@xml:id='{0}']/t:title".format(publication), namespaces={"t":"http://www.tei-c.org/ns/1.0"})
-  title = xp(xml)[0].text
-  if not title:
-    title = publication
+  elements = []
+  try:
+    r = requests.get(publications_xml_url)
+    xml = etree.fromstring(r.content)
+    elements = etree.XPath("//t:bibl[@xml:id='{0}']/t:title".format(publication), namespaces={"t":"http://www.tei-c.org/ns/1.0"})(xml)
+  except Exception, e:
+    log.error("Exception retrieving titles.xml: ", repr(e))
+
+  title = elements[0].text if elements else publication
 
   #print "calling the Publication model"
   pub = models.Publication()
