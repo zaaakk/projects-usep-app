@@ -13,6 +13,8 @@ from .models import FlatCollection
 from .models import DisplayInscriptionHelper
 from usep_app import settings_app
 
+from lxml import etree
+
 
 log = logging.getLogger(__name__)
 url_map = {  # TODO: check if this is still being used
@@ -77,6 +79,7 @@ def collection( request, collection ):
       u'inscriptions': inscription_dict,
       u'inscription_count': num,
       u'display': display_dict,
+      u'flat_collection': FlatCollection.objects.get(collection_code=collection),
       }
     return data_dict
   def build_response( format, callback ):
@@ -156,31 +159,26 @@ def pubChildren( request, publication ):
   log.debug( u'publication: %s' % publication )
   assert type( publication ) == unicode
 
-  #print "pubChildren with publication: " + publication
+  publications_xml_url = settings_app.DISPLAY_PUBLICATIONS_BIB_URL
+  elements = []
+  try:
+    r = requests.get(publications_xml_url)
+    xml = etree.fromstring(r.content)
+    elements = etree.XPath("//t:bibl[@xml:id='{0}']/t:title".format(publication), namespaces={"t":"http://www.tei-c.org/ns/1.0"})(xml)
+  except Exception, e:
+    log.error("Exception retrieving titles.xml: ", repr(e))
 
-  if not u'publications_to_inscription_ids_dict' in request.session:
-    #print "before initializing Publications"
-    pubs = models.Publications()
-    #print "about make pubs get pub data"
-    pubs.getPubData()  # makes solr call
-    #print "building the publication result"
-    pubs.buildPubLists()
-    request.session['publications_to_inscription_ids_dict'] = pubs.master_pub_dict  # key: publication; value: list of inscription_ids
-
-  #print "about to get publication specific data for publication: " + publication
-  data = request.session[u'publications_to_inscription_ids_dict'][publication]
-  #print "data retrieved: " + str(data)
-  log.debug( u'publication data: %s' % data )
+  title = elements[0].text if elements else publication
 
   #print "calling the Publication model"
   pub = models.Publication()
-  pub.getPubData( data )
+  pub.getPubData( publication )
   pub.buildInscriptionList( request.META[u'wsgi.url_scheme'], request.get_host() )
   pub.makeImageUrls()
   data_dict = {
-    u'publication_title': publication,
+    u'publication_title': title,
     u'inscriptions': pub.inscription_entries,
-    u'inscription_count': pub.inscription_count }
+    u'inscription_count': pub.inscription_count, }
   ## respond
   format = request.GET.get( u'format', None )
   callback = request.GET.get( u'callback', None )

@@ -329,7 +329,6 @@ class DisplayInscriptionHelper( object ):
 
 #   # end class DisplayInscriptionHelper()
 
-
 class Publication(object):
 
     def __init__(self):
@@ -340,43 +339,30 @@ class Publication(object):
         self.pub_solr_urls = []
         self.pub_solr_responses = []
 
-    def getPubData( self, id_list ):
+    def getPubData( self, pub_id ):
         """
-        Builds solr query from inscription-id list stored in session by Publications.buildPubLists().
-        We have the ids already; we just need the status (possible TODO: store the status when the id-list is originally built).
-        Loop used because a large list can return a solr 'too many boolean clauses' error
+        Retrieves inscriptions with the given bib_id.
         """
-        log.debug( u'len(id_list): %s' % len(id_list) )
-        log.debug( u'id_list: %s' % id_list )
 
-        # log.debug( u'self.inscription_entries START: %s' % self.inscription_entries )
         log.debug( u'len(self.inscription_entries) START: %s' % len(self.inscription_entries) )
-        for i in range( 0, len(id_list), 500 ):  # needed
-            list_chunk = id_list[i:i + 500]
-            ## make solr call
-            q_string = u''
-            for i, entry in enumerate( list_chunk ):
-                if i == 0:
-                    q_string = u'id:%s' % entry
-                else:
-                    q_string = u'%s OR id:%s' % ( q_string, entry )
-            sh = SolrHelper()
-            payload = dict( sh.default_params.items() + {
-                u'q': q_string,
-                u'rows': u'99999',
+
+        sh = SolrHelper()
+
+        payload = dict( sh.default_params.items() + {
+                u'q':u'bib_ids:{0}'.format(pub_id),
+                u'rows':u'99999',
                 u'fl': u'id,graphic_name,status',
-                u'sort': u'id asc' }.items()
+                u'sort': u'id asc'}.items()
                 )
-            r = requests.post( settings_app.SOLR_URL_BASE, payload )
-            solr_response = r.content.decode(u'utf-8', u'replace')
-            log.debug( u'this pubn_solr_url: %s' % r.url )
-            # log.debug( u'this pubn_solr_response: %s' % solr_response )
-            self.pub_solr_urls.append( r.url )
-            self.pub_solr_responses.append( solr_response )
-            jdict = json.loads( solr_response )
-            for item in jdict[u'response'][u'docs']:
-                self.inscription_entries.append( item )
-        self.inscription_count = len( self.inscription_entries )
+        r = requests.post( settings_app.SOLR_URL_BASE, payload )
+        solr_response = r.content.decode('utf-8', 'replace')
+        self.pub_solr_urls.append( r.url )
+        self.pub_solr_responses.append( solr_response )
+        json_resp = json.loads(solr_response)
+        
+        self.inscription_entries = json_resp[u'response'][u'docs']
+        self.inscription_count = json_resp[u'response'][u'numFound']
+
         log.debug( u'self.inscription_entries END: %s' % self.inscription_entries[0:10] )
         return
 

@@ -1,6 +1,13 @@
 {% extends "usep_templates/base.html" %}
 {% load quote_plus_tag %}
 
+{% block in_page_css%}
+  <style type="text/css">
+  div#main ul {
+    list-style-type: circle;
+  }
+  </style>
+{% endblock %}
 
 {% block head_title %}US Epigraphy — Publications{% endblock head_title %}
 
@@ -58,7 +65,7 @@
       var processor = Saxon.run({
           stylesheet: target_stylesheet,
           source:     target_source,
-          parameters: { url: ("{% url publication_url " " %}".slice(1, -4)) }
+          parameters: { url: ('{% url publication_url " " %}'.slice(1, -4)), new:"yes"  }
       });
 
       processor.setSuccess( fade("out", document.getElementById("loading")) );
