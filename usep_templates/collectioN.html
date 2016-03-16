@@ -22,7 +22,7 @@
 
 {% block content %}
   <div id="main">
-    <div id="description">{{ flat_collection.collection_description }}</div>
+    <div id="description">{% autoescape off %}{{ flat_collection.collection_description }} {% endautoescape %}</div>
     <div id="container">
       <p>( Total: {{ inscription_count }} ) Jump to: {% for k,v in display.iteritems %}<a href="#{{ k }}">{{ v }}</a>{% if not forloop.last %} | {% endif %}{% endfor %}</p>
       {% for keylang,language_group in inscriptions.iteritems %}
