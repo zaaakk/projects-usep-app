@@ -10,6 +10,10 @@ from django.db import models
 from django.utils.encoding import smart_unicode
 from usep_app import settings_app
 
+from django.utils.http import urlencode
+
+from lxml import etree
+
 import string
 
 log = logging.getLogger(__name__)
@@ -185,7 +189,7 @@ def break_token(token):
 
 def separate_into_languages(docs):
 
-    # Language value/display pairs as of 10/2014
+    # Language value/display pairs as of 3/2016
     language_pairs = {
         u"lat": u"Latin",
         u"grc": u"Greek",
@@ -555,4 +559,133 @@ class SolrHelper(object):
         u'indent': u'on',
         u'facet': u'on',
         u'facet.mincount': u'1',
+        u'facet.limit':u'-1',
         u'wt': u'json' }
+    solr_url = settings_app.SOLR_URL_BASE
+
+    default_facets = ["condition", "decoration", "fake", "language", "material", 
+        "object_type", "text_genre", "writing", "status", "char", "name"]
+
+    def __init__(self):
+        self.vocab = Vocab()
+
+    def makeSolrQuery(self, q_obj):
+        fields = []
+        for f in q_obj:
+            if f.startswith(u"facet_"):
+                fields += [u"({0}:{1})".format(f[6:], q_obj[f][0])]
+                continue
+
+            values = []
+            for v in q_obj[f]:
+                if v:
+                    values = values + [u"{0}:{1}".format(f,v)]
+
+            if values: fields = fields + [u"("+(u" OR ".join(values))+u")"]
+
+        return u" AND ".join(fields)
+
+    def add_collection(self, result_list):
+        for doc in result_list:
+            col_list = []
+            if u"msid_region" in doc: col_list.append(doc[u'msid_region'])
+            if u"msid_settlement" in doc: col_list.append(doc[u'msid_settlement'])
+            if u"msid_institution" in doc: col_list.append(doc[u'msid_institution'])
+            if u"msid_repository" in doc: col_list.append(doc[u'msid_repository'])
+
+            doc[u'collection'] = u'.'.join(col_list)
+
+        return result_list
+
+    def query(self, q_obj, params={}):
+        q = self.makeSolrQuery(q_obj)
+        params = dict(params.items() + self.default_params.items())
+        params[u'facet.mincount'] = "1"
+        params[u'facet.field'] = self.default_facets
+        params[u'q'] = q
+
+        r = requests.get(self.solr_url, params=params)
+        resp = r.json
+        if "error" in resp:
+            return resp, None, None
+        return self.add_collection(resp['response']['docs']), self.facetDisplay(resp['facet_counts']['facet_fields']), q
+
+    def facetDisplay(self, facet_dict):
+        """Make a display dict from a solr facet result, parsing the counts into a dict"""
+        facet_displays = dict()
+        for field in facet_dict:
+            facet_displays[field] = dict()
+            counts = facet_dict[field]
+
+            for i in range(0,len(counts), 2):
+                facet_displays[field][counts[i]] = counts[i+1]
+
+        return facet_displays
+
+    def enhance_solr_data( self, solr_data, url_scheme, server_name ):
+        """ Adds to dict entries from solr: image-url and item-url. """
+        enhanced_list = []
+        for entry in solr_data:
+            image_url = None
+            if u'graphic_name' in entry.keys():
+                image_url = u'%s/%s' % ( settings_app.INSCRIPTIONS_URL_SEGMENT, entry[u'graphic_name'] )
+            entry[u'image_url'] = image_url
+            entry[u'url'] = u'%s://%s%s' % ( url_scheme, server_name, reverse(u'inscription_url', args=(entry[u'id'],)) )
+            enhanced_list.append( entry )
+        return enhanced_list
+
+class Vocab(object):
+    """Matches controlled values to display values."""
+    tax_url = settings_app.DISPLAY_PUBLICATIONS_BIB_URL.replace("titles.xml", "include_taxonomies.xml")
+
+    fieldNames = {
+        "condition": "Condition",
+        "decoration": "Decoration",
+        "fake": "Fake",
+        "language": "Language",
+        "material": "Material",
+        "object_type": "Type of Object",
+        "text_genre": "Genre",
+        "writing": "Writing",
+        "status": "Transcription Status",
+        "char": "Special Characters",
+        "name": "Names",
+        "metadata":"Metadata",
+        "transcription":"Fully Transcribed",
+        "bib_only":"Citations",
+    }
+
+    language_pairs = {
+        u"lat": u"Latin",
+        u"grc": u"Greek",
+        u"la": u"Latin",
+        u"la-Grek": u"Latin written in Greek",
+        u"lat-Grek":u"Latin written in Greek",
+        u"etr":u"Etruscan",
+        u"xrr":u"Raetic",
+        u"und": u"Undecided",
+        u"unknown": u"Unknown"
+    }
+    
+    def __init__(self):
+        r = requests.get(self.tax_url)
+        self.xml = etree.fromstring(r.content)
+
+        self.control_vals = etree.XPath("//t:category/@xml:id", namespaces={"t":"http://www.tei-c.org/ns/1.0"})(self.xml)
+
+        self.map = dict()
+
+        for val in self.control_vals:
+            display = etree.XPath("//t:category[@xml:id='{0}']/t:catDesc".format(val), namespaces={"t":"http://www.tei-c.org/ns/1.0"})(self.xml)
+            if display:
+                self.map[val] = display[0].text
+
+        self.map = dict(self.map.items() + self.fieldNames.items() + self.language_pairs.items())
+
+    def __getitem__(self, i):
+        i = i.replace("#", "")
+        if i in self.map:
+            return self.map[i]
+        else:
+            return i
+        
