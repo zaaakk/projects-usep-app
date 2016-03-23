@@ -639,20 +639,20 @@ class Vocab(object):
     tax_url = settings_app.DISPLAY_PUBLICATIONS_BIB_URL.replace("titles.xml", "include_taxonomies.xml")
 
     fieldNames = {
-        "condition": "Condition",
-        "decoration": "Decoration",
-        "fake": "Fake",
-        "language": "Language",
-        "material": "Material",
-        "object_type": "Type of Object",
-        "text_genre": "Genre",
-        "writing": "Writing",
-        "status": "Transcription Status",
-        "char": "Special Characters",
-        "name": "Names",
-        "metadata":"Metadata",
-        "transcription":"Fully Transcribed",
-        "bib_only":"Citations",
+        u"condition": u"Condition",
+        u"decoration": u"Decoration",
+        u"fake": u"Fake",
+        u"language": u"Language",
+        u"material": u"Material",
+        u"object_type":u"Type of Object",
+        u"text_genre": u"Genre",
+        u"writing": u"Writing",
+        u"status": u"Transcription Status",
+        u"char": u"Special Characters",
+        u"name": u"Names",
+        u"metadata": u"Metadata",
+        u"transcription": u"Fully Transcribed",
+        u"bib_only": u"Citations",
     }
 
     language_pairs = {
