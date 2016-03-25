@@ -620,6 +620,8 @@ class SolrHelper(object):
             for i in range(0,len(counts), 2):
                 facet_displays[field][counts[i]] = counts[i+1]
 
+            facet_displays[field] = sorted(facet_displays[field].items(), key=lambda x: x[1],reverse=True)
+
         return facet_displays
 
     def enhance_solr_data( self, solr_data, url_scheme, server_name ):

@@ -93,8 +93,6 @@
 	<button id="adv_button" type="button" onclick="expand(event);">Advanced Search</button>
 	<br>
 	<fieldset id="advanced">
-<!-- 		<legend></legend}
--->	
 	<table>
 	<button class="reset" type="button" onclick="reset()">Reset Search</button>
  	{% for field,values in facets.items %}
@@ -105,7 +103,7 @@
 		<!-- <option value="NONE">Select...</option> -->
 		{% for item in values %}
 			<option value="{{item}}">
-				{{item|tax}}
+				{{item.0|tax}}
 			</option>
 		{% endfor %}
 	</select>
