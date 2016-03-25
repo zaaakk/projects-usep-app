@@ -102,7 +102,7 @@
 	<select multiple name="{{field}}">
 		<!-- <option value="NONE">Select...</option> -->
 		{% for item in values %}
-			<option value="{{item}}">
+			<option value="{{item.0}}">
 				{{item.0|tax}}
 			</option>
 		{% endfor %}

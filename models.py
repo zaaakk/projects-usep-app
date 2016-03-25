@@ -597,7 +597,7 @@ class SolrHelper(object):
 
         return result_list
 
-    def query(self, q_obj, params={}):
+    def query(self, q_obj, params={}, search_form=False):
         q = self.makeSolrQuery(q_obj)
         params = dict(params.items() + self.default_params.items())
         params[u'facet.mincount'] = "1"
@@ -608,19 +608,27 @@ class SolrHelper(object):
         resp = r.json
         if "error" in resp:
             return resp, None, None
-        return self.add_collection(resp['response']['docs']), self.facetDisplay(resp['facet_counts']['facet_fields']), q
+        return self.add_collection(resp['response']['docs']), self.facetDisplay(resp['facet_counts']['facet_fields'], search_form), q
 
-    def facetDisplay(self, facet_dict):
+    def facetDisplay(self, facet_dict, form=False):
         """Make a display dict from a solr facet result, parsing the counts into a dict"""
         facet_displays = dict()
+
+        sorter = lambda x: -x[1]
+        if form:
+            sorter = lambda x: self.vocab[x[0]].lower()
+
         for field in facet_dict:
             facet_displays[field] = dict()
             counts = facet_dict[field]
 
-            for i in range(0,len(counts), 2):
-                facet_displays[field][counts[i]] = counts[i+1]
 
-            facet_displays[field] = sorted(facet_displays[field].items(), key=lambda x: x[1],reverse=True)
+            for i in range(0,len(counts), 2):
+                f_display = counts[i]
+
+                facet_displays[field][f_display] = counts[i+1]
+
+            facet_displays[field] = sorted(facet_displays[field].items(), key=sorter)
 
         return facet_displays
 
