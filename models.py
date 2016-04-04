@@ -563,7 +563,7 @@ class SolrHelper(object):
         u'wt': u'json' }
     solr_url = settings_app.SOLR_URL_BASE
 
-    default_facets = ["condition", "decoration", "fake", "language", "material", 
+    default_facets = ["condition", "fake", "language", "material", 
         "object_type", "text_genre", "writing", "status", "char", "name"]
 
     def __init__(self):

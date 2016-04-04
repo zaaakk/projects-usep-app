@@ -87,7 +87,7 @@
 {% block content%}
 {% block form%}
 <form id="searchform" action="results" method="GET">
-	<label for="fulltext">Full Text Search: <input type="text" name="text"></input></label>
+	<label for="fulltext">Full Text Search: <input type="text" name="transcription"></input></label>
 
 	<input type="submit" value="Search"></input>
 	<button id="adv_button" type="button" onclick="expand(event);">Advanced Search</button>
@@ -95,13 +95,13 @@
 	<fieldset id="advanced">
 	<table>
 	<button class="reset" type="button" onclick="reset()">Reset Search</button>
- 	{% for field,values in facets.items %}
+ 	{% for field_val in facets %}
  	<tr>
-	<th for="{{field}}">{{field|tax}}</th>
+	<th for="{{field_val.0}}">{{field_val.0|tax}}</th>
 	<td>
-	<select multiple name="{{field}}">
+	<select multiple name="{{field_val.0}}">
 		<!-- <option value="NONE">Select...</option> -->
-		{% for item in values %}
+		{% for item in field_val.1 %}
 			<option value="{{item.0}}">
 				{{item.0|tax}}
 			</option>
