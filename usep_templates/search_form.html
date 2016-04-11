@@ -65,7 +65,7 @@
 <script type="text/javascript">
 	function expand(event) {
 		event.preventDefault();
-		document.getElementById('advanced').style.height={{ facets|length }}*1.3+'in';
+		document.getElementById('advanced').style.height="initial";
 		document.getElementById("adv_button").onclick = contract;
 	}
 
@@ -110,6 +110,13 @@
 	</td>
 	</tr>
 	{% endfor %}
+	<tr>
+		<th>Fake</th>
+		<td>
+			<input type="radio" name="fake" value="include">Show inscriptions that are forgeries or counterfeit (falsi vel alieni)</input><br/>
+			<input type="radio" name="fake" value="hide" checked>Don't show forgeries</input>
+		</td>
+	</tr>
 	</table>
 	</fieldset>
 

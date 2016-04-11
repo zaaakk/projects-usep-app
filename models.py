@@ -563,7 +563,7 @@ class SolrHelper(object):
         u'wt': u'json' }
     solr_url = settings_app.SOLR_URL_BASE
 
-    default_facets = ["condition", "fake", "language", "material", 
+    default_facets = ["condition", "language", "material", 
         "object_type", "text_genre", "writing", "status", "char", "name"]
 
     def __init__(self):
@@ -575,6 +575,12 @@ class SolrHelper(object):
             if f.startswith(u"facet_"):
                 fields += [u"({0}:{1})".format(f[6:], q_obj[f][0])]
                 continue
+
+            if f == u"fake":
+                if q_obj[f][0] == u'hide':
+                    fields = fields + [u"(NOT fake:*)"]
+                continue
+
 
             values = []
             for v in q_obj[f]:
