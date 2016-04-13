@@ -566,6 +566,8 @@ class SolrHelper(object):
     default_facets = ["condition", "language", "material", 
         "object_type", "text_genre", "writing", "status", "char", "name"]
 
+    null_fields = ["condition", "material","writing","char","name","fake"]
+
     def __init__(self):
         self.vocab = Vocab()
 
@@ -573,12 +575,16 @@ class SolrHelper(object):
         fields = []
         for f in q_obj:
             if f.startswith(u"facet_"):
+                if q_obj[f][0] == u'none_value':
+                    fields += [u"NOT ({0}:*)".format(f[6:])]
+                    continue
+
                 fields += [u"({0}:{1})".format(f[6:], q_obj[f][0])]
                 continue
 
             if f == u"fake":
                 if q_obj[f][0] == u'hide':
-                    fields = fields + [u"(NOT fake:*)"]
+                    fields = fields + [u"NOT (fake:*)"]
                 continue
 
 
@@ -608,17 +614,20 @@ class SolrHelper(object):
         params = dict(params.items() + self.default_params.items())
         params[u'facet.mincount'] = "1"
         params[u'facet.field'] = self.default_facets
+        params[u'facet.query'] = ["NOT {0}:*".format(f) for f in self.null_fields]
         params[u'q'] = q
 
         r = requests.get(self.solr_url, params=params)
         resp = r.json
         if "error" in resp:
             return resp, None, None
-        return self.add_collection(resp['response']['docs']), self.facetDisplay(resp['facet_counts']['facet_fields'], search_form), q
+        return self.add_collection(resp['response']['docs']), self.facetDisplay(resp['facet_counts'], search_form), q
 
-    def facetDisplay(self, facet_dict, form=False):
+    def facetDisplay(self, facets, form=False):
         """Make a display dict from a solr facet result, parsing the counts into a dict"""
         facet_displays = dict()
+        facet_dict = facets['facet_fields']
+        facet_queries = facets['facet_queries']
 
         sorter = lambda x: -x[1]
         if form:
@@ -628,12 +637,15 @@ class SolrHelper(object):
             facet_displays[field] = dict()
             counts = facet_dict[field]
 
+            total = 0
 
             for i in range(0,len(counts), 2):
                 f_display = counts[i]
-
                 facet_displays[field][f_display] = counts[i+1]
+                total += counts[i+1]
 
+            if "NOT {0}:*".format(field) in facet_queries:
+                facet_displays[field]["none_value"] = facet_queries["NOT {0}:*".format(field)]
             facet_displays[field] = sorted(facet_displays[field].items(), key=sorter)
 
         return facet_displays

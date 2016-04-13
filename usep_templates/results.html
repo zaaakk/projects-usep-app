@@ -29,6 +29,10 @@
 		width: 250px;
 		float: right;
 	}
+
+	a.none_facet {
+		color: red;
+	}
 </style>
 {% endblock %}
 
@@ -44,6 +48,7 @@
 
 {% regroup results|dictsort:"collection" by collection as collections %}
 
+<h4>{% if results|length > 0 %}{{results|length}} results{% endif %}</h4>
 <a href="../">&lt; Back to search</a><br><br>
 <div id="results">
 	
@@ -84,8 +89,8 @@ No Results. <a href="../">Search again...</a>
 
 {% endblock results %}
 {% block facets%}
-
 <ul id="facets">
+<h4>{{results|length}} Total Results</h4>
 {% for facet,counts in facets.items %}
 {% block facet %}
 {% if counts %}
@@ -94,7 +99,15 @@ No Results. <a href="../">Search again...</a>
 		<ul class="facet_list">
 			{% for name,count in counts %}
 				<li>
-				<a href="{{url}}&amp;facet_{{facet}}={{name}}">{{name|tax}}: {{count}}</a>
+					{% if name == "none_value" %}
+					<a class="none_facet" href="{{url}}&amp;facet_{{facet}}={{name}}">
+						No Value ({{count}})
+					</a>
+					{% else %}
+					<a href="{{url}}&amp;facet_{{facet}}={{name}}">
+						{{name|tax}} ({{count}})
+					</a>
+					{% endif %}
 				</li>
 			{% endfor %}
 		</ul>
