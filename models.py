@@ -229,7 +229,7 @@ class Collection(object):
     def get_solr_data( self, collection ):
         """ Queries solr for collection info. """
         payload = {
-            u'q': collection,
+            u'q': u"id:{0}*".format(collection),
             u'fl': u'id,status,graphic_name,language,msid_idno',
             u'start': u'0',
             u'rows': u'99000',
