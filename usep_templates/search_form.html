@@ -95,6 +95,14 @@
 	<fieldset id="advanced">
 	<table>
 	<button class="reset" type="button" onclick="reset()">Reset Search</button>
+ 	<tr>
+		<th>Transcription Status</th>
+		<td>
+			<input type="radio" name="status" value="transcription" checked>Show only fully transcribed inscriptions</input><br/>
+			<input type="radio" name="status" value="metadata">Show all inscriptions that have metadata</input><br/>
+			<input type="radio" name="status" value="bib_only">Show all inscriptions, even ones with only bibliographic information.</input>
+		</td>
+	</tr>
  	{% for field_val in facets %}
  	<tr>
 	<th for="{{field_val.0}}">{{field_val.0|tax}}</th>

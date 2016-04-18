@@ -595,6 +595,16 @@ class SolrHelper(object):
                     fields = fields + [u"NOT (fake:*)"]
                 continue
 
+            if f ==u"status":
+                if q_obj[f][0] == u"transcription":
+                    fields = fields + [u"(status:transcription)"]
+                elif q_obj[f][0] == u"metadata":
+                    fields = fields + [u"(status:transcription OR status:metadata)"]
+                else:
+                     fields = fields + [u"(status:*)"]
+                continue
+
+
 
             values = []
             for v in q_obj[f]:
