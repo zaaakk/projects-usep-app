@@ -564,7 +564,7 @@ class SolrHelper(object):
     solr_url = settings_app.SOLR_URL_BASE
 
     default_facets = ["condition", "language", "material", 
-        "object_type", "text_genre", "writing", "status", "char", "name"]
+        "object_type", "text_genre", "writing", "status", "char", "name", "fake"]
 
     null_fields = ["condition", "material","writing","char","name","fake"]
 
@@ -575,6 +575,14 @@ class SolrHelper(object):
         fields = []
         for f in q_obj:
             if f.startswith(u"facet_"):
+
+                if f == u"facet_fake":
+                    if q_obj[f][0] == u'not_fake':
+                        fields += [u"NOT (fake:*)"]
+                    else:
+                        fields += ["(fake:*)"]
+                    continue
+
                 if q_obj[f][0] == u'none_value':
                     fields += [u"NOT ({0}:*)".format(f[6:])]
                     continue
@@ -636,6 +644,14 @@ class SolrHelper(object):
         for field in facet_dict:
             facet_displays[field] = dict()
             counts = facet_dict[field]
+            if field == u"fake":
+                num = sum([counts[x] for x in range(1, len(counts), 2)])
+                li = []
+                if num != 0: li += [("fake",num)]
+                if facet_queries["NOT fake:*"] != 0: li += [("not_fake",facet_queries["NOT fake:*"])]
+                facet_displays[u"fake"] = li
+
+                continue
 
             total = 0
 
@@ -694,6 +710,11 @@ class Vocab(object):
         u"und": u"Undecided",
         u"unknown": u"Unknown"
     }
+
+    others = {
+        "not_fake":"Genuine",
+        "none_value":"No Value",
+    }
     
     def __init__(self):
         r = requests.get(self.tax_url)
@@ -708,7 +729,7 @@ class Vocab(object):
             if display:
                 self.map[val] = display[0].text
 
-        self.map = dict(self.map.items() + self.fieldNames.items() + self.language_pairs.items())
+        self.map = dict(self.map.items() + self.fieldNames.items() + self.language_pairs.items() + self.others.items())
 
     def __getitem__(self, i):
         i = i.replace("#", "")
