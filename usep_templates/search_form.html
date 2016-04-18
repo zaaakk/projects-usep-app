@@ -65,7 +65,7 @@
 <script type="text/javascript">
 	function expand(event) {
 		event.preventDefault();
-		document.getElementById('advanced').style.height={{ facets|length }}*1.3+'in';
+		document.getElementById('advanced').style.height="initial";
 		document.getElementById("adv_button").onclick = contract;
 	}
 
@@ -95,13 +95,13 @@
 	<fieldset id="advanced">
 	<table>
 	<button class="reset" type="button" onclick="reset()">Reset Search</button>
- 	{% for field,values in facets.items %}
+ 	{% for field_val in facets %}
  	<tr>
-	<th for="{{field}}">{{field|tax}}</th>
+	<th for="{{field_val.0}}">{{field_val.0|tax}}</th>
 	<td>
-	<select multiple name="{{field}}">
+	<select multiple name="{{field_val.0}}">
 		<!-- <option value="NONE">Select...</option> -->
-		{% for item in values %}
+		{% for item in field_val.1 %}
 			<option value="{{item.0}}">
 				{{item.0|tax}}
 			</option>
@@ -110,6 +110,13 @@
 	</td>
 	</tr>
 	{% endfor %}
+	<tr>
+		<th>Fake</th>
+		<td>
+			<input type="radio" name="fake" value="include">Show inscriptions that are forgeries or counterfeit (falsi vel alieni)</input><br/>
+			<input type="radio" name="fake" value="hide" checked>Don't show forgeries</input>
+		</td>
+	</tr>
 	</table>
 	</fieldset>
 

@@ -12,7 +12,11 @@ from usep_app import settings_app, models
 def search_form(request):
 	sh = models.SolrHelper()
 	results, facets, querystring = sh.query({u"*":u"*"}, {"rows":0}, search_form=True)
-	return render(request, u'usep_templates/search_form.html', {"facets":facets})
+	field_list = ["text_genre", "object_type", "material", "language", "writing", "condition", "char", "condition"]
+	f = []
+	for x in field_list:
+		f += [(x, facets[x])]
+	return render(request, u'usep_templates/search_form.html', {"facets":f})
 
 def results(request):
 
