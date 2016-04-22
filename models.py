@@ -680,9 +680,15 @@ class SolrHelper(object):
         facet_dict = facets['facet_fields']
         facet_queries = facets['facet_queries']
 
+        def name_key(value):
+            if "." in value[0]:
+                return (self.vocab[value[0].split(".")[0]].lower(), self.vocab[value[0]].lower())
+            else:
+                return (self.vocab[value[0]].lower(), value[0].lower())
+
         sorter = lambda x: -x[1]
         if form:
-            sorter = lambda x: self.vocab[x[0]].lower()
+            sorter = name_key
 
         for field in facet_dict:
             facet_displays[field] = dict()
