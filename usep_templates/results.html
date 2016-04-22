@@ -43,7 +43,7 @@
 
 {% block results%}
 
-<p>{{querystring}}</p>
+<p style="display: none;">{{querystring}}</p>
 
 
 {% regroup results|dictsort:"collection" by collection as collections %}
