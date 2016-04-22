@@ -573,7 +573,6 @@ class SolrHelper(object):
 
     def makeSolrQuery(self, q_obj):
         fields = []
-
         if u"notBefore" not in q_obj or u"notAfter" not in q_obj:
             # if we have an incomplete date, just skip it
             if u"date_type" in q_obj:
@@ -581,6 +580,14 @@ class SolrHelper(object):
             if u"notBefore" in q_obj:
                 del q_obj[u"notBefore"]
 
+            if u"notAfter" in q_obj:
+                del q_obj[u"notAfter"]
+
+        elif len(q_obj[u"notBefore"][0]) == 0 or len(q_obj[u"notBefore"][0]) == 0:
+            if u"date_type" in q_obj:
+                del q_obj[u"date_type"]
+            if u"notBefore" in q_obj:
+                del q_obj[u"notBefore"]
             if u"notAfter" in q_obj:
                 del q_obj[u"notAfter"]
 
