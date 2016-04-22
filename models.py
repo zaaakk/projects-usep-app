@@ -727,10 +727,14 @@ class Vocab(object):
     }
     
     def __init__(self):
-        r = requests.get(self.tax_url)
-        self.xml = etree.fromstring(r.content)
+        try:
+            r = requests.get(self.tax_url)
+            self.xml = etree.fromstring(r.content)
+            self.control_vals = etree.XPath("//t:category/@xml:id", namespaces={"t":"http://www.tei-c.org/ns/1.0"})(self.xml)
+        except Exception, e:
+            logging.error(e)
+            self.control_vals = []
 
-        self.control_vals = etree.XPath("//t:category/@xml:id", namespaces={"t":"http://www.tei-c.org/ns/1.0"})(self.xml)
 
         self.map = dict()
 
