@@ -573,6 +573,34 @@ class SolrHelper(object):
 
     def makeSolrQuery(self, q_obj):
         fields = []
+
+        if u"notBefore" not in q_obj or u"notAfter" not in q_obj:
+            # if we have an incomplete date, just skip it
+            if u"date_type" in q_obj:
+                del q_obj[u"date_type"]
+            if u"notBefore" in q_obj:
+                del q_obj[u"notBefore"]
+
+            if u"notAfter" in q_obj:
+                del q_obj[u"notAfter"]
+
+        else:
+            dtype = q_obj[u"date_type"][0]
+            nb = int(q_obj[u"notBefore"][0])
+            na = int(q_obj[u"notAfter"][0])
+            del q_obj[u"date_type"]
+            del q_obj[u"notBefore"]
+            del q_obj[u"notAfter"]
+            qstring = u""
+            if dtype == u"inclusive":
+                qstring = u"(notBefore:[{0} TO {1}] OR notAfter:[{0} TO {1}] OR (notBefore:[* TO {0}] AND notAfter[{1} TO *]) OR (notBefore:[{0} TO *] AND notAfter[* TO {1}]))"
+            else:
+                qstring = u"(notBefore:[{0} TO *] AND notAfter[* TO {1}])"
+
+
+            fields += [qstring.format(nb, na)]
+        
+
         for f in q_obj:
             if f.startswith(u"facet_"):
 
@@ -595,7 +623,7 @@ class SolrHelper(object):
                     fields = fields + [u"NOT (fake:*)"]
                 continue
 
-            if f ==u"status":
+            if f == u"status":
                 if q_obj[f][0] == u"transcription":
                     fields = fields + [u"(status:transcription)"]
                 elif q_obj[f][0] == u"metadata":
@@ -603,8 +631,6 @@ class SolrHelper(object):
                 else:
                      fields = fields + [u"(status:*)"]
                 continue
-
-
 
             values = []
             for v in q_obj[f]:

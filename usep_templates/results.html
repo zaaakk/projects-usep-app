@@ -73,6 +73,9 @@
 	          <img class="thumb" src="{{ STATIC_URL }}usep/images/NoImageAvailable.jpg" alt="inscription_thumbnail" width="40" height="40"></img>
 	          {% endif %}
 	          <a href="{{ result.url }}">{{ result.id }} </a>
+	          {% if show_dates %}
+	          <span class="date">(Between {{result.notBefore|era}} and {{result.notAfter|era}})</span>
+	          {% endif %}
 	          <span id="status">({{ result.status }})</span>
 	    </li>
 	    {% endblock result %}
