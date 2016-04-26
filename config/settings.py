@@ -4,8 +4,8 @@ from __future__ import unicode_literals
 """
 Django settings for django_template_project.
 
-Environmental variables triggered in project's env_min_djng/bin/activate, when using runserver,
-  or env_min_djng/bin/activate_this.py, when using apache via passenger.
+Environmental variables triggered in project's env_usepweb/bin/activate, when using runserver,
+  or env_usepweb/bin/activate_this.py, when using apache via passenger.
 """
 
 import json, logging, os
@@ -18,16 +18,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['DJANGO_TEMPLATE__SECRET_KEY']
+SECRET_KEY = os.environ['USEPWEB__SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = json.loads( os.environ['DJANGO_TEMPLATE__DEBUG_JSON'] )  # will be True or False
+DEBUG = json.loads( os.environ['USEPWEB__DEBUG_JSON'] )  # will be True or False
 TEMPLATE_DEBUG = DEBUG
 
-ADMINS = json.loads( os.environ['DJANGO_TEMPLATE__ADMINS_JSON'] )
+ADMINS = json.loads( os.environ['USEPWEB__ADMINS_JSON'] )
 MANAGERS = ADMINS
 
-ALLOWED_HOSTS = json.loads( os.environ['DJANGO_TEMPLATE__ALLOWED_HOSTS'] )  # list
+ALLOWED_HOSTS = json.loads( os.environ['USEPWEB__ALLOWED_HOSTS'] )  # list
 
 
 # Application definition
@@ -60,7 +60,7 @@ WSGI_APPLICATION = 'config.passenger_wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-DATABASES = json.loads( os.environ['DJANGO_TEMPLATE__DATABASES_JSON'] )
+DATABASES = json.loads( os.environ['USEPWEB__DATABASES_JSON'] )
 
 
 # Internationalization
@@ -80,18 +80,18 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
-STATIC_URL = os.environ['DJANGO_TEMPLATE__STATIC_URL']
-STATIC_ROOT = os.environ['DJANGO_TEMPLATE__STATIC_ROOT']  # needed for collectstatic command
+STATIC_URL = os.environ['USEPWEB__STATIC_URL']
+STATIC_ROOT = os.environ['USEPWEB__STATIC_ROOT']  # needed for collectstatic command
 
 
 # Templates
 
-TEMPLATE_DIRS = json.loads( os.environ['DJANGO_TEMPLATE__TEMPLATE_DIRS'] )  # list
+TEMPLATE_DIRS = json.loads( os.environ['USEPWEB__TEMPLATE_DIRS'] )  # list
 
 
 # Email
-EMAIL_HOST = os.environ['DJANGO_TEMPLATE__EMAIL_HOST']
-EMAIL_PORT = int( os.environ['DJANGO_TEMPLATE__EMAIL_PORT'] )
+EMAIL_HOST = os.environ['USEPWEB__EMAIL_HOST']
+EMAIL_PORT = int( os.environ['USEPWEB__EMAIL_PORT'] )
 
 
 # sessions
@@ -121,7 +121,7 @@ LOGGING = {
         'logfile': {
             'level':'DEBUG',
             'class':'logging.FileHandler',  # note: configure server to use system's log-rotate to avoid permissions issues
-            'filename': os.environ.get(u'DJANGO_TEMPLATE__LOG_PATH'),
+            'filename': os.environ.get(u'USEPWEB__LOG_PATH'),
             'formatter': 'standard',
         },
         'console':{
@@ -133,7 +133,7 @@ LOGGING = {
     'loggers': {
         'browse_app': {
             'handlers': ['logfile'],
-            'level': os.environ.get(u'DJANGO_TEMPLATE__LOG_LEVEL'),
+            'level': os.environ.get(u'USEPWEB__LOG_LEVEL'),
         },
     }
 }
