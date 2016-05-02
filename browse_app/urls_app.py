@@ -9,6 +9,8 @@ urlpatterns = patterns('',
 
     url( r'^info/$',  'browse_app.views.hi', name='info_url' ),
 
+    url( r'^collections/$',  'browse_app.views.collections', name='collections_url' ),
+
     url( r'^$',  RedirectView.as_view(pattern_name='info_url') ),
 
     )
