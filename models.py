@@ -564,7 +564,7 @@ class SolrHelper(object):
     solr_url = settings_app.SOLR_URL_BASE
 
     default_facets = ["condition", "language", "material", 
-        "object_type", "text_genre", "writing", "status", "char", "name"]
+        "object_type", "text_genre", "writing", "status", "char", "name", "fake"]
 
     null_fields = ["condition", "material","writing","char","name","fake"]
 
@@ -573,8 +573,51 @@ class SolrHelper(object):
 
     def makeSolrQuery(self, q_obj):
         fields = []
+        if u"notBefore" not in q_obj or u"notAfter" not in q_obj:
+            # if we have an incomplete date, just skip it
+            if u"date_type" in q_obj:
+                del q_obj[u"date_type"]
+            if u"notBefore" in q_obj:
+                del q_obj[u"notBefore"]
+
+            if u"notAfter" in q_obj:
+                del q_obj[u"notAfter"]
+
+        elif len(q_obj[u"notBefore"][0]) == 0 or len(q_obj[u"notBefore"][0]) == 0:
+            if u"date_type" in q_obj:
+                del q_obj[u"date_type"]
+            if u"notBefore" in q_obj:
+                del q_obj[u"notBefore"]
+            if u"notAfter" in q_obj:
+                del q_obj[u"notAfter"]
+
+        else:
+            dtype = q_obj[u"date_type"][0]
+            nb = int(q_obj[u"notBefore"][0])
+            na = int(q_obj[u"notAfter"][0])
+            del q_obj[u"date_type"]
+            del q_obj[u"notBefore"]
+            del q_obj[u"notAfter"]
+            qstring = u""
+            if dtype == u"inclusive":
+                qstring = u"(notBefore:[{0} TO {1}] OR notAfter:[{0} TO {1}] OR (notBefore:[* TO {0}] AND notAfter[{1} TO *]) OR (notBefore:[{0} TO *] AND notAfter[* TO {1}]))"
+            else:
+                qstring = u"(notBefore:[{0} TO *] AND notAfter[* TO {1}])"
+
+
+            fields += [qstring.format(nb, na)]
+        
+
         for f in q_obj:
             if f.startswith(u"facet_"):
+
+                if f == u"facet_fake":
+                    if q_obj[f][0] == u'not_fake':
+                        fields += [u"NOT (fake:*)"]
+                    else:
+                        fields += ["(fake:*)"]
+                    continue
+
                 if q_obj[f][0] == u'none_value':
                     fields += [u"NOT ({0}:*)".format(f[6:])]
                     continue
@@ -587,6 +630,14 @@ class SolrHelper(object):
                     fields = fields + [u"NOT (fake:*)"]
                 continue
 
+            if f == u"status":
+                if q_obj[f][0] == u"transcription":
+                    fields = fields + [u"(status:transcription)"]
+                elif q_obj[f][0] == u"metadata":
+                    fields = fields + [u"(status:transcription OR status:metadata)"]
+                else:
+                     fields = fields + [u"(status:*)"]
+                continue
 
             values = []
             for v in q_obj[f]:
@@ -629,13 +680,27 @@ class SolrHelper(object):
         facet_dict = facets['facet_fields']
         facet_queries = facets['facet_queries']
 
+        def name_key(value):
+            if "." in value[0]:
+                return (self.vocab[value[0].split(".")[0]].lower(), self.vocab[value[0]].lower())
+            else:
+                return (self.vocab[value[0]].lower(), value[0].lower())
+
         sorter = lambda x: -x[1]
         if form:
-            sorter = lambda x: self.vocab[x[0]].lower()
+            sorter = name_key
 
         for field in facet_dict:
             facet_displays[field] = dict()
             counts = facet_dict[field]
+            if field == u"fake":
+                num = sum([counts[x] for x in range(1, len(counts), 2)])
+                li = []
+                if num != 0: li += [("fake",num)]
+                if facet_queries["NOT fake:*"] != 0: li += [("not_fake",facet_queries["NOT fake:*"])]
+                facet_displays[u"fake"] = li
+
+                continue
 
             total = 0
 
@@ -694,12 +759,21 @@ class Vocab(object):
         u"und": u"Undecided",
         u"unknown": u"Unknown"
     }
+
+    others = {
+        "not_fake":"Genuine",
+        "none_value":"No Value",
+    }
     
     def __init__(self):
-        r = requests.get(self.tax_url)
-        self.xml = etree.fromstring(r.content)
+        try:
+            r = requests.get(self.tax_url)
+            self.xml = etree.fromstring(r.content)
+            self.control_vals = etree.XPath("//t:category/@xml:id", namespaces={"t":"http://www.tei-c.org/ns/1.0"})(self.xml)
+        except Exception, e:
+            logging.error(e)
+            self.control_vals = []
 
-        self.control_vals = etree.XPath("//t:category/@xml:id", namespaces={"t":"http://www.tei-c.org/ns/1.0"})(self.xml)
 
         self.map = dict()
 
@@ -708,7 +782,7 @@ class Vocab(object):
             if display:
                 self.map[val] = display[0].text
 
-        self.map = dict(self.map.items() + self.fieldNames.items() + self.language_pairs.items())
+        self.map = dict(self.map.items() + self.fieldNames.items() + self.language_pairs.items() + self.others.items())
 
     def __getitem__(self, i):
         i = i.replace("#", "")

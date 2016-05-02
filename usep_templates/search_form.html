@@ -16,6 +16,7 @@
 	#content {
 		margin-left: 3.5cm;
 		font-size: 1.2em;
+		width: 70%;
 	}
 
 	#advanced {
@@ -36,12 +37,14 @@
 
 	table th,table td {
 		border-bottom: 1px solid slategray;
+		min-height: 1in;
 	}
 
 	#advanced select[multiple] {
 		width: 2.5in;
 		height: 1in;
-		float: right;
+		float: left;
+		margin-left: 2cm;
 	}
 
 	input[type='text'] {
@@ -54,6 +57,10 @@
 		height: 1cm;
 		width: 2cm;
 		text-align: center;
+	}
+
+	#error {
+		color: #b3002d;
 	}
 
 	.reset {
@@ -81,6 +88,20 @@
 			opts[i].selected = false;
 		}
 	}
+	function dateChange(event) {
+		var notBefore = parseInt(document.querySelector("#notBefore").value);
+		var notAfter = parseInt(document.querySelector("#notAfter").value);
+
+		console.log(notBefore);
+		console.log(notAfter);
+
+		var obj = document.querySelector('#error');
+		if (notAfter < notBefore) {
+			obj.innerText = ("Invalid date range!");
+		} else {
+			obj.innerText = "";
+		}
+	}
 </script>
 {% endblock %}
 
@@ -95,6 +116,29 @@
 	<fieldset id="advanced">
 	<table>
 	<button class="reset" type="button" onclick="reset()">Reset Search</button>
+	To search by publication, see <a href="{% url publications_url %}">Publications</a>
+ 	<tr>
+		<th>Transcription Status</th>
+		<td>
+			<input type="radio" name="status" value="transcription" checked>Show only fully transcribed inscriptions</input><br/>
+			<input type="radio" name="status" value="metadata">Show all inscriptions that have metadata</input><br/>
+			<input type="radio" name="status" value="bib_only">Show all inscriptions, even ones with only bibliographic information.</input>
+		</td>
+	</tr>
+	<tr>
+		<th>Date</th>
+		<td>
+			Use negative numbers to refer to years BCE (e.g., -100 refers to 100 BCE).<br/>
+			<label for="notBefore">Not Before:<input id="notBefore" type="num" max="1000" min="-1000" step="1" name="notBefore" onchange="dateChange(event);"></input></label>
+			<label for="notAfter">Not After:<input id="notAfter" type="num" max="1000" min="-1000" step="1" name="notAfter" onchange="dateChange(event);"></input></label>
+			<span id="error"></span>
+			<br/>
+			<label for="date_type"><select name="date_type" value="inclusive">
+				<option value="inclusive" checked>Inclusive (inscriptions whose range matches any part)</option>
+				<option value="exclusive">Exclusive (inscriptions whose range is entirely contained)</option>
+			</select></label>
+		</td>
+	</tr>
  	{% for field_val in facets %}
  	<tr>
 	<th for="{{field_val.0}}">{{field_val.0|tax}}</th>

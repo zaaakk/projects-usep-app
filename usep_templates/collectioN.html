@@ -4,20 +4,6 @@
 
 {% block head_media_href %}href="{{ STATIC_URL }}usep/css/style.css"{% endblock head_media_href %}
 
-{% block header %}
-  <a href="../../collections/"><img src="{{ STATIC_URL }}usep/css/gfx/header_brickstamp.png" height="156" width="159" alt="U.S. Epigraphy Project" title="U.S. Epigraphy Project home page"/></a>
-  <div id="headerlinks">
-    <a href="/search/usep/results"><img src="{{ STATIC_URL }}usep/css/gfx/button_search.png" /></a>
-    <!-- <a href="../../../../search/usep/results"><img src="{{ STATIC_URL }}usep/css/gfx/button_search.png" height="25" width="160" /></a> -->
-    <a href="../../collections/"><img src="{{ STATIC_URL }}usep/css/gfx/button_collections.png" height="25" width="160" /></a>
-    <a href="../../publications/"><img src="{{ STATIC_URL }}usep/css/gfx/button_publications.png" height="25" width="160" /></a> <br />
-    <a href="../../texts/">Texts</a> |
-    <a href="../../links/">Epigraphy links</a> |
-    <a href="../../about/">About</a> |
-    <a href="../../contact/">Contact</a>
-  </div>
-{% endblock header %}
-
 {% block page_title %}Inscriptions from <span class="id_string">{{ collection_title }}</span>{% endblock page_title %}
 
 {% block content %}

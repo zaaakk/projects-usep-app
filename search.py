@@ -12,7 +12,9 @@ from usep_app import settings_app, models
 def search_form(request):
 	sh = models.SolrHelper()
 	results, facets, querystring = sh.query({u"*":u"*"}, {"rows":0}, search_form=True)
-	field_list = ["text_genre", "object_type", "material", "language", "writing", "condition", "char", "condition"]
+
+
+	field_list = ["text_genre", "object_type", "material", "language", "writing", "condition", "char"]
 	f = []
 	for x in field_list:
 		f += [(x, facets[x])]
@@ -26,7 +28,9 @@ def results(request):
 
 	results, facets, querystring = sh.query(q, {"rows": 4000})
 
-	data_dict = {"q":q, "title":"Search", "facets":facets, "url":request.get_full_path(), "querystring":querystring}
+	show_dates = u"notAfter" in querystring
+
+	data_dict = {"q":q, "title":"Search", "facets":facets, "url":request.get_full_path(), "querystring":querystring, "show_dates":show_dates}
 	if 'error' in results:
 		data_dict['error'] = results['error']
 	else:
