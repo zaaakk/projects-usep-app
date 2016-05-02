@@ -6,4 +6,6 @@ import os
 
 FOO = 'BAR'
 
-FOO2 = os.environ['FOO2']
+# FOO2 = os.environ['FOO2']
+
+LOGIN_URL = unicode( os.environ['USEPWEB__LOGIN_URL'] )
