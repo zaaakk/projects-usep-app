@@ -1,56 +1,54 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US" xml:lang="en-US">
 
-<html>
+  <head profile="http://gmpg.org/xfn/11">
 
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
-    <title>
-        {% block page_title %}
-        browse_app - Brown University Library
-        {% endblock page_title %}
-    </title>
-    <link href="//library.brown.edu/css_2011/BUL2011.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="//library.brown.edu/scripts_2011/css3-mediaqueries.js"></script>
-</head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>{% block head_title %}HOLDER{% endblock head_title %}</title>
+    <link type="text/css" {% block head_media_href %}href="{{ STATIC_URL }}usep/css/style.css"{% endblock head_media_href %} media="all" rel="stylesheet" />
 
-<body>
+    {% block in_page_css %}{% endblock in_page_css %}
 
-    <div id="wrapper">
+  </head>
 
-        <div id="header">
-            <p class="top_header_links">
-                <a href="http://library.brown.edu/libweb/proxy.php">Off-Campus Access</a> &nbsp;&nbsp;&#124;&nbsp;&nbsp;
-                <a href="http://library.brown.edu/libweb/atoz.php">Library A&ndash;Z</a> <!-- &nbsp;&nbsp;&#124;&nbsp;&nbsp; -->
-                {% if logout_url %}&nbsp;&nbsp;&#124;&nbsp;&nbsp;<a href="{{ logout_url }}">Log-out</a>{% endif %}
-            </p>
+  <body>
 
-            <div class="BUhomelink">
-                <a href="http://www.brown.edu"><img src="//library.brown.edu/images/spacer.gif" width="50" alt="Brown University Homepage" title="Brown University Homepage" /></a>
-            </div>
+    <div id="header">
+      {% block header %}
+      <a href="{# {% url 'collections_url' %} #}"><img src="{{ STATIC_URL }}usep/css/gfx/header_brickstamp.png" alt="U.S. Epigraphy Project" title="U.S. Epigraphy Project home page"/></a>
+    	<div id="headerlinks">
+        <!-- <a href="{{ usep_search_url }}"><img src="{{ STATIC_URL }}usep/css/gfx/button_search.png" /></a> -->
+    		<!-- <a href="../../../search/usep/results"><img src="{{ STATIC_URL }}usep/css/gfx/button_search.png" /></a> -->
+        <a href="/search/usep/results"><img src="{{ STATIC_URL }}usep/css/gfx/button_search.png" /></a>
+        <a href="{# {% url 'collections_url' %} #}"><img src="{{ STATIC_URL }}usep/css/gfx/button_collections.png" /></a>
+        <a href="{# {% url 'publications_url' %} #}"><img src="{{ STATIC_URL }}usep/css/gfx/button_publications.png" /></a> <br />
+  			<a href="{# {% url 'texts_url' %} #}">Texts</a> |
+  			<a href="{# {% url 'links_url' %} #}">Epigraphy links</a> |
+  			<a href="{# {% url 'about_url' %} #}">About</a> |
+  			<a href="{# {% url 'contact_url' %} #}">Contact</a>
+    	</div>
+    	{% endblock header %}
+    </div>
 
-            <div class="BULhomelink">
-                <a href="http://library.brown.edu/"><img src="//library.brown.edu/images/spacer.gif" width="440" height="30" alt="Brown University Library Homepage" title="Brown University Library Homepage" /></a>
-            </div>
+    <div id="undefined_wrapper">
+      {% block list_of_states %}
+      <div id="listofstates"></div>  {% comment %} css applies green bar to this, so needed for now {% endcomment %}
+      {% endblock list_of_states %}
 
-        </div> <!-- end div#header -->
+      <h1 id="pagetitle">{% block page_title %}HOLDER{% endblock page_title %}</h1>
 
-        <div class="content-wrapper findit-core">
 
-            <div class="large-content findit-core">
-                <h3>app x</h3>
+      <div id="content">
+        {% block content %}
+        {% endblock content %}
+      <div> <!-- end div id="content" -->
 
-                <div style="margin:2em;">
-                    {% block content %}
-                    {% endblock content %}
-                </div>
+    </div> <!-- end div id="undefined_wrapper" -->
 
-            </div> <!-- end div.large-content findit-core -->
+  </body>
 
-        </div> <!-- end div.content-wrapper findit-core -->
-
-    </div> <!-- end div#wrapper -->
-
-</body>
+  {% block page_js %}
+  {% endblock page_js %}
 
 </html>
