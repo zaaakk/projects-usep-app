@@ -28,22 +28,23 @@ def collections( request ):
     all_collections_objects = FlatCollection.objects.all().order_by( 'region_name', 'collection_code' )
     all_collections_dictionaries = [ obj.as_dict() for obj in all_collections_objects ]
     data_dict = {
-      u'region_codes': fc.make_region_codes_list(),
-      u'all_collections_dictionaries': all_collections_dictionaries
+      'region_codes': fc.make_region_codes_list(),
+      'all_collections_dictionaries': all_collections_dictionaries,
+      'login_url': settings_app.LOGIN_URL
     }
     return data_dict
   def build_response( format, callback ):
-    if format == u'json':
+    if format == 'json':
       output = json.dumps( data_dict, sort_keys=True, indent=2 )
       if callback:
-        output = u'%s(%s)' % ( callback, output )
-      return HttpResponse( output, content_type = u'application/javascript; charset=utf-8' )
+        output = '%s(%s)' % ( callback, output )
+      return HttpResponse( output, content_type = 'application/javascript; charset=utf-8' )
     else:
-      data_dict[u'login_url'] = settings_app.LOGIN_URL
-      return render( request, u'browse_app_templates/collectionS.html', data_dict )
+
+      return render( request, 'browse_app_templates/collectionS.html', data_dict )
   ## work ##
   data_dict = prepare_data()
-  format = request.GET.get( u'format', None )
-  callback = request.GET.get( u'callback', None )
+  format = request.GET.get( 'format', None )
+  callback = request.GET.get( 'callback', None )
   response = build_response( format, callback )
   return response
