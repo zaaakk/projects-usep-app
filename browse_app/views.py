@@ -30,7 +30,7 @@ def collections( request ):
     data_dict = {
       'region_codes': fc.make_region_codes_list(),
       'all_collections_dictionaries': all_collections_dictionaries,
-      'login_url': settings_app.LOGIN_URL
+      'login_url': reverse('admin:index' )  # yes
     }
     return data_dict
   def build_response( format, callback ):
