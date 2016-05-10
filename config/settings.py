@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = os.environ['USEPWEB__SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = json.loads( os.environ['USEPWEB__DEBUG_JSON'] )  # will be True or False
+DEBUG = json.loads( os.environ['USEPWEB__DEBUG_JSON'] )  # "true" or "false" to True or False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = json.loads( os.environ['USEPWEB__ADMINS_JSON'] )
