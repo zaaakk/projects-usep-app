@@ -40,7 +40,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'browse_app',
+    'usep_app',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -133,7 +133,7 @@ LOGGING = {
         },
     },
     'loggers': {
-        'browse_app': {
+        'usep_app': {
             'handlers': ['logfile'],
             'level': os.environ.get(u'USEPWEB__LOG_LEVEL'),
         },

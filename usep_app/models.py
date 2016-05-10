@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.utils.encoding import smart_unicode
-from browse_app import settings_app
+from usep_app import settings_app
 
 
 log = logging.getLogger(__name__)

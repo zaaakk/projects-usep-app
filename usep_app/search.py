@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render_to_response, render
 from django.views.decorators.cache import cache_page
-from browse_app import settings_app, models
+from usep_app import settings_app, models
 
 
 def search_form(request):

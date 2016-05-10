@@ -30,7 +30,7 @@ def collections( request ):
     data_dict = {
       'region_codes': fc.make_region_codes_list(),
       'all_collections_dictionaries': all_collections_dictionaries,
-      'login_url': reverse('admin:browse_app_flatcollection_changelist' )
+      'login_url': reverse('admin:usep_app_flatcollection_changelist' )
     }
     return data_dict
   def build_response( format, callback ):
@@ -41,7 +41,7 @@ def collections( request ):
       return HttpResponse( output, content_type = 'application/javascript; charset=utf-8' )
     else:
 
-      return render( request, 'browse_app_templates/collectionS.html', data_dict )
+      return render( request, 'usep_templates/collectionS.html', data_dict )
   ## work ##
   data_dict = prepare_data()
   format = request.GET.get( 'format', None )

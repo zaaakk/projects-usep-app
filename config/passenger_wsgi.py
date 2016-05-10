@@ -12,7 +12,7 @@ Prepares application environment.
 Variables assume project setup like:
 stuff
     django_template_project
-        browse_app
+        usep_app
         config
     env_usepweb
 """

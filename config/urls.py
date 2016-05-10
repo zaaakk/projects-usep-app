@@ -10,6 +10,6 @@ urlpatterns = patterns('',
 
     url( r'^admin/', include(admin.site.urls) ),  # eg host/project_x/admin/
 
-    url( r'^', include('browse_app.urls_app') ),  # eg host/project_x/anything/
+    url( r'^', include('usep_app.urls_app') ),  # eg host/project_x/anything/
 
 )
