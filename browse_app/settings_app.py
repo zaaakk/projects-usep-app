@@ -8,3 +8,5 @@ import os
 LOGIN_URL = unicode( os.environ['USEPWEB__LOGIN_URL'] )
 
 SOLR_URL_BASE = unicode( os.environ['USEPWEB__SOLR_URL_BASE'] )
+
+DISPLAY_PUBLICATIONS_BIB_URL = unicode( os.environ['USEPWEB__DISPLAY_PUBLICATIONS_BIB_URL'] )
