@@ -14,6 +14,6 @@ urlpatterns = patterns('',
 
     url( r'^search/$', 'usep_app.search.search_form', name='search_url'),
 
-    url( r'^$',  RedirectView.as_view(pattern_name='info_url') ),
+    url( r'^$',  RedirectView.as_view(pattern_name='collections_url') ),
 
     )
