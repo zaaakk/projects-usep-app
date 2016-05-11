@@ -22,11 +22,11 @@
     		<!-- <a href="../../../search/usep/results"><img src="{{ STATIC_URL }}browse/css/gfx/button_search.png" /></a> -->
         <a href="{% url 'search_url' %}"><img src="{{ STATIC_URL }}browse/css/gfx/button_search.png" /></a>
         <a href="{% url 'collections_url' %}"><img src="{{ STATIC_URL }}browse/css/gfx/button_collections.png" /></a>
-        <a href="{# {% url 'publications_url' %} #}"><img src="{{ STATIC_URL }}browse/css/gfx/button_publications.png" /></a> <br />
-  			<a href="{# {% url 'texts_url' %} #}">Texts</a> |
-  			<a href="{# {% url 'links_url' %} #}">Epigraphy links</a> |
-  			<a href="{# {% url 'about_url' %} #}">About</a> |
-  			<a href="{# {% url 'contact_url' %} #}">Contact</a>
+        <a href="{% url 'publications_url' %}"><img src="{{ STATIC_URL }}browse/css/gfx/button_publications.png" /></a> <br />
+  			<a href="{% url 'texts_url' %}">Texts</a> |
+  			<a href="{% url 'links_url' %}">Epigraphy links</a> |
+  			<a href="{% url 'about_url' %}">About</a> |
+  			<a href="{% url 'contact_url' %}">Contact</a>
     	</div>
     	{% endblock header %}
     </div>
