@@ -20,6 +20,10 @@ def hi( request ):
     return HttpResponse( '<p>hi</p> <p>( %s )</p>' % now )
 
 
+def coming( request ):
+    return HttpResponse( '<p>coming</p>')
+
+
 def collections( request ):
   """Displays list of collections by Region."""
   ## helpers ##
@@ -30,7 +34,9 @@ def collections( request ):
     data_dict = {
       'region_codes': fc.make_region_codes_list(),
       'all_collections_dictionaries': all_collections_dictionaries,
-      'login_url': reverse('admin:usep_app_flatcollection_changelist' )
+      'login_url': reverse('admin:usep_app_flatcollection_changelist' ),
+      'search_url': reverse( 'search_url' ), 'collections_url': reverse( 'search_url' ), 'publications_url': reverse( 'publications_url' ),
+      'texts_url': reverse( 'texts_url' ), 'links_url': reverse( 'links_url' ), 'about_url': reverse( 'about_url' ), 'contact_url': reverse( 'contact_url' ),
     }
     return data_dict
   def build_response( format, callback ):
