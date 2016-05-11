@@ -21,6 +21,7 @@ def hi( request ):
 
 
 def coming( request ):
+    """ Stub view. """
     return HttpResponse( '<p>coming</p>')
 
 
@@ -54,3 +55,7 @@ def collections( request ):
   callback = request.GET.get( 'callback', None )
   response = build_response( format, callback )
   return response
+
+def collection( request, collection ):
+    """ Stub view. """
+    return HttpResponse( '<p>coming</p>')

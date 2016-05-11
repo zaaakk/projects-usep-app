@@ -20,6 +20,8 @@ urlpatterns = patterns('',
     url( r'^about/$',  'usep_app.views.coming', name='about_url' ),
     url( r'^contact/$',  'usep_app.views.coming', name='contact_url' ),
 
+    url( r'^collections/(?P<collection>[^/]+)/$',  'usep_app.views.collection', name='collection_url' ),
+
     url( r'^$',  RedirectView.as_view(pattern_name='collections_url') ),
 
     )
