@@ -1,10 +1,27 @@
 {% extends "usep_templates/base.html" %}
 
+{% load vocab %}
+
 {% block head_title %}US Epigraphy — {{ collection_title }} Collection{% endblock head_title %}
 
 {% block head_media_href %}href="{{ STATIC_URL }}usep/css/style.css"{% endblock head_media_href %}
 
 {% block page_title %}Inscriptions from <span class="id_string">{{ collection_title }}</span>{% endblock page_title %}
+
+{% block in_page_css %}
+<style>
+  ul.collection li {
+    min-height: 40px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+  .desc {
+    display: block;
+    padding-top: 1mm;
+    text-indent: 0.25cm;
+  }
+</style>
+{% endblock in_page_css %}
 
 {% block content %}
   <div id="main">
@@ -14,17 +31,23 @@
       {% for keylang,language_group in inscriptions.iteritems %}
       <h2 id="{{ keylang }}">{{ language_group.display }}</h2>
       <ul class="collection">
-        {% for member in language_group.docs %}
+        {% for result in language_group.docs %}
         <li>
-          {% if member.image_url %}
-          <img class="thumb" src="{{ member.image_url }}" alt="inscription_thumbnail" width="40" height="40"></img>
-          {% else %}
-          <img class="thumb" src="{{ STATIC_URL }}usep/images/NoImageAvailable.jpg" alt="inscription_thumbnail" width="40" height="40"></img>
-          {% endif %}
-          <a href="{{ member.url }}">{{ member.id }} </a>
-          <span id="status">({{ member.status }})</span>
+          {% if result.image_url %}
+            <img class="thumb" src="{{ result.image_url }}" alt="inscription_thumbnail" width="40" height="40"></img>
+            {% else %}
+            <img class="thumb" src="{{ STATIC_URL }}usep/images/NoImageAvailable.jpg" alt="inscription_thumbnail" width="40" height="40"></img>
+            {% endif %}
+            <a href="{{ result.url }}">{{ result.id }} </a>
+            <span class="status">({{ result.status }})</span>
+            {% if result.text_genre_desc %}
+            <br/><span class="desc">{{result.text_genre_desc.0}}</span>
+            {% endif %}
+            {% if show_dates %}
+            <br/><span class="date">(Between {{result.notBefore|era}} and {{result.notAfter|era}})</span>
+            {% endif %}
         </li>
-        <!-- <li><img class="thumb" src="http://dev.stg.brown.edu/projects/usepigraphy/new/Pictures/Images/{% if member.image_url %}{{ member.id }}{% else %}NoImageAvailable{% endif %}.jpg" alt="Thumbnail indicating there is an image." width="40" height="40"></img><a href="http://dev.stg.brown.edu/projects/usepigraphy/new/view/#{{ member.id }}">{{ member.id }} <span id="status">({{ member.status }})</span></a></li> -->       {% endfor %}
+        {% endfor %}
       </ul>
       {% endfor %}
     </div>

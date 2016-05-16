@@ -80,6 +80,7 @@ def collection( request, collection ):
       u'inscription_count': num,
       u'display': display_dict,
       u'flat_collection': FlatCollection.objects.get(collection_code=collection),
+      u'show_dates':False,
       }
     return data_dict
   def build_response( format, callback ):

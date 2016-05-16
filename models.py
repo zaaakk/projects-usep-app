@@ -230,7 +230,7 @@ class Collection(object):
         """ Queries solr for collection info. """
         payload = {
             u'q': u"id:{0}*".format(collection),
-            u'fl': u'id,status,graphic_name,language,msid_idno',
+            u'fl': u'*',
             u'start': u'0',
             u'rows': u'99000',
             u'wt': u'json',
