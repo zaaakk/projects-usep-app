@@ -16,22 +16,35 @@
 	#content {
 		margin-left: 3.5cm;
 		font-size: 1.2em;
-	}
-
-	#content {
 		width: 80%;
+		min-width: 800px;
 	}
 
-	#results {
+	div#results {
+		width: 70%;
+		min-width: 500px;
 		float: left;
 	}
+
 	ul#facets {
-		width: 250px;
+		width: 20%;
 		float: right;
+		min-width: 200px;
 	}
 
 	a.none_facet {
 		color: red;
+	}
+
+	ul.collection li {
+		min-height: 40px;
+		padding-top: 6px;
+		padding-bottom: 6px;
+	}
+	.desc {
+		display: block;
+		padding-top: 1mm;
+		text-indent: 0.25cm;
 	}
 </style>
 {% endblock %}
@@ -59,13 +72,6 @@
 	{% for result in coll.list %}
 		
 		{% block result%}
-		<!-- result:
-		{
-			image_url:"string",
-			url:"string"
-			id:"string",
-			status:"string"
-		} -->
 		<li>
 	          {% if result.image_url %}
 	          <img class="thumb" src="{{ result.image_url }}" alt="inscription_thumbnail" width="40" height="40"></img>
@@ -76,7 +82,10 @@
 	          {% if show_dates %}
 	          <span class="date">(Between {{result.notBefore|era}} and {{result.notAfter|era}})</span>
 	          {% endif %}
-	          <span id="status">({{ result.status }})</span>
+	          <span class="status">({{ result.status }})</span>
+	          {% if result.text_genre_desc %}
+	          <br/><span class="desc">{{result.text_genre_desc.0}}</span>
+	          {% endif %}
 	    </li>
 	    {% endblock result %}
 
