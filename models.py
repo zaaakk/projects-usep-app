@@ -355,7 +355,7 @@ class Publication(object):
         payload = dict( sh.default_params.items() + {
                 u'q':u'bib_ids:{0}'.format(pub_id),
                 u'rows':u'99999',
-                u'fl': u'id,graphic_name,status',
+                u'fl': u'*',
                 u'sort': u'id asc'}.items()
                 )
         r = requests.post( settings_app.SOLR_URL_BASE, payload )
