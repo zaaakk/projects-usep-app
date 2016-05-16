@@ -286,15 +286,26 @@ list-style-type: none;
 ul.collection li {
 border-bottom: 1px solid #CCC;
 padding-bottom: 13px;
-padding-top: 13px;}
+padding-top: 13px;
+min-height: 40px;
+padding-top: 6px;
+padding-bottom: 6px;
+}
 
 ul.collection img {
 float: left;
 margin-right: 10px;
+height: 40px;
 }
 
 ul.collection p {
 margin-left: 50px;
+}
+
+ul.collection span.desc {
+display: block;
+padding-top: 1mm;
+text-indent: 0.25cm;
 }
 
 

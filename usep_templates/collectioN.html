@@ -8,21 +8,6 @@
 
 {% block page_title %}Inscriptions from <span class="id_string">{{ collection_title }}</span>{% endblock page_title %}
 
-{% block in_page_css %}
-<style>
-  ul.collection li {
-    min-height: 40px;
-    padding-top: 6px;
-    padding-bottom: 6px;
-  }
-  .desc {
-    display: block;
-    padding-top: 1mm;
-    text-indent: 0.25cm;
-  }
-</style>
-{% endblock in_page_css %}
-
 {% block content %}
   <div id="main">
     <div id="description">{% autoescape off %}{{ flat_collection.collection_description }} {% endautoescape %}</div>
