@@ -27,6 +27,7 @@ def coming( request ):
 
 def collections( request ):
   """Displays list of collections by Region."""
+  log.debug( 'starting collections()' )
   ## helpers ##
   def prepare_data():
     fc = FlatCollection()

@@ -667,11 +667,13 @@ class SolrHelper(object):
         params[u'facet.field'] = self.default_facets
         params[u'facet.query'] = ["NOT {0}:*".format(f) for f in self.null_fields]
         params[u'q'] = q
-
+        log.debug( 'solr_url, `{}`'.format(self.solr_url) )
         r = requests.get(self.solr_url, params=params)
-        resp = r.json
-        if "error" in resp:
-            return resp, None, None
+        log.debug( 'r.url, `{}`'.format(r.url) )
+        resp = r.json()
+        log.debug( 'resp, ```{}```'.format(pprint.pformat(resp)) )
+        # if "error" in resp:
+        #     return resp, None, None
         return self.add_collection(resp['response']['docs']), self.facetDisplay(resp['facet_counts'], search_form), q
 
     def facetDisplay(self, facets, form=False):
