@@ -1,4 +1,5 @@
 Django==1.9.5
+lxml==3.2.0
 PyMySQL==0.7.2
 requests==2.9.1
 shellvars-py==0.1.2

@@ -1,0 +1,175 @@
+{% extends "usep_templates/base.html" %}
+
+{% load vocab %}
+
+{% block page_title%}Search Inscriptions{% endblock %}
+{% block head_title%}Search{% endblock %}
+
+{% block in_page_css%}
+<style>
+	#pagetitle {
+		text-align: left;
+		margin-left: 3cm;
+		width: initial;
+	}
+
+	#content {
+		margin-left: 3.5cm;
+		font-size: 1.2em;
+		width: 70%;
+	}
+
+	#advanced {
+		border: none;
+		height: 0px;
+		transition: height 1s ease, opacity 0.1s;
+		overflow: hidden;
+		padding: 0;
+	}
+
+	#advanced tr {
+		height: 1.2in;
+	}
+
+	table th {
+		padding-right: 1cm;
+	}
+
+	table th,table td {
+		border-bottom: 1px solid slategray;
+		min-height: 1in;
+	}
+
+	#advanced select[multiple] {
+		width: 2.5in;
+		height: 1in;
+		float: left;
+		margin-left: 2cm;
+	}
+
+	input[type='text'] {
+		width: 50%;
+		height: 20px;
+	}
+
+	input[type='submit'] {
+		display: block;
+		height: 1cm;
+		width: 2cm;
+		text-align: center;
+	}
+
+	#error {
+		color: #b3002d;
+	}
+
+	.reset {
+		display: block;
+		width: 1in;
+		margin: auto;
+	}
+</style>
+<script type="text/javascript">
+	function expand(event) {
+		event.preventDefault();
+		document.getElementById('advanced').style.height="initial";
+		document.getElementById("adv_button").onclick = contract;
+	}
+
+	function contract(event) {
+		event.preventDefault();
+		document.getElementById('advanced').style.height='0in';
+		document.getElementById("adv_button").onclick = expand;
+	}
+
+	function reset() {
+		var opts = document.getElementsByTagName('option');
+		for (var i = 0; i < opts.length; i++) {
+			opts[i].selected = false;
+		}
+	}
+	function dateChange(event) {
+		var notBefore = parseInt(document.querySelector("#notBefore").value);
+		var notAfter = parseInt(document.querySelector("#notAfter").value);
+
+		console.log(notBefore);
+		console.log(notAfter);
+
+		var obj = document.querySelector('#error');
+		if (notAfter < notBefore) {
+			obj.innerText = ("Invalid date range!");
+		} else {
+			obj.innerText = "";
+		}
+	}
+</script>
+{% endblock %}
+
+{% block content%}
+{% block form%}
+<form id="searchform" action="results" method="GET">
+	<label for="fulltext">Full Text Search: <input type="text" name="text"></input></label>
+
+	<input type="submit" value="Search"></input>
+	<button id="adv_button" type="button" onclick="expand(event);">Advanced Search</button>
+	<br>
+	<fieldset id="advanced">
+	<table>
+	<button class="reset" type="button" onclick="reset()">Reset Search</button>
+	To search by publication, see <a href="{% url publications_url %}">Publications</a>
+ 	<tr>
+		<th>Transcription Status</th>
+		<td>
+			<input type="radio" name="status" value="transcription" checked>Show only fully transcribed inscriptions</input><br/>
+			<input type="radio" name="status" value="metadata">Show all inscriptions that have metadata</input><br/>
+			<input type="radio" name="status" value="bib_only">Show all inscriptions, even ones with only bibliographic information.</input>
+		</td>
+	</tr>
+	<tr>
+		<th>Date</th>
+		<td>
+			Use negative numbers to refer to years BCE (e.g., -100 refers to 100 BCE).<br/>
+			<label for="notBefore">Not Before:<input id="notBefore" type="num" max="1000" min="-1000" step="1" name="notBefore" onchange="dateChange(event);"></input></label>
+			<label for="notAfter">Not After:<input id="notAfter" type="num" max="1000" min="-1000" step="1" name="notAfter" onchange="dateChange(event);"></input></label>
+			<span id="error"></span>
+			<br/>
+			<label for="date_type"><select name="date_type" value="inclusive">
+				<option value="inclusive" checked>Inclusive (inscriptions whose range matches any part)</option>
+				<option value="exclusive">Exclusive (inscriptions whose range is entirely contained)</option>
+			</select></label>
+		</td>
+	</tr>
+ 	{% for field_val in facets %}
+ 	<tr>
+	<th for="{{field_val.0}}">{{field_val.0|tax}}</th>
+	<td>
+	<select multiple name="{{field_val.0}}">
+		<!-- <option value="NONE">Select...</option> -->
+		{% for item in field_val.1 %}
+			<option value="{{item.0}}">
+				{{item.0|tax}}
+			</option>
+		{% endfor %}
+	</select>
+	</td>
+	</tr>
+	{% endfor %}
+	<tr>
+		<th>Fake</th>
+		<td>
+			<input type="radio" name="fake" value="include">Show inscriptions that are forgeries or counterfeit (falsi vel alieni)</input><br/>
+			<input type="radio" name="fake" value="hide" checked>Don't show forgeries</input>
+		</td>
+	</tr>
+	</table>
+	</fieldset>
+
+
+	<br/>
+</form>
+{% endblock %}
+
+{{error}}
+
+{% endblock content %}
+

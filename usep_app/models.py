@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
+import json, logging, os, pprint
+from operator import itemgetter  # for a comparator sort
 
-import datetime, json, logging, os, pprint
-from django.conf import settings as project_settings
+import requests
+from django.conf import settings as settings_project
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.http import HttpResponseRedirect
 from django.utils.encoding import smart_unicode
 from usep_app import settings_app
 
+from django.utils.http import urlencode
+
+from lxml import etree
+
+import string
 
 log = logging.getLogger(__name__)
+
 
 
 ### django-db collection class ###
@@ -156,7 +162,6 @@ def id_sort(doc):
 
     return tuple(keylist)
 
-
 # Break a mixed numeric/text token into numeric/non-numeric parts. Helper for id_sort
 def break_token(token):
     idx1 = 0
@@ -181,7 +186,6 @@ def break_token(token):
 
     parts += [token[idx1:idx2]]
     return parts
-
 
 def separate_into_languages(docs):
 
@@ -219,7 +223,6 @@ def separate_into_languages(docs):
 
     return (result, len(docs), d)
 
-
 class Collection(object):
     """ Handles code to display the inscriptions list for a given collection. """
 
@@ -227,7 +230,7 @@ class Collection(object):
         """ Queries solr for collection info. """
         payload = {
             u'q': u"id:{0}*".format(collection),
-            u'fl': u'id,status,graphic_name,language,msid_idno',
+            u'fl': u'*',
             u'start': u'0',
             u'rows': u'99000',
             u'wt': u'json',
@@ -330,7 +333,6 @@ class DisplayInscriptionHelper( object ):
 
 #   # end class DisplayInscriptionHelper()
 
-
 class Publication(object):
 
     def __init__(self):
@@ -353,7 +355,7 @@ class Publication(object):
         payload = dict( sh.default_params.items() + {
                 u'q':u'bib_ids:{0}'.format(pub_id),
                 u'rows':u'99999',
-                u'fl': u'id,graphic_name,status',
+                u'fl': u'*',
                 u'sort': u'id asc'}.items()
                 )
         r = requests.post( settings_app.SOLR_URL_BASE, payload )
@@ -543,6 +545,8 @@ class Publications(object):
         # print str([j for j, element in enumerate(self.monographs_dict.keys()) if element == 'Classical Attic Tombstones'])
         # print str(self.monographs_dict[('Classical Attic Tombstones')])
 
+
+
         # log.debug( u'corpora list before sort: %s' % self.corpora )
         return
 
@@ -602,6 +606,7 @@ class SolrHelper(object):
 
 
             fields += [qstring.format(nb, na)]
+
 
         for f in q_obj:
             if f.startswith(u"facet_"):
@@ -722,9 +727,6 @@ class SolrHelper(object):
             enhanced_list.append( entry )
         return enhanced_list
 
-    # end class SolrHelper
-
-
 class Vocab(object):
     """Matches controlled values to display values."""
     tax_url = settings_app.DISPLAY_PUBLICATIONS_BIB_URL.replace("titles.xml", "include_taxonomies.xml")
@@ -789,4 +791,3 @@ class Vocab(object):
         else:
             return i
 
-    # end class Vocab
