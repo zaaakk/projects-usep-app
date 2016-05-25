@@ -6,7 +6,7 @@
 
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>{% block head_title %}HOLDER{% endblock head_title %}</title>
-    <link type="text/css" {% block head_media_href %}href="{{ STATIC_URL }}browse/css/style.css"{% endblock head_media_href %} media="all" rel="stylesheet" />
+    <link type="text/css" {% block head_media_href %}href="{{ STATIC_URL }}usep/css/style.css"{% endblock head_media_href %} media="all" rel="stylesheet" />
 
     {% block in_page_css %}{% endblock in_page_css %}
 
@@ -16,12 +16,12 @@
 
     <div id="header">
       {% block header %}
-      <a href="{% url 'collections_url' %}"><img src="{{ STATIC_URL }}browse/css/gfx/header_brickstamp.png" alt="U.S. Epigraphy Project" title="U.S. Epigraphy Project home page"/></a>
+      <a href="{% url 'collections_url' %}"><img src="{{ STATIC_URL }}usep/css/gfx/header_brickstamp.png" alt="U.S. Epigraphy Project" title="U.S. Epigraphy Project home page"/></a>
     	<div id="headerlinks">
             <div>
-                <a href="{% url 'search_url' %}"><img src="{{ STATIC_URL }}browse/css/gfx/button_search.png" /></a>
-                <a href="{% url 'collections_url' %}"><img src="{{ STATIC_URL }}browse/css/gfx/button_collections.png" /></a>
-                <a href="{% url 'publications_url' %}"><img src="{{ STATIC_URL }}browse/css/gfx/button_publications.png" /></a> <br />
+                <a href="{% url 'search_url' %}"><img src="{{ STATIC_URL }}usep/css/gfx/button_search.png" /></a>
+                <a href="{% url 'collections_url' %}"><img src="{{ STATIC_URL }}usep/css/gfx/button_collections.png" /></a>
+                <a href="{% url 'publications_url' %}"><img src="{{ STATIC_URL }}usep/css/gfx/button_publications.png" /></a> <br />
   			</div>
             <div>
                 <a href="{% url 'texts_url' %}">Texts</a> |

@@ -11,9 +11,8 @@ urlpatterns = patterns('',
     url( r'^info/$',  'usep_app.views.hi', name='info_url' ),
 
     url( r'^search/$', 'usep_app.search.search_form', name='search_url'),
-    # url( r'^search/$', 'usep_app.views.coming', name='search_url'),
     url( r'^collections/$',  'usep_app.views.collections', name='collections_url' ),
-    url( r'^publications/$',  'usep_app.views.coming', name='publications_url' ),
+    url( r'^publications/$',  'usep_app.views.publications', name='publications_url' ),
 
     url( r'^texts/$',  'usep_app.views.coming', name='texts_url' ),
     url( r'^links/$',  'usep_app.views.coming', name='links_url' ),
@@ -23,6 +22,7 @@ urlpatterns = patterns('',
     url( r'^search/results/$', 'usep_app.views.coming', name='search_results_url'),
 
     url( r'^collections/(?P<collection>[^/]+)/$',  'usep_app.views.collection', name='collection_url' ),
+    url( r'^publication/(?P<publication>[^/]+)/$', 'usep_app.views.publication', name='publication_url' ),
 
     url( r'^$',  RedirectView.as_view(pattern_name='collections_url') ),
 

@@ -25,6 +25,11 @@ def coming( request ):
     return HttpResponse( '<p>coming</p>')
 
 
+def collection( request, collection ):
+    """ Stub view. """
+    return HttpResponse( '<p>coming</p>')
+
+
 def collections( request ):
   """Displays list of collections by Region."""
   log.debug( 'starting collections()' )
@@ -57,6 +62,25 @@ def collections( request ):
   response = build_response( format, callback )
   return response
 
-def collection( request, collection ):
+
+def publication( request, publication ):
     """ Stub view. """
     return HttpResponse( '<p>coming</p>')
+
+
+def publications( request ):
+    """ Displays list of Corpora, Journals, Monographs, and Unpublished/Missing citations. """
+    hostname = request.get_host()
+    custom_static_url = project_settings.STATIC_URL
+    publications_stylesheet_url = settings_app.DISPLAY_PUBLICATIONS_XSL_URL
+    publications_xml_url = settings_app.DISPLAY_PUBLICATIONS_BIB_URL
+    if hostname.lower() == u"usepigraphy.brown.edu":
+        custom_static_url = custom_static_url.replace(u"library.brown.edu", u"usepigraphy.brown.edu")
+        publications_stylesheet_url = publications_stylesheet_url.replace(u"library.brown.edu", u"usepigraphy.brown.edu")
+        publications_xml_url = publications_xml_url.replace(u"library.brown.edu", u"usepigraphy.brown.edu")
+    data_dict = {
+        u'publications_stylesheet_url': publications_stylesheet_url,
+        u'publications_xml_url': publications_xml_url,
+        u'custom_static_url': custom_static_url,
+    }
+    return render( request, u'usep_templates/publications.html', data_dict )
