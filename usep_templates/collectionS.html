@@ -1,8 +1,8 @@
 {% extends "usep_templates/base.html" %}
 
-{% block head_title %}Collections of Greek and Latin Inscriptions in the USA{% endblock head_title %}
-
 {% block page_title %}Collections of Greek and Latin Inscriptions in the USA{% endblock page_title %}
+			
+{% block head_title %}Collections of Greek and Latin Inscriptions in the USA{% endblock head_title %}
 
 {% block list_of_states %}
   <div id="listofstates">
@@ -12,16 +12,35 @@
   </div>
 {% endblock list_of_states %}
 
-{% block content %}
 
+
+	
+
+{% block content %}
+<div class="Scontainer">
+	
+		<div class="intro">
+			<h2>About</h2>
+	<p>The goal of the U.S. Epigraphy Project (USEP) is to collect and share information about ancient Greek and Latin inscriptions preserved in the United States of America.
+
+The Project currently provides access to a database of some 750 Greek and 1,700 Latin inscriptions in the USA through browsing by collection and publication and by searching various categories of metadata (language, date, origin, type, material) and bibliographic information. A growing digital corpus of the collection registers some 400 EpiDoc editions of Latin texts and provides some 1,000 images of the inscriptions registered by the Project, each of which is identified by a unique USEP number based upon its location.
+
+</p>
+		</div>
+
+	
+	<div class="intro">
   <div id="map">
     <p>
-      <iframe width="600" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://batchgeo.com/map/15a95237b77fadbd7161115646e676e0" frameborder="0" width="100%" height="550" style="border:3px solid #999;border-radius:5px;"></iframe>
+      <iframe width="400" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://batchgeo.com/map/15a95237b77fadbd7161115646e676e0" frameborder="0" width="100%" height="550" style="border:3px solid #999;border-radius:5px;"></iframe>
     </p>
     <p>
       <small>View <a href="http://batchgeo.com/map/15a95237b77fadbd7161115646e676e0">US Epigraphy Collections</a> in a full screen map</small>
     </p>
   </div>
+	
+	</div>
+</div>
 
   <div class="region">
 
@@ -32,16 +51,17 @@
       {% comment %} ## Region-name with anchor ## {% endcomment %}
       {% for item in region_name.list %}
         {% if forloop.first %}
+	  		<div class="subregion">
           <a name="{{ item.region_code|lower }}">
         {% endif %}
       {% endfor %}
             <h2>{{ region_name.grouper }}</h2>
           </a>
-
+<div class="descriptioncontainer">
       {% comment %} ## Collections ## {% endcomment %}
       {% for item in region_name.list %}
         <p class="description">
-          <a href="../collections/{{ item.collection_code }}/">{{ item.collection_code }}</a>
+         <h3> <a href="../collections/{{ item.collection_code }}/">{{ item.collection_code }}</a></h3>
           <a class="js-link" href="#">[More...]</a>
           <br/>
           <a target="_blank" href="{{ item.collection_url }}">{{ item.collection_name }}<br/>{{ item.collection_address }}</a>
@@ -50,6 +70,8 @@
           </div>
         </p>
       {% endfor %}
+</div>
+	  </div>
     {% endfor %}
 
     <!-- end region output -->

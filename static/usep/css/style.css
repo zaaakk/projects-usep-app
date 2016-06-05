@@ -13,6 +13,22 @@ b1b1b1	light grey
 
 /*general layout*/
 
+.Scontainer {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	align-items: center;
+	max-width:1000px;
+	min-width: 300px;
+	background: #dedcd1;
+}
+
+.intro {
+	flex: 1;
+	margin: 20px;
+}
+
 html{font-size:100.01%;}
 body {
 	background:#F5F5F5;
@@ -81,8 +97,13 @@ img {
 	}
 
 #pagetitle {
+	display: flex;
+	margin-left:auto;
+	margin-right:auto;
 	width: 100%;
+	max-width: 900px;
   	text-align: center;
+	justify-content: center 
 }
 
 /*structure*/
@@ -117,7 +138,7 @@ img {
 
 #content, body > h1 {
 	margin: 0 auto;
-	width:650px;
+	max-width:900px;
 	padding: 0em;
 	}
 
@@ -196,12 +217,46 @@ img {
 		content: " | ";
 	}
 
+
+
+.region {
+	column-width:400px;
+	column-gap: 0;
+}
+
+.subregion {
+	break-inside:avoid;
+	margin: 20px;
+	padding: 10px;
+	min-width: 300px;
+	max-width: 400px;
+	background: #dedcd1;
+}
+
+
+.descriptioncontainer{
+	
+}
+
+
 .description {
 	padding-left: 20px;
 	font-weight: bold;
+	width: 60%;
+	min-width: 150px;
 }
+
+
+
+h3> a:link{
+		font-weight:400;
+	font-size: 14px;
+ color:#792525;
+}
+
 	.description > a {
 		font-weight: inherit;
+		
 	}
 	.description > a:last-child{
 		background:url(gfx/external-link-icon.png) center right no-repeat;
