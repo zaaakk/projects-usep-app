@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import datetime, json, logging, os, pprint
 from . import settings_app
+from .models import AboutPage, ContactsPage, LinksPage, PublicationsPage, TextsPage  # static pages
 from .models import FlatCollection
 from django.conf import settings as project_settings
 from django.contrib.auth import logout
@@ -84,3 +85,39 @@ def publications( request ):
         u'custom_static_url': custom_static_url,
     }
     return render( request, u'usep_templates/publications.html', data_dict )
+
+
+## static pages  ##
+
+
+def texts( request ):
+    page_data = TextsPage.objects.all()
+    page_data = page_data[0] if page_data else []  # just one record
+    page_dct = {
+        'page_data': page_data,
+        'settings_app': settings_app }
+    return render( request, u'usep_templates/static.html', page_dct )
+
+def links( request ):
+  page_data = LinksPage.objects.all()[0]  # just one record
+  page_dct = {
+    u'page_data': page_data,
+    u'settings_app': settings_app }
+  return render( request, u'usep_templates/static.html', page_dct )
+  # return render_to_response( u'usep_templates/static.html', page_dct )
+
+def about( request ):
+  page_data = AboutPage.objects.all()[0]  # just one record
+  page_dct = {
+    u'page_data': page_data,
+    u'settings_app': settings_app }
+  return render( request, u'usep_templates/static.html', page_dct )
+  # return render_to_response( u'usep_templates/static.html', page_dct )
+
+def contact( request ):
+  page_data = ContactsPage.objects.all()[0]  # just one record
+  page_dct = {
+    u'page_data': page_data,
+    u'settings_app': settings_app }
+  return render( request, u'usep_templates/static.html', page_dct )
+  # return render_to_response( u'usep_templates/static.html', page_dct )
