@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     url( r'^search/results/$', 'usep_app.views.coming', name='search_results_url'),
 
     url( r'^collections/(?P<collection>[^/]+)/$',  'usep_app.views.collection', name='collection_url' ),
+    url( r'^inscription/(?P<inscription_id>[^/]+)/$', 'usep_app.views.display_inscription', name='inscription_url' ),
     url( r'^publication/(?P<publication>[^/]+)/$', 'usep_app.views.publication', name='publication_url' ),
 
     url( r'^$',  RedirectView.as_view(pattern_name='collections_url') ),

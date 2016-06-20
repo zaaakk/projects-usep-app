@@ -1,0 +1,112 @@
+{% extends "usep_templates/base.html" %}
+
+<!-- {% block head_title %}US Epigraphy — Inscription — {{ inscription_id }}{% endblock head_title %} -->
+
+{% block in_page_css %}
+<style type="text/css">
+    .metadata {
+        float: left;
+        width: 300px;
+    }
+    .bibl {
+        float: left;
+        width: 900px;
+    }
+    .bibl p {
+        float: left;
+        width: 275px;
+    }
+    .facsimile {
+        position:absolute;
+        left: 662px;
+        top: 448px;
+        /*top: 1048px;*/
+    }
+    div p a {
+        float: left;
+    }
+</style>
+<!-- these are all from the scrollables website -->
+<!-- <link rel="stylesheet" type="text/css" href="http://static.flowplayer.org/tools/css/scrollable-horizontal.css" /> -->
+<!-- <link rel="stylesheet" type="text/css" href="http://static.flowplayer.org/tools/css/scrollable-buttons.css" /> -->
+{% endblock in_page_css %}
+
+{% block page_title %}Inscription: <span class="id_string">{{ inscription_id }}</span>{% endblock page_title %}
+
+{% block content %}
+    <div id="loading" style="background-image: url('{{ custom_static_url }}usep/loading.png');"></div>
+    <div id="container"></div>
+    <div id="images"></div>
+{% endblock content %}
+
+{% block page_js %}
+<!-- Loading client-side XSL processor -->
+<script type="text/javascript" language="javascript" src="{{ saxonce_file_url }}"></script>
+
+<!-- Loading image viewer -->
+<script type="text/javascript" language="javascript" src="{{ custom_static_url }}usep/js/highslide/highslide-with-gallery.packed.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ custom_static_url }}usep/js/highslide/highslide.css" />
+
+<script type="text/javascript" language="javascript" src="{{ custom_static_url }}usep/js/fade.js"></script>
+
+<!-- JQuery -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var windowWidth = $(window).width();
+        var content = $("#container");
+        var images = $("#images");
+        var leftSideOffset = 80;
+        var imageDivWidth = 205;
+        var contentImageSpacer = 30;
+
+        console.log("window width: " + windowWidth);
+
+        content.css("left", imageDivWidth + leftSideOffset + contentImageSpacer + "px");
+        content.css("width", windowWidth - (imageDivWidth + leftSideOffset * 2 + contentImageSpacer) + "px");
+
+        images.css("left", leftSideOffset + "px");
+        images.css("width", imageDivWidth + "px");
+
+        // $("#loading").fadeIn();
+    });
+
+    var onSaxonLoad = function() {
+
+        var inscription_xml = "{{ source_xml_url }}"
+        console.log( "inscription_xml: " + inscription_xml );
+        // var xsl = Saxon.requestXML("{{ custom_static_url }}usep/xsl/xipr.xsl");
+        var xsl = Saxon.requestXML("{{ xipr_url }}");
+        var xml = Saxon.requestXML(inscription_xml);
+        var proc = Saxon.newXSLT20Processor(xsl);
+
+        var xml2 = proc.transformToDocument(xml);
+        // var xsl2 = Saxon.requestXML("{{ custom_static_url }}usep/xsl/USEp_display.xsl");
+        var xsl2 = Saxon.requestXML("{{ xsl_url }}");
+        var proc2 = Saxon.newXSLT20Processor(xsl2);
+
+        proc2.updateHTMLDocument(xml2);
+        proc2.setSuccess(fade("out", document.getElementById("loading")));
+    };
+
+    // override Highslide settings here
+    // instead of editing the highslide.js file
+    hs.graphicsDir = '{{ custom_static_url }}usep/js/highslide/graphics/';
+    hs.addSlideshow({
+        // slideshowGroup: 'group1',
+        interval: 5000,
+        repeat: false,
+        useControls: true,
+        fixedControls: true,
+        overlayOptions: {
+            opacity: .6,
+            position: 'top center',
+            hideOnMouseOut: true
+        }
+    });
+    // Optional: a crossfade transition looks good with the slideshow
+    hs.transitions = ['expand', 'crossfade'];
+</script>
+
+{% endblock page_js %}

@@ -3,9 +3,9 @@
 from __future__ import unicode_literals
 
 import datetime, json, logging, os, pprint
-from . import settings_app
+from . import models, settings_app
 from .models import AboutPage, ContactsPage, LinksPage, PublicationsPage, TextsPage  # static pages
-from .models import FlatCollection
+from .models import DisplayInscriptionHelper, FlatCollection
 from django.conf import settings as project_settings
 from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
@@ -22,11 +22,6 @@ def hi( request ):
 
 
 def coming( request ):
-    """ Stub view. """
-    return HttpResponse( '<p>coming</p>')
-
-
-def collection( request, collection ):
     """ Stub view. """
     return HttpResponse( '<p>coming</p>')
 
@@ -62,6 +57,64 @@ def collections( request ):
   callback = request.GET.get( 'callback', None )
   response = build_response( format, callback )
   return response
+
+
+
+
+def collection( request, collection ):
+    """Displays list of inscriptions for given collection."""
+    ## helpers ##
+    def prepare_data():
+        c = models.Collection()
+        solr_data = c.get_solr_data( collection )
+        inscription_dict, num, display_dict = c.enhance_solr_data( solr_data, request.META[u'wsgi.url_scheme'], request.get_host() )
+        data_dict = {
+            u'collection_title': collection,
+            u'inscriptions': inscription_dict,
+            u'inscription_count': num,
+            u'display': display_dict,
+            u'flat_collection': FlatCollection.objects.get(collection_code=collection),
+            u'show_dates':False,
+            }
+        return data_dict
+    def build_response( format, callback ):
+        if format == u'json':
+            output = json.dumps( data_dict, sort_keys=True, indent=2 )
+            if callback:
+                output = u'%s(%s)' % ( callback, output )
+            return HttpResponse( output, content_type = u'application/javascript; charset=utf-8' )
+        else:
+            return render( request, u'usep_templates/collectioN.html', data_dict )
+    ## work ##
+    log.debug( 'starting collection()' )
+    data_dict = prepare_data()
+    format = request.GET.get( u'format', None )
+    callback = request.GET.get( u'callback', None )
+    response = build_response( format, callback )
+    return response
+
+
+
+
+def display_inscription( request, inscription_id ):
+    """ Displays inscription html from saxon-ce rendering of source xml and an include file of bib data,
+      which is then run through an xsl transform. """
+    log.debug( u'display_inscription() starting' )
+    display_inscription_helper = DisplayInscriptionHelper()  # models.py
+    source_xml_url = display_inscription_helper.build_source_xml_url(
+        settings_app.DISPLAY_INSCRIPTION_XML_URL_PATTERN, request.is_secure(), request.get_host(), inscription_id )
+    context = display_inscription_helper.build_context(
+        request.get_host(),
+        project_settings.STATIC_URL,
+        inscription_id,
+        source_xml_url,
+        settings_app.DISPLAY_INSCRIPTION_XSL_URL,
+        settings_app.DISPLAY_INSCRIPTION_SAXONCE_FILE_URL,
+        settings_app.DISPLAY_INSCRIPTION_XIPR_URL )
+    log.debug( u'display_inscription() context, %s' % pprint.pformat(context) )
+    return render( request, u'usep_templates/display_inscription.html', context )
+
+
 
 
 def publication( request, publication ):
