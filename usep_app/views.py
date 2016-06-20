@@ -59,8 +59,6 @@ def collections( request ):
   return response
 
 
-
-
 def collection( request, collection ):
     """Displays list of inscriptions for given collection."""
     ## helpers ##
@@ -94,8 +92,6 @@ def collection( request, collection ):
     return response
 
 
-
-
 def display_inscription( request, inscription_id ):
     """ Displays inscription html from saxon-ce rendering of source xml and an include file of bib data,
       which is then run through an xsl transform. """
@@ -115,13 +111,6 @@ def display_inscription( request, inscription_id ):
     return render( request, u'usep_templates/display_inscription.html', context )
 
 
-
-
-def publication( request, publication ):
-    """ Stub view. """
-    return HttpResponse( '<p>coming</p>')
-
-
 def publications( request ):
     """ Displays list of Corpora, Journals, Monographs, and Unpublished/Missing citations. """
     hostname = request.get_host()
@@ -138,6 +127,47 @@ def publications( request ):
         u'custom_static_url': custom_static_url,
     }
     return render( request, u'usep_templates/publications.html', data_dict )
+
+
+
+
+def pub_children( request, publication ):
+    """displays listing of inscriptions for publication"""
+    log.debug( u'publication: %s' % publication )
+    assert type( publication ) == unicode
+
+    publications_xml_url = settings_app.DISPLAY_PUBLICATIONS_BIB_URL
+    elements = []
+    try:
+        r = requests.get(publications_xml_url)
+        xml = etree.fromstring(r.content)
+        elements = etree.XPath("//t:bibl[@xml:id='{0}']/t:title".format(publication), namespaces={"t":"http://www.tei-c.org/ns/1.0"})(xml)
+    except Exception, e:
+        log.error("Exception retrieving titles.xml: ", repr(e))
+
+    title = elements[0].text if elements else publication
+
+    #print "calling the Publication model"
+    pub = models.Publication()
+    pub.getPubData( publication )
+    pub.buildInscriptionList( request.META[u'wsgi.url_scheme'], request.get_host() )
+    pub.makeImageUrls()
+    data_dict = {
+        u'publication_title': title,
+        u'inscriptions': pub.inscription_entries,
+        u'inscription_count': pub.inscription_count, }
+    ## respond
+    format = request.GET.get( u'format', None )
+    callback = request.GET.get( u'callback', None )
+    if format == u'json':
+        output = json.dumps( data_dict, sort_keys=True, indent=2 )
+        if callback:
+            output = u'%s(%s)' % ( callback, output )
+        return HttpResponse( output, content_type = u'application/javascript; charset=utf-8' )
+    else:
+        return render( request, u'usep_templates/publicatioN.html', data_dict )
+
+
 
 
 ## static pages  ##
