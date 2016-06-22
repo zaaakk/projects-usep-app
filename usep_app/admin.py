@@ -11,7 +11,7 @@ from .models import AboutPage, ContactsPage, LinksPage, PublicationsPage, TextsP
 class FlatCollectionAdmin( admin.ModelAdmin ):
     # date_hierarchy = 'sent'
     # list_display = [ 'sent', 'sender', 'email' ]
-    ordering = [ '-id' ]
+    ordering = [ 'collection_code' ]
 
 
 admin.site.register( FlatCollection, FlatCollectionAdmin )
