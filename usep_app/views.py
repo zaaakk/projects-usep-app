@@ -86,6 +86,7 @@ def collection( request, collection ):
     ## work ##
     log.debug( 'starting collection()' )
     data_dict = prepare_data()
+    log.debug( 'data_dict, ```{}```'.format(pprint.pformat(data_dict)) )
     format = request.GET.get( u'format', None )
     callback = request.GET.get( u'callback', None )
     response = build_response( format, callback )
