@@ -1,0 +1,126 @@
+{% extends "usep_templates/base.html" %}
+
+{% load vocab %}
+
+{% block page_title%}Inscription Results{% endblock %}
+{% block head_title%}Results{% endblock %}
+
+{% block in_page_css%}
+<style>
+	#pagetitle {
+		text-align: left;
+		margin-left: 3cm;
+		width: initial;
+	}
+
+	#content {
+		margin-left: 3.5cm;
+		font-size: 1.2em;
+		width: 80%;
+		min-width: 800px;
+	}
+
+	div#results {
+		width: 70%;
+		min-width: 500px;
+		float: left;
+	}
+
+	ul#facets {
+		width: 20%;
+		float: right;
+		min-width: 200px;
+	}
+
+	a.none_facet {
+		color: red;
+	}
+</style>
+{% endblock %}
+
+{% block content%}
+
+
+{{error}}
+
+{% block results%}
+
+<p style="display: none;">{{querystring}}</p>
+
+
+{% regroup results|dictsort:"collection" by collection as collections %}
+
+<h4>{% if results|length > 0 %}{{results|length}} results{% endif %}</h4>
+<a href="../">&lt; Back to search</a><br><br>
+<div id="results">
+
+{% for coll in collections %}
+
+	<a href="../../collections/{{coll.grouper}}">{{coll.grouper}}</a>
+	<ul class="collection">
+	{% for result in coll.list %}
+
+		{% block result%}
+		<li>
+	          {% if result.image_url %}
+	          <img class="thumb" src="{{ result.image_url }}" alt="inscription_thumbnail" width="40" height="40"></img>
+	          {% else %}
+	          <img class="thumb" src="{{ STATIC_URL }}usep/images/NoImageAvailable.jpg" alt="inscription_thumbnail" width="40" height="40"></img>
+	          {% endif %}
+	          <a href="{{ result.url }}">{{ result.id }} </a>
+	          {% if show_dates %}
+	          <span class="date">(Between {{result.notBefore|era}} and {{result.notAfter|era}})</span>
+	          {% endif %}
+	          <span class="status">({{ result.status }})</span>
+	          {% if result.text_genre_desc %}
+	          <br/><span class="desc">{{result.text_genre_desc.0}}</span>
+	          {% endif %}
+	    </li>
+	    {% endblock result %}
+
+
+	{% endfor %}
+	</ul>
+
+{% empty %}
+No Results. <a href="../">Search again...</a>
+
+{% endfor %}
+</div>
+
+{% endblock results %}
+{% block facets%}
+<ul id="facets">
+<h4>{{results|length}} Total Results</h4>
+{% for facet,counts in facets.items %}
+{% block facet %}
+{% if counts %}
+	<li>
+		<h4>{{facet|tax}}</h4>
+		<ul class="facet_list">
+			{% for name,count in counts %}
+				<li>
+					{% if name == "none_value" %}
+					<a class="none_facet" href="{{url}}&amp;facet_{{facet}}={{name}}">
+						No Value ({{count}})
+					</a>
+					{% else %}
+					<a href="{{url}}&amp;facet_{{facet}}={{name}}">
+						{{name|tax}} ({{count}})
+					</a>
+					{% endif %}
+				</li>
+			{% endfor %}
+		</ul>
+	</li>
+{% endif %}
+{% endblock facet %}
+
+{% endfor %}
+</ul>
+
+{% endblock facets%}
+
+
+{% endblock content %}
+

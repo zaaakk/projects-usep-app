@@ -23,7 +23,8 @@ urlpatterns = patterns('',
     url( r'^contact/$',  'usep_app.views.contact', name='contact_url' ),
 
     url( r'^search/$', 'usep_app.search.search_form', name='search_url'),
-    url( r'^search/results/$', 'usep_app.views.coming', name='search_results_url'),
+    # url( r'^search/results/$', 'usep_app.views.coming', name='search_results_url'),
+    url( r'^search/results/$', 'usep_app.search.results', name='search_results_url'),
 
     url( r'^$',  RedirectView.as_view(pattern_name='collections_url') ),
 
