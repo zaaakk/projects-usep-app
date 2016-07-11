@@ -1,4 +1,4 @@
-##### overview
+#### overview
 
 This is the code that powers the Brown University [U.S. Epigraphy](http://library.brown.edu/projects/usep/) project.
 
@@ -54,7 +54,9 @@ For more information about that project, see that site's ['About' page](http://l
 
     - update the virtual environment
 
-        - run `$ `
+        - run `$ pip install -r ./usepweb_project/config/requirements.txt`
+
+        - takes a few minutes; if you want, you can see the packages you just installed with the command `$ pip freeze` (you don't have to run that)
 
     - make a log directory and an env_settings directory
 
@@ -63,7 +65,6 @@ For more information about that project, see that site's ['About' page](http://l
         - run `$ mkdir ./usepweb_env_settings`
 
         - you should now see those two directories, in addition to the previous two, in the `usepweb_project_stuff` directory
-
 
     - to be continued...
 
