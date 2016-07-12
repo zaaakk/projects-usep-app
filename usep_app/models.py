@@ -274,6 +274,7 @@ class DisplayInscriptionHelper( object ):
         url = url_pattern.replace( u'SCHEME', scheme )
         url = url.replace( u'HOSTNAME', hostname )
         url = url.replace( u'INSCRIPTION_ID', inscription_id )
+        log.debug( 'url, ```{}```'.format(url) )
         return url
 
     def build_context( self, hostname, custom_static_url, inscription_id, source_xml_url, xsl_url, saxonce_url, xipr_url ):

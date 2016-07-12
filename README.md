@@ -12,7 +12,7 @@ For more information about that project, see that site's ['About' page](http://l
 
     - assumptions
 
-        - you have [Brown's VPN](https://www.brown.edu/information-technology/software/catalog/vpn-f5-desktop-client) installed
+        - you have [Brown's VPN](https://www.brown.edu/information-technology/software/catalog/vpn-f5-desktop-client) installed, and active
 
         - python 2.7x, [virtualenv](https://virtualenv.pypa.io/en/stable/), and [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git#Installing-on-Mac) are installed
 
@@ -26,7 +26,9 @@ For more information about that project, see that site's ['About' page](http://l
 
                 - if the developer tools weren't installed, you'll be prompted to install them via a GUI interface -- takes 5-10 minutes for the install
 
-    - create the directory 'usepweb_project_stuff' anywhere
+        - a directory that's web-accessible via a localhost url like `http://127.0.0.1/some_dir/some_file.html`
+
+    - create the directory 'usepweb_project_stuff' anywhere (not web-accessible)
 
     - create the virtual environment
 
@@ -58,14 +60,95 @@ For more information about that project, see that site's ['About' page](http://l
 
         - takes a few minutes; if you want, you can see the packages you just installed with the command `$ pip freeze` (you don't have to run that)
 
-    - make a log directory and an env_settings directory
+    - make some directories
 
         - run `$ mkdir ./usepweb_logs`
 
         - run `$ mkdir ./usepweb_env_settings`
 
-        - you should now see those two directories, in addition to the previous two, in the `usepweb_project_stuff` directory
+        - run `$ mkdir ./usepweb_db_stuff`
 
-    - to be continued...
+        - you should now see those three directories, in addition to the previous two, in the `usepweb_project_stuff` directory
+
+    - create the environmental-settings file
+
+        - get the `usepweb_env_settings.sh` file from a developer, and put it in the `usepweb_env_settings` directory
+
+        - open the file `env_usepweb/bin/activate`, and add the following 3 lines to the bottom (replacing `FULL_PATH_TO` with your actual path:
+
+                USEPWEB__SETTINGS="/FULL_PATH_TO/usepweb_env_settings.sh"
+                source $USEPWEB__SETTINGS
+                echo "- usepweb_project env settings loaded into environment from $USEPWEB__SETTINGS"
+
+            (tip: you can copy the full path to a file by selecting the file in the Finder, and selecting option-command-c)
+
+        - load the settings file by running
+
+                $ source ./env_usepweb/bin/activate
+
+            (you'll see the `echo` message appear)
+
+    - db work
+
+        - create the db:
+
+                $ sqlite3 ./usepweb_db_stuff/usepweb.db
+                SQLite version 3.8.10.2 2015-05-20 18:17:19
+                Enter ".help" for usage hints.
+                sqlite> create table dummy(text, priority INTEGER);
+                sqlite> drop table dummy;
+                sqlite> .quit
+                $
+
+            - the db is not actually saved until a table is created, thus the dummy table create/drop
+
+        - update the db's structure
+
+            - navigate into the project directory
+
+                - run `$ cd ./usepweb_project/`
+
+                you're now in the `usepweb_project_stuff/usepweb_project` directory
+
+            - initial db setup
+
+                - run `$ python ./manage.py migrate`
+
+            - additional db setup
+
+                - run `python ./manage.py migrate --run-syncdb`
+
+    - prepare localhost web-data
+
+        - create, in your web-accessible directory, the directory `usep_web_stuff`, and cd into it.
+
+        - data
+
+            - run `$ git clone https://github.com/Brown-University-Library/usep-data.git ./usep_data`
+
+        - media
+
+            - run `$ mkdir ./usep_media`
+
+            - cd back to your project-directory (not the 'stuff' directory)
+
+                run `$ ./manage.py collectstatic --clear`, and after confirming it will write to the correct directory, type 'yes'
+
+            - note: normally this step does not have to be done when using django's development webserver, but has to in this case because of the javascript xslt work. _TODO: investigate whether this can be done without collectstatic._
+
+        - images (not absolutely necessary, but useful)
+
+            - run `$ mkdir ./usep_images` and and copy images files from the development server that start with CA.Berk...
+
+            - _TODO: see if we can point to the dev-server's image directory_
+
+
+---
+
+#### provisioning TODOs
+
+- combine some of above into a shell script
+
+- consider a pre-made sqlite3 db
 
 ---
