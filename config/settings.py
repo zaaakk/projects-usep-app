@@ -84,7 +84,7 @@ USE_TZ = False
 
 STATIC_URL = os.environ['USEPWEB__STATIC_URL']
 STATIC_ROOT = os.environ['USEPWEB__STATIC_ROOT']  # needed for collectstatic command
-
+STATICFILES_DIRS = json.loads( os.environ['USEPWEB__STATICFILES_DIRS_JSON'] )  # list
 
 # Templates
 
