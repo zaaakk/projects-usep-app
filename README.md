@@ -10,23 +10,27 @@ For more information about that project, see that site's ['About' page](http://l
 
 - mac
 
+    - note: this first write-up will go through steps very sequentially; much can be optimized in the future via a provision shell-script.
+
     - assumptions
 
         - you have [Brown's VPN](https://www.brown.edu/information-technology/software/catalog/vpn-f5-desktop-client) installed, and active
 
-        - python 2.7x, [virtualenv](https://virtualenv.pypa.io/en/stable/), and [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git#Installing-on-Mac) are installed
+        - you have python 2.7x, [virtualenv](https://virtualenv.pypa.io/en/stable/) -- all modern macs default to this
 
-        - mild familiarity with the Terminal app (when you see an instruction to run something that begins with a `$`, that means run it from the Terminal, but don't type the `$` and following space)
+        - you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git#Installing-on-Mac) installed
+
+        - you have [virtualenv](https://virtualenv.pypa.io/en/stable/installation/) installed
+
+        - mild familiarity with the Terminal app (when you see an instruction to run something that begins with a `$`, that means run it from the Terminal -- but don't type the `$` and following space)
 
         - xcode developer tools are installed
 
             - why: needed to install lxml, a python xml package, in a later step
 
-            - if you're not sure they'e installed, try running `$ xcode-select --install`
+            - if you're not sure they're installed, try running `$ xcode-select --install`
 
                 - if the developer tools weren't installed, you'll be prompted to install them via a GUI interface -- takes 5-10 minutes for the install
-
-        - a directory that's web-accessible via a localhost url like `http://127.0.0.1/some_dir/some_file.html`
 
     - create the directory 'usepweb_project_stuff' anywhere (not web-accessible)
 
@@ -68,7 +72,9 @@ For more information about that project, see that site's ['About' page](http://l
 
         - run `$ mkdir ./usepweb_db_stuff`
 
-        - you should now see those three directories, in addition to the previous two, in the `usepweb_project_stuff` directory
+        - run `$ mkdir ./usepweb_web_stuff`
+
+        - you should now see those four directories, in addition to the previous two, in the `usepweb_project_stuff` directory
 
     - create the environmental-settings file
 
