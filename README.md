@@ -88,6 +88,8 @@ For more information about that project, see that site's ['About' page](http://l
 
             (tip: you can copy the full path to a file by selecting the file in the Finder, and selecting option-command-c)
 
+        - update the environmental-settings file as needed
+
         - load the settings file by running
 
                 $ source ./env_usepweb/bin/activate
@@ -123,31 +125,28 @@ For more information about that project, see that site's ['About' page](http://l
             - additional db setup
 
                 - run `python ./manage.py migrate --run-syncdb`
+                - run `python ./manage.py createsuperuser` and supply the requested username/password info
 
-    - prepare localhost web-data
+        - using the admin, manually add a couple of collections from data supplied by developer
+            - TODO, auto-populate db on creation
 
-        - create, in your web-accessible directory, the directory `usep_web_stuff`, and cd into it.
+    - update non-project webfiles
 
-        - data
+        - via sftp, or via data supplied by developer, populate the `usepweb_project_stuff/usepweb_web_stuff/usep_data` directory
 
-            - run `$ git clone https://github.com/Brown-University-Library/usep-data.git ./usep_data`
+        - via sftp, or via data supplied by developer, populate the `usepweb_project_stuff/usepweb_web_stuff/usep_images` directory. Note, the full image directory is huge, only use the necessary images for the few collections created above
+            - TODO: see if code can be changed to default to pointing to production's image-directory
 
-        - media
+    - test via `python ./manage.py check`, and then via `python ./manage.py runserver`
 
-            - run `$ mkdir ./usep_media`
+    - review typical work-session steps
+        - open Teminal
+        - cd to `usepweb_project_stuff/usepweb_project` directory
+        - run `$ git pull` and do whatever needs done
+        - run `$ source ../env_usepweb/bin/activate`
+        - run `python ./manage.py runserver`
 
-            - cd back to your project-directory (not the 'stuff' directory)
-
-                run `$ ./manage.py collectstatic --clear`, and after confirming it will write to the correct directory, type 'yes'
-
-            - note: normally this step does not have to be done when using django's development webserver, but has to in this case because of the javascript xslt work. _TODO: investigate whether this can be done without collectstatic._
-
-        - images (not absolutely necessary, but useful)
-
-            - run `$ mkdir ./usep_images` and and copy images files from the development server that start with CA.Berk...
-
-            - _TODO: see if we can point to the dev-server's image directory_
-
+    - do a test commit
 
 ---
 
