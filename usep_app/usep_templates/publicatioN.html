@@ -24,27 +24,34 @@
 
 {% block content %}
   <div id="main">
-    <div id="container">
+    <div id="Ncontainer">
       <p>( count: {{ inscription_count }} )</p>
-      <ul class="collection">
+      <div class="collection">
         {% for member in inscriptions %}
-        <li>
+        <div class="item right-caption">
+             <h3><a href="{{ member.url }}">{{ member.id }} </a></h3>
             {% if member.image_url %}
-            <img class="thumb" src="{{ member.image_url }}" alt="inscription_thumbnail" width="40" height="40"></img>
+            <img class="thumb" src="{{ member.image_url }}" alt="inscription_thumbnail" width="80" height="80"></img>
             {% else %}
-            <img class="thumb" src="{{ STATIC_URL }}usep/images/NoImageAvailable.jpg" alt="inscription_thumbnail" width="40" height="40"></img>
+            <img class="thumb" src="{{ STATIC_URL }}usep/images/NoImageAvailable.jpg" alt="inscription_thumbnail" width="80" height="80"></img>
             {% endif %}
-            <a href="{{ member.url }}">{{ member.id }} </a>
+            <hr>
+        <div class="caption">
+              <p>
             <span class="status">({{ member.status }})</span>
+          
             {% if member.text_genre_desc %}
             <br/><span class="desc">{{member.text_genre_desc.0}}</span>
             {% endif %}
             {% if show_dates %}
             <br/><span class="date">(Between {{member.notBefore|era}} and {{member.notAfter|era}})</span>
+                </p>
             {% endif %}
-        </li>
+        </div>
+       </div>
         {% endfor %}
       </ul>
     </div>
+
   </div>
 {% endblock content %}

@@ -1,0 +1,22 @@
+{% load vocab %}
+{% if counts %}
+	<li>
+		 <div class="facet_title"><p><h4>↓    {{facet|tax}}</h4> </p> </div>
+		<ul class="facet_list">
+          
+			{% for name,count in counts %}
+				<li>
+					{% if name == "none_value" %}
+					<a class="none_facet" href="{{url}}&amp;facet_{{facet}}={{name}}">
+						No Value ({{count}})
+					</a>
+					{% else %}
+					<a href="{{url}}&amp;facet_{{facet}}={{name}}">
+					 {{name|tax}} ({{count}})
+					</a>
+					{% endif %}
+				</li>
+			{% endfor %}
+		</ul>
+	</li>
+{% endif %}
