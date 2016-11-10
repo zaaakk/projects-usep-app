@@ -359,6 +359,7 @@ img {
 
 .status{
     font-family: 'Vollkorn', serif;
+    color:#99827e;
     padding:5px;
     padding-bottom:1px;
     overflow: auto;
@@ -475,7 +476,7 @@ td.inactive {
 }
 
 .metadata {
-	width: 300px;	
+	width: 500px;	
 }
 
 .facsimile {

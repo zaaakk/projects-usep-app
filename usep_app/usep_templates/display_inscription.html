@@ -35,26 +35,31 @@
 
     }
     .bibl {
-
+    margin-top:15px;
+        margin-bottom:30px;
+    }
+    
+    .bibl a:link{
+        color: #99827e;
     }
     .bibl p {
     max-width:500px;
     }
     
     #edition {
-        margin
+        
     }
     .facsimile {
-/*
-        position:absolute;
-        left: 662px;
-        top: 448px;
-    
-*/
-        /*top: 1048px;*/
+
     }
-    div p a {
-        /*float: left;*/
+    
+    #container > div > p a:link {
+    font-family:'Volkhorn', serif;
+        color:#4b7975;
+    }
+    div p a:link {
+    color: #99827e;
+    
     }
 </style>
 <!-- these are all from the scrollables website -->
@@ -62,7 +67,7 @@
 <!-- <link rel="stylesheet" type="text/css" href="http://static.flowplayer.org/tools/css/scrollable-buttons.css" /> -->
 {% endblock in_page_css %}
 
-{% block page_title %}Inscription: <span class="id_string">{{ inscription_id }}</span>{% endblock page_title %}
+{% block page_title %}Inscription:&nbsp; <span class="id_string">{{ inscription_id }}</span>{% endblock page_title %}
 
 {% block content %}
     <div id="loading" style="background-image: url('{{ custom_static_url }}usep/loading.png');"></div>
